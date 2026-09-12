@@ -1,6 +1,6 @@
 # JSON Tool
 
-A browser-only JSON formatter. The whole app is the single `index.html` at the repo root — no build step and no third-party dependencies.
+A browser-only JSON formatter. The app itself is a single `index.html` at the repo root — no build step and no third-party dependencies.
 
 ## Features
 
@@ -26,4 +26,15 @@ Parsing happens entirely in the browser, so pasted JSON never leaves the machine
 
 ## Deploying
 
-The deliverable is one static file, so any static host works. The live domain is `json-tool.com`.
+Four files make up the published site: `index.html`, `robots.txt`, `sitemap.xml` and `og-image.png`. They are served from the repo root as-is, so any static host works. The live domain is `json-tool.com`.
+
+`og-image.html` is the design source for the social card, not a page: it is listed in `.vercelignore` so it never gets published. To regenerate the image after editing it:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=2 \
+  --window-size=1200,630 --screenshot=/tmp/og-2x.png "file://$PWD/og-image.html"
+sips -z 630 1200 -s format png /tmp/og-2x.png --out og-image.png
+```
+
+Rendering at 2× and downsampling keeps the text crisp at the 1200×630 size crawlers expect.
