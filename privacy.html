@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S1RYL7MXPJ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-S1RYL7MXPJ');
-    </script>
+    <link rel="stylesheet" href="consent.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Privacy Policy – JSON Tool</title>
@@ -58,13 +51,13 @@
                 <li>Copied text. The copy button uses your browser's clipboard API, which is handled locally.</li>
                 <li>Downloaded files. "Download" builds the file in your browser with a temporary object URL; it never reaches a server.</li>
                 <li>Names, email addresses, accounts or payment details. There is no sign-up and no way to submit them through the tool.</li>
-                <li>Third-party fonts, scripts, images, iframes or ad networks. The page makes exactly one request to a third party, listed in section 2.</li>
+                <li>No ad networks, fonts, images or iframes. The only third-party request is Google Analytics, described in section 2, and it is made only after you accept the cookie banner. This policy is updated before any further third-party service (such as advertising) is added.</li>
             </ul>
 
             <h2>2. What is collected</h2>
 
             <h3>Google Analytics (usage statistics)</h3>
-            <p>The page loads <code>https://www.googletagmanager.com/gtag/js</code> for Google Analytics 4 (property <code>G-S1RYL7MXPJ</code>). It records how the site is used, not what is in your JSON. Collected data includes:</p>
+            <p>The page loads <code>https://www.googletagmanager.com/gtag/js</code> for Google Analytics 4 (property <code>G-S1RYL7MXPJ</code>) — but only after you accept the cookie banner; before that, no request reaches Google and no cookie is written. It records how the site is used, not what is in your JSON. For visitors who accepted, collected data includes:</p>
             <ul>
                 <li>Pages viewed, referring site, approximate country derived from your IP address, and browser, operating system and screen characteristics.</li>
                 <li>Interaction events, which carry only a category and a control name. The complete list of events this site sends: <code>format_click</code>, <code>minify_click</code>, <code>copy_result</code>, <code>copy_result_floating</code>, <code>download_result</code>, <code>clear_click</code>, <code>example_used</code>, <code>indent_change</code> (with the chosen indent width), <code>sort_toggle</code> (with whether sorting was on or off).</li>
@@ -75,10 +68,10 @@
             <p>The site is delivered through Vercel's content delivery network. Like any web host, it records standard request metadata for security and operational purposes — requested URL, timestamp, HTTP status, user agent and IP address. The site owner does not receive a per-visitor log of this data.</p>
 
             <h3>Stored in your browser</h3>
-            <p>One key, <code>json-tool-theme</code>, is saved in <code>localStorage</code> with the value <code>dark</code> or <code>light</code>, so the site remembers your theme choice. It never leaves your device and is removed when you clear site data.</p>
+            <p>Two keys are stored. <code>json-tool-theme</code> holds <code>dark</code> or <code>light</code> so the site remembers your theme choice, and <code>cookie-consent</code> holds your banner choice (<code>accepted</code> or <code>rejected</code>). Both are read and written by the page itself, never leave your device, and are removed when you clear site data.</p>
 
             <h2>3. Cookies</h2>
-            <p>This site sets no cookies of its own. Google Analytics sets the following:</p>
+            <p>This site sets no cookies of its own. Google Analytics, which loads only after you accept the banner, sets the following:</p>
             <table>
                 <thead>
                     <tr><th>Name</th><th>Purpose</th><th>Duration</th></tr>
@@ -123,11 +116,22 @@
                 <a href="about.html">About</a> &middot;
                 <a href="privacy.html">Privacy</a> &middot;
                 <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
                 <a href="contact.html">Contact</a>
             </span>
         </footer>
     </div>
 
     <script src="page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
 </body>
 </html>

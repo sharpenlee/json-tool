@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S1RYL7MXPJ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-S1RYL7MXPJ');
-    </script>
+    <link rel="stylesheet" href="consent.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About – JSON Tool</title>
@@ -68,9 +61,8 @@
 
             <h2>What it deliberately does not do</h2>
             <ul>
-                <li>No account, no sign-in, no usage limits, no watermark on output.</li>
+                <li>No account, no sign-in, no usage limits, and no paywall.</li>
                 <li>No server-side processing of your JSON, and no ability to recover anything you typed.</li>
-                <li>No ads and no sponsored placement.</li>
             </ul>
 
             <h2>Known limits</h2>
@@ -78,7 +70,7 @@
             <p>Because everything runs in your tab, very large inputs are bounded by your browser's memory and can make the tab unresponsive. Split files over a few megabytes rather than pasting them whole.</p>
 
             <h2>Cost</h2>
-            <p>Free, with no paid tier. The only thing collected is anonymous usage analytics — described in full in the <a href="privacy.html">privacy policy</a>.</p>
+            <p>Free, with no paid tier. What is and is not collected is described in full in the <a href="privacy.html">privacy policy</a>.</p>
 
             <div class="notice">
                 <p>Spotted something wrong, or want a capability added? <a href="contact.html">Get in touch</a> — bug reports with the input and your browser name are the most useful kind.</p>
@@ -92,11 +84,22 @@
                 <a href="about.html">About</a> &middot;
                 <a href="privacy.html">Privacy</a> &middot;
                 <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
                 <a href="contact.html">Contact</a>
             </span>
         </footer>
     </div>
 
     <script src="page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
 </body>
 </html>
