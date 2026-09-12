@@ -26,7 +26,7 @@ Parsing happens entirely in the browser, so pasted JSON never leaves the machine
 
 ## Deploying
 
-Four files make up the published site: `index.html`, `robots.txt`, `sitemap.xml` and `og-image.png`. They are served from the repo root as-is, so any static host works. The live domain is `json-tool.com`.
+The tool page is self-contained, and the published site is now `index.html`, the four informational pages (`about.html`, `privacy.html`, `terms.html`, `contact.html`) with their shared `page.css` and `page.js`, plus `robots.txt`, `sitemap.xml` and `og-image.png`. Everything is served from the repo root as-is, so any static host works. The live domain is `json-tool.com`.
 
 `og-image.html` is the design source for the social card, not a page: it is listed in `.vercelignore` so it never gets published. To regenerate the image after editing it:
 

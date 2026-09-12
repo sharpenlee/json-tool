@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S1RYL7MXPJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-S1RYL7MXPJ');
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy – JSON Tool</title>
+    <meta name="description" content="Privacy policy for JSON Tool. Your JSON is processed entirely in your browser and is never uploaded. Describes exactly what analytics data is collected." />
+    <link rel="canonical" href="https://json-tool.com/privacy.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Privacy Policy – JSON Tool" />
+    <meta property="og:description" content="Your JSON is processed in your browser and never uploaded. This policy lists exactly what is collected." />
+    <meta property="og:url" content="https://json-tool.com/privacy.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Privacy Policy – JSON Tool" />
+    <meta name="twitter:description" content="Your JSON is processed in your browser and never uploaded. This policy lists exactly what is collected." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <link rel="stylesheet" href="page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="/">JSON<span>Tool</span></a>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+            </button>
+        </header>
+
+        <main>
+            <h1>Privacy Policy</h1>
+            <p class="updated">Last updated: 12 September 2026</p>
+
+            <div class="notice">
+                <p><strong>Short version:</strong> the JSON you paste is never uploaded, stored, logged or seen by anyone. It is parsed by JavaScript inside your own browser. What this site does collect is anonymous usage analytics from Google Analytics, described precisely below.</p>
+            </div>
+
+            <h2>1. What is not collected</h2>
+            <ul>
+                <li>Your JSON input or the formatted output. There is no request that carries it: formatting calls <code>JSON.parse</code> in your browser, and the result is written straight into the page.</li>
+                <li>Copied text. The copy button uses your browser's clipboard API, which is handled locally.</li>
+                <li>Downloaded files. "Download" builds the file in your browser with a temporary object URL; it never reaches a server.</li>
+                <li>Names, email addresses, accounts or payment details. There is no sign-up and no way to submit them through the tool.</li>
+                <li>Third-party fonts, scripts, images, iframes or ad networks. The page makes exactly one request to a third party, listed in section 2.</li>
+            </ul>
+
+            <h2>2. What is collected</h2>
+
+            <h3>Google Analytics (usage statistics)</h3>
+            <p>The page loads <code>https://www.googletagmanager.com/gtag/js</code> for Google Analytics 4 (property <code>G-S1RYL7MXPJ</code>). It records how the site is used, not what is in your JSON. Collected data includes:</p>
+            <ul>
+                <li>Pages viewed, referring site, approximate country derived from your IP address, and browser, operating system and screen characteristics.</li>
+                <li>Interaction events, which carry only a category and a control name. The complete list of events this site sends: <code>format_click</code>, <code>minify_click</code>, <code>copy_result</code>, <code>copy_result_floating</code>, <code>download_result</code>, <code>clear_click</code>, <code>example_used</code>, <code>indent_change</code> (with the chosen indent width), <code>sort_toggle</code> (with whether sorting was on or off).</li>
+            </ul>
+            <p>Google states that Analytics 4 does not log or store full IP addresses and uses them only to derive coarse location. This site does not send your JSON, page content or any custom identifier to Analytics.</p>
+
+            <h3>Hosting and delivery logs</h3>
+            <p>The site is delivered through Vercel's content delivery network. Like any web host, it records standard request metadata for security and operational purposes — requested URL, timestamp, HTTP status, user agent and IP address. The site owner does not receive a per-visitor log of this data.</p>
+
+            <h3>Stored in your browser</h3>
+            <p>One key, <code>json-tool-theme</code>, is saved in <code>localStorage</code> with the value <code>dark</code> or <code>light</code>, so the site remembers your theme choice. It never leaves your device and is removed when you clear site data.</p>
+
+            <h2>3. Cookies</h2>
+            <p>This site sets no cookies of its own. Google Analytics sets the following:</p>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Purpose</th><th>Duration</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>_ga</code></td>
+                        <td>Distinguishes unique visitors by assigning a randomly generated identifier.</td>
+                        <td>2 years</td>
+                    </tr>
+                    <tr>
+                        <td><code>_ga_S1RYL7MXPJ</code></td>
+                        <td>Keeps the current session's analytics state.</td>
+                        <td>2 years</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>4. Legal basis (for readers in the EEA and UK)</h2>
+            <p>Analytics is processed on the basis of legitimate interest in understanding which parts of the tool are used. If you prefer, you can block <code>googletagmanager.com</code>, use Google's <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Analytics opt-out browser add-on</a>, or simply load the page and then switch your network off — the tool keeps working without a connection.</p>
+
+            <h2>5. Sharing and selling</h2>
+            <p>No personal data is sold or rented. Data may be processed by the service providers named above (Google for analytics, Vercel for delivery) under their own terms, and may be disclosed if required by law.</p>
+
+            <h2>6. Retention</h2>
+            <p>Nothing identifiable is retained by this site. Analytics data is retained according to the retention setting configured on the Google Analytics property and is deleted by Google at the end of that period.</p>
+
+            <h2>7. Children</h2>
+            <p>The tool is a general-purpose developer utility and is not directed at children under 16. No knowing collection of their data takes place.</p>
+
+            <h2>8. Changes to this policy</h2>
+            <p>If the page starts collecting anything additional, this policy is updated before that change goes live, and the date at the top of the page is revised. Continued use after an update means the revised policy applies.</p>
+
+            <h2>9. Contact</h2>
+            <p>Questions about this policy, or requests relating to personal data, go to <a href="mailto:hi@json-tool.com">hi@json-tool.com</a> — see the <a href="contact.html">contact page</a>.</p>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+</body>
+</html>
