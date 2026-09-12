@@ -105,6 +105,13 @@ main {
     transition: background 0.25s, box-shadow 0.25s;
 }
 
+.back {
+    margin-bottom: 1.4rem;
+    font-size: 0.92rem;
+}
+.back a { color: var(--text-muted); font-weight: 600; }
+.back a:hover { color: var(--primary); }
+
 h1 {
     font-size: 2.1rem;
     font-weight: 800;
