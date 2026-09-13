@@ -38,3 +38,12 @@ sips -z 630 1200 -s format png /tmp/og-2x.png --out og-image.png
 ```
 
 Rendering at 2× and downsampling keeps the text crisp at the 1200×630 size crawlers expect.
+
+## Languages
+
+English is the source of truth and lives at the repo root. Eight locale directories hold translated copies of the same five pages — `/ko/`, `/ja/`, `/zh/` (Simplified Chinese), `/zh-hant/` (Traditional Chinese), `/ru/`, `/es/`, `/pt/` (pt-BR), `/fr/` — each containing `index.html`, `about.html`, `privacy.html`, `terms.html` and `contact.html`.
+
+- Shared assets (`/page.css`, `/page.js`, `/consent.css`, `/consent.js`, `/og-image.png`, `robots.txt`) are served from the root; locale pages reference them with root-absolute paths and link between their own pages with relative paths.
+- Every page declares `<link rel="alternate" hreflang="…">` for all nine locales plus `x-default` in its `<head>`, and `sitemap.xml` groups the locales of each page type into one `<url>` entry carrying the same alternates.
+
+**Maintenance note:** the tool page's inline `<script>` is duplicated across all nine copies (only its user-facing string literals differ), so any change to the tool's logic must be applied to `index.html` and every locale's `index.html`. `consent.js`, `page.js` and `page.css` contain no user-facing text and are already shared.

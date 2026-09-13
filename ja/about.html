@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>概要 – JSON Tool</title>
+    <meta name="description" content="JSON Toolが何をするのか、誰のためのものか、どう運営され、意図的に何をしないのか。無料のブラウザベースJSONフォーマッター・ミニファイア・バリデーター。" />
+    <link rel="canonical" href="https://json-tool.com/ja/about.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/about.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/about.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/about.html" />
+    <link rel="alternate" hreflang="zh" href="https://json-tool.com/zh/about.html" />
+    <link rel="alternate" hreflang="zh-hant" href="https://json-tool.com/zh-hant/about.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/about.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/about.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/about.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/about.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/about.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="概要 – JSON Tool" />
+    <meta property="og:description" content="JSON Toolが何をするのか、誰のためのものか、意図的に何をしないのか。" />
+    <meta property="og:url" content="https://json-tool.com/ja/about.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – ブラウザでJSONをフォーマット、ミニファイ、検証" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="概要 – JSON Tool" />
+    <meta name="twitter:description" content="JSON Toolが何をするのか、誰のためのものか、意図的に何をしないのか。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – ブラウザでJSONをフォーマット、ミニファイ、検証" />
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/" class="active" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/" hreflang="zh" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="ダークモードの切り替え">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">ダーク</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; JSONツールに戻る</a></p>
+            <h1>概要</h1>
+            <p class="updated">最終更新日: 2026年9月12日</p>
+
+            <p class="lead">JSON Toolは、JSONをフォーマット・ミニファイ・検証する無料のシングルページユーティリティです。一人の開発者によって運営される独立プロジェクトで、ツール全体は単一のHTMLファイルであり、独自のバックエンドはありません。</p>
+
+            <h2>何ができるか</h2>
+            <ul>
+                <li><strong>フォーマット</strong> — 1〜20の間で選べるインデント幅でJSONを整形。</li>
+                <li><strong>ミニファイ</strong> — すべての空白を除去してペイロードを縮小。</li>
+                <li><strong>検証</strong> — 入力が有効なJSONでない場合、正確なパーサーエラーを報告。</li>
+                <li><strong>キー並べ替え</strong> — 配列内にネストされたオブジェクトも含めて再帰的に実行。2つのペイロードを行ごとに比較できます。</li>
+                <li><strong>快適に読める</strong> — 行番号、文字数、ライト／ダークテーマ、クリップボードへのコピー、<code>formatted.json</code>としてのダウンロード。</li>
+            </ul>
+
+            <h2>誰のためのものか</h2>
+            <p>APIレスポンスを確認する開発者、JSONエクスポートを調べるアナリスト、壊れたペイロードをデバッグする人。JSONとは何かをまったく知らなくても使えます。貼り付けてフォーマットを押し、結果を読むだけです。</p>
+            <p>設計上の最優先事項は、機密ペイロードを手元のマシンに留めておくことです。設定ダンプ、トークン、顧客レコード、内部APIレスポンスは、まさに再フォーマットのためにどこかのサイトにアップロードしてはいけない類のものです。だからこのツールはアップロードしません。</p>
+
+            <h2>仕組み</h2>
+            <p>整形はブラウザ内で、JavaScriptエンジン自身のJSONパーサーを使って行われます。ブラウザがJSONを読み込むのと同じコードパスです。処理のためにサーバーに送信されるものはなく、貼り付けた内容のキュー、保存、ログもありません。ページが読み込まれた後はネットワークから切断して作業を続けられます。</p>
+
+            <h2>意図的にやらないこと</h2>
+            <ul>
+                <li>アカウントなし、ログインなし、利用制限なし、ペイウォールなし。</li>
+                <li>あなたのJSONのサーバーサイド処理なし。入力した内容を復元する手段もありません。</li>
+            </ul>
+
+            <h2>既知の制限</h2>
+            <p>厳密なJSONのみを受け付けます。コメント、末尾のカンマ、シングルクォート、JSON5、JSONC、改行区切りのJSON（NDJSON）は拒否されます。これはJSONパーサーの仕様であり、バグではありません。JSON Schema検証、JSONPathクエリ、差分表示、YAML／XML／CSVとの変換はありません。</p>
+            <p>すべてがタブ内で実行されるため、非常に大きな入力はブラウザのメモリに制約され、タブが応答しなくなる可能性があります。数メガバイトを超えるファイルは全体を貼り付けるのではなく分割してください。</p>
+
+            <h2>料金</h2>
+            <p>無料で、有料プランはありません。何を収集し、何を収集しないかは<a href="privacy.html">プライバシーポリシー</a>に詳しく記載されています。</p>
+
+            <div class="notice">
+                <p>問題を見つけた場合、または機能追加を希望する場合は、<a href="contact.html">ご連絡ください</a>。入力内容とブラウザ名付きのバグ報告が最も役立ちます。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 無断転載を禁じます。</span>
+            <span>
+                <a href="index.html">ホーム</a> &middot;
+                <a href="about.html">概要</a> &middot;
+                <a href="privacy.html">プライバシー</a> &middot;
+                <a href="terms.html">利用規約</a> &middot;
+                <a href="#" id="cookieSettings">Cookie設定</a> &middot;
+                <a href="contact.html">お問い合わせ</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookieの同意" aria-hidden="true">
+        <p>当サイトでは、訪問者の利用状況を把握するためにGoogle AnalyticsのCookieを使用します。JSONは常にブラウザ内でローカルに処理されます。詳細は<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒否</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">同意</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

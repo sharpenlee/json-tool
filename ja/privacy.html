@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>プライバシーポリシー – JSON Tool</title>
+    <meta name="description" content="JSON Toolのプライバシーポリシー。JSONはブラウザ内で完全に処理され、アップロードされることはありません。収集されるアナリティクスデータの詳細を正確に説明します。" />
+    <link rel="canonical" href="https://json-tool.com/ja/privacy.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/privacy.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/privacy.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/privacy.html" />
+    <link rel="alternate" hreflang="zh" href="https://json-tool.com/zh/privacy.html" />
+    <link rel="alternate" hreflang="zh-hant" href="https://json-tool.com/zh-hant/privacy.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/privacy.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/privacy.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/privacy.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/privacy.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/privacy.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="プライバシーポリシー – JSON Tool" />
+    <meta property="og:description" content="JSONはブラウザ内で処理され、アップロードされることはありません。このポリシーは、収集される内容を正確に列挙します。" />
+    <meta property="og:url" content="https://json-tool.com/ja/privacy.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – ブラウザでJSONをフォーマット、ミニファイ、検証" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="プライバシーポリシー – JSON Tool" />
+    <meta name="twitter:description" content="JSONはブラウザ内で処理され、アップロードされることはありません。このポリシーは、収集される内容を正確に列挙します。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – ブラウザでJSONをフォーマット、ミニファイ、検証" />
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/" class="active" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/" hreflang="zh" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="ダークモードの切り替え">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">ダーク</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; JSONツールに戻る</a></p>
+            <h1>プライバシーポリシー</h1>
+            <p class="updated">最終更新日: 2026年9月12日</p>
+
+            <div class="notice">
+                <p><strong>短いまとめ:</strong> 貼り付けたJSONがアップロード・保存・ログ記録・閲覧されることは一切ありません。JSONは自分のブラウザ内のJavaScriptによって解析されます。このサイトが収集するのは、以下に正確に説明される、Google Analyticsによる匿名の利用統計のみです。</p>
+            </div>
+
+            <h2>1. 収集されないもの</h2>
+            <ul>
+                <li>入力したJSONや整形した出力。それらを運ぶリクエストは存在しません。整形はブラウザ内で<code>JSON.parse</code>を呼び出し、結果はそのままページに書き込まれます。</li>
+                <li>コピーしたテキスト。コピーボタンはブラウザのクリップボードAPIを使用し、ローカルで処理されます。</li>
+                <li>ダウンロードしたファイル。「ダウンロード」はブラウザ内で一時的なオブジェクトURLを使ってファイルを生成します。サーバーに届くことはありません。</li>
+                <li>氏名、メールアドレス、アカウント、支払い情報。サインアップはなく、ツールを通じてこれらを送信する手段もありません。</li>
+                <li>広告ネットワーク、フォント、画像、iframeは一切ありません。唯一のサードパーティリクエストは第2節で説明するGoogle Analyticsで、Cookieバナーに同意した後にのみ送信されます。広告などのさらなるサードパーティサービスを追加する前には、このポリシーを更新します。</li>
+            </ul>
+
+            <h2>2. 収集されるもの</h2>
+
+            <h3>Google Analytics（利用統計）</h3>
+            <p>ページはGoogle Analytics 4（プロパティ <code>G-S1RYL7MXPJ</code>）用に<code>https://www.googletagmanager.com/gtag/js</code>を読み込みますが、それはCookieバナーに同意した後のみです。それ以前はGoogleへのリクエストはなく、Cookieも書き込まれません。記録されるのはサイトの使われ方であり、JSONの中身ではありません。同意した訪問者について、収集されるデータは以下を含みます：</p>
+            <ul>
+                <li>閲覧したページ、参照サイト、IPアドレスから推定されるおおよその国、ブラウザ・OS・画面の特性。</li>
+                <li>カテゴリとコントロール名のみを持つ操作イベント。このサイトが送信するイベントの完全なリスト: <code>format_click</code>、<code>minify_click</code>、<code>copy_result</code>、<code>copy_result_floating</code>、<code>download_result</code>、<code>clear_click</code>、<code>example_used</code>、<code>indent_change</code>（選択したインデント幅を含む）、<code>sort_toggle</code>（並べ替えのオン／オフを含む）。</li>
+            </ul>
+            <p>Googleは、Analytics 4は完全なIPアドレスを記録・保存せず、大まかな地域の推定にのみ使用すると述べています。このサイトはJSON、ページコンテンツ、カスタムIDをAnalyticsに送信しません。</p>
+
+            <h3>ホスティングと配信ログ</h3>
+            <p>サイトはVercelのコンテンツ配信ネットワークを通じて配信されます。他のウェブホストと同様に、セキュリティと運用のために標準的なリクエストメタデータ（リクエストURL、タイムスタンプ、HTTPステータス、ユーザーエージェント、IPアドレス）を記録します。サイト運営者は訪問者ごとのログを受け取りません。</p>
+
+            <h3>ブラウザに保存されるもの</h3>
+            <p>2つのキーが保存されます。<code>json-tool-theme</code>は<code>dark</code>または<code>light</code>を保持し、テーマ選択を記憶します。<code>cookie-consent</code>はバナーの選択（<code>accepted</code>または<code>rejected</code>）を保持します。どちらもページ自身が読み書きし、端末の外に出ることはなく、サイトデータを消去すると削除されます。</p>
+
+            <h2>3. Cookie</h2>
+            <p>このサイトは独自のCookieを設定しません。バナーに同意した後にのみ読み込まれるGoogle Analyticsは以下を設定します：</p>
+            <table>
+                <thead>
+                    <tr><th>名前</th><th>目的</th><th>期間</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>_ga</code></td>
+                        <td>ランダムに生成されたIDを割り当ててユニークな訪問者を識別します。</td>
+                        <td>2年</td>
+                    </tr>
+                    <tr>
+                        <td><code>_ga_S1RYL7MXPJ</code></td>
+                        <td>現在のセッションのアナリティクス状態を保持します。</td>
+                        <td>2年</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>4. 法的根拠（EEA・英国の読者向け）</h2>
+            <p>アナリティクスは、ツールのどの部分が使われているかを理解するという正当な利益に基づいて処理されます。希望する場合は、<code>googletagmanager.com</code>をブロックするか、Googleの<a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Analyticsオプトアウトブラウザアドオン</a>を使用するか、あるいはページを読み込んだ後にネットワークをオフにすることもできます。ツールは接続がなくても動作し続けます。</p>
+
+            <h2>5. 共有と販売</h2>
+            <p>個人データが販売・レンタルされることはありません。データは上記のサービスプロバイダー（アナリティクスのGoogle、配信のVercel）がそれぞれの規約に基づいて処理する場合があり、法律で要求された場合には開示される可能性があります。</p>
+
+            <h2>6. 保存期間</h2>
+            <p>このサイトは特定可能なものを一切保持しません。アナリティクスデータはGoogle Analyticsプロパティに設定された保持設定に従って保持され、その期間の終了時にGoogleによって削除されます。</p>
+
+            <h2>7. 子供</h2>
+            <p>このツールは汎用の開発者向けユーティリティであり、16歳未満の子供を対象としていません。彼らのデータを意図的に収集することはありません。</p>
+
+            <h2>8. このポリシーの変更</h2>
+            <p>ページが追加の何かを収集し始める場合、このポリシーはその変更が公開される前に更新され、ページ上部の日付も改訂されます。更新後の継続利用は、改訂されたポリシーが適用されることを意味します。</p>
+
+            <h2>9. お問い合わせ</h2>
+            <p>このポリシーに関する質問や個人データに関するリクエストは、<a href="mailto:hi@json-tool.com">hi@json-tool.com</a>まで。<a href="contact.html">お問い合わせページ</a>もご覧ください。</p>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 無断転載を禁じます。</span>
+            <span>
+                <a href="index.html">ホーム</a> &middot;
+                <a href="about.html">概要</a> &middot;
+                <a href="privacy.html">プライバシー</a> &middot;
+                <a href="terms.html">利用規約</a> &middot;
+                <a href="#" id="cookieSettings">Cookie設定</a> &middot;
+                <a href="contact.html">お問い合わせ</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookieの同意" aria-hidden="true">
+        <p>当サイトでは、訪問者の利用状況を把握するためにGoogle AnalyticsのCookieを使用します。JSONは常にブラウザ内でローカルに処理されます。詳細は<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒否</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">同意</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

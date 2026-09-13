@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Politique de confidentialité – JSON Tool</title>
+    <meta name="description" content="Politique de confidentialité de JSON Tool. Votre JSON est traité entièrement dans votre navigateur et n'est jamais envoyé. Décrit exactement quelles données d'analyse sont collectées." />
+    <link rel="canonical" href="https://json-tool.com/fr/privacy.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/privacy.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/privacy.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/privacy.html" />
+    <link rel="alternate" hreflang="zh" href="https://json-tool.com/zh/privacy.html" />
+    <link rel="alternate" hreflang="zh-hant" href="https://json-tool.com/zh-hant/privacy.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/privacy.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/privacy.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/privacy.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/privacy.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/privacy.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Politique de confidentialité – JSON Tool" />
+    <meta property="og:description" content="Votre JSON est traité dans votre navigateur et jamais envoyé. Cette politique liste exactement ce qui est collecté." />
+    <meta property="og:url" content="https://json-tool.com/fr/privacy.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – formater, minifier et valider du JSON dans votre navigateur" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Politique de confidentialité – JSON Tool" />
+    <meta name="twitter:description" content="Votre JSON est traité dans votre navigateur et jamais envoyé. Cette politique liste exactement ce qui est collecté." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – formater, minifier et valider du JSON dans votre navigateur" />
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Langue">
+                    <a href="/" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/" hreflang="zh" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/" class="active" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Activer/désactiver le mode sombre">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Sombre</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Retour à l'outil JSON</a></p>
+            <h1>Politique de confidentialité</h1>
+            <p class="updated">Dernière mise à jour : 12 septembre 2026</p>
+
+            <div class="notice">
+                <p><strong>En bref :</strong> le JSON que vous collez n'est jamais envoyé, stocké, journalisé ni vu par personne. Il est analysé par JavaScript dans votre propre navigateur. La seule chose que ce site collecte, ce sont des statistiques d'utilisation anonymes de Google Analytics, décrites précisément ci-dessous.</p>
+            </div>
+
+            <h2>1. Ce qui n'est pas collecté</h2>
+            <ul>
+                <li>Votre saisie JSON ou la sortie formatée. Aucune requête ne la transporte : la mise en forme appelle <code>JSON.parse</code> dans votre navigateur et le résultat est écrit directement dans la page.</li>
+                <li>Le texte copié. Le bouton de copie utilise l'API de presse-papiers de votre navigateur, qui est gérée localement.</li>
+                <li>Les fichiers téléchargés. Le bouton « Télécharger » crée le fichier dans votre navigateur avec une URL d'objet temporaire ; il n'atteint jamais un serveur.</li>
+                <li>Noms, adresses e-mail, comptes ou données de paiement. Il n'y a pas d'inscription et aucun moyen de les soumettre via l'outil.</li>
+                <li>Aucun réseau publicitaire, aucune police, aucune image, aucun iframe. La seule requête tierce est Google Analytics, décrite à la section 2, et elle n'est effectuée qu'après que vous avez accepté le bandeau de cookies. Cette politique est mise à jour avant l'ajout de tout autre service tiers (comme la publicité).</li>
+            </ul>
+
+            <h2>2. Ce qui est collecté</h2>
+
+            <h3>Google Analytics (statistiques d'utilisation)</h3>
+            <p>La page charge <code>https://www.googletagmanager.com/gtag/js</code> pour Google Analytics 4 (propriété <code>G-S1RYL7MXPJ</code>) — mais seulement après que vous avez accepté le bandeau de cookies ; avant cela, aucune requête n'atteint Google et aucun cookie n'est écrit. Il enregistre la façon dont le site est utilisé, pas le contenu de votre JSON. Pour les visiteurs ayant accepté, les données collectées comprennent :</p>
+            <ul>
+                <li>Pages vues, site référent, pays approximatif dérivé de votre adresse IP, et caractéristiques du navigateur, du système d'exploitation et de l'écran.</li>
+                <li>Événements d'interaction, qui ne portent qu'une catégorie et un nom de contrôle. La liste complète des événements envoyés par ce site : <code>format_click</code>, <code>minify_click</code>, <code>copy_result</code>, <code>copy_result_floating</code>, <code>download_result</code>, <code>clear_click</code>, <code>example_used</code>, <code>indent_change</code> (avec la largeur d'indentation choisie), <code>sort_toggle</code> (avec si le tri était activé ou non).</li>
+            </ul>
+            <p>Google déclare qu'Analytics 4 ne journalise ni ne stocke les adresses IP complètes et ne les utilise que pour en dériver une localisation approximative. Ce site n'envoie pas votre JSON, le contenu des pages ni aucun identifiant personnalisé à Analytics.</p>
+
+            <h3>Journaux d'hébergement et de diffusion</h3>
+            <p>Le site est diffusé via le réseau de diffusion de contenu de Vercel. Comme tout hébergeur, il enregistre des métadonnées standard de requête à des fins de sécurité et d'exploitation — URL demandée, horodatage, statut HTTP, user-agent et adresse IP. Le propriétaire du site ne reçoit pas de journal individuel de ces données par visiteur.</p>
+
+            <h3>Stocké dans votre navigateur</h3>
+            <p>Deux clés sont stockées. <code>json-tool-theme</code> contient <code>dark</code> ou <code>light</code> pour que le site mémorise votre choix de thème, et <code>cookie-consent</code> contient votre choix du bandeau (<code>accepted</code> ou <code>rejected</code>). Les deux sont lues et écrites par la page elle-même, ne quittent jamais votre appareil et sont supprimées lorsque vous effacez les données du site.</p>
+
+            <h2>3. Cookies</h2>
+            <p>Ce site ne définit aucun cookie propre. Google Analytics, qui n'est chargé qu'après l'acceptation du bandeau, définit les suivants :</p>
+            <table>
+                <thead>
+                    <tr><th>Nom</th><th>Finalité</th><th>Durée</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>_ga</code></td>
+                        <td>Distingue les visiteurs uniques en attribuant un identifiant généré aléatoirement.</td>
+                        <td>2 ans</td>
+                    </tr>
+                    <tr>
+                        <td><code>_ga_S1RYL7MXPJ</code></td>
+                        <td>Conserve l'état analytique de la session en cours.</td>
+                        <td>2 ans</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>4. Base légale (pour les lecteurs dans l'EEE et au Royaume-Uni)</h2>
+            <p>L'analyse est traitée sur la base de l'intérêt légitime à comprendre quelles parties de l'outil sont utilisées. Si vous préférez, vous pouvez bloquer <code>googletagmanager.com</code>, utiliser l'<a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">extension de navigateur de désactivation d'Analytics</a> de Google, ou simplement charger la page puis couper votre réseau — l'outil continue de fonctionner sans connexion.</p>
+
+            <h2>5. Partage et vente</h2>
+            <p>Aucune donnée personnelle n'est vendue ni louée. Les données peuvent être traitées par les fournisseurs de services cités ci-dessus (Google pour l'analyse, Vercel pour la diffusion) selon leurs propres conditions, et peuvent être divulguées si la loi l'exige.</p>
+
+            <h2>6. Conservation</h2>
+            <p>Rien d'identifiable n'est conservé par ce site. Les données d'analyse sont conservées selon le paramètre de conservation configuré sur la propriété Google Analytics et sont supprimées par Google à la fin de cette période.</p>
+
+            <h2>7. Enfants</h2>
+            <p>L'outil est un utilitaire généraliste pour développeurs et ne s'adresse pas aux enfants de moins de 16 ans. Aucune collecte délibérée de leurs données n'a lieu.</p>
+
+            <h2>8. Modifications de cette politique</h2>
+            <p>Si la page commence à collecter quoi que ce soit d'autre, cette politique est mise à jour avant que ce changement ne prenne effet, et la date en haut de la page est révisée. L'utilisation continue après une mise à jour signifie que la politique révisée s'applique.</p>
+
+            <h2>9. Contact</h2>
+            <p>Les questions sur cette politique ou les demandes concernant des données personnelles doivent être adressées à <a href="mailto:hi@json-tool.com">hi@json-tool.com</a> — voir la <a href="contact.html">page de contact</a>.</p>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Tous droits réservés.</span>
+            <span>
+                <a href="index.html">Accueil</a> &middot;
+                <a href="about.html">À propos</a> &middot;
+                <a href="privacy.html">Confidentialité</a> &middot;
+                <a href="terms.html">Conditions</a> &middot;
+                <a href="#" id="cookieSettings">Paramètres des cookies</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consentement aux cookies" aria-hidden="true">
+        <p>Nous utilisons des cookies de Google Analytics pour comprendre comment les visiteurs utilisent ce site. Votre JSON est toujours traité localement dans votre navigateur. Consultez notre <a href="privacy.html">Politique de confidentialité</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Refuser</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accepter</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

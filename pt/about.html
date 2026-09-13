@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sobre – JSON Tool</title>
+    <meta name="description" content="O que o JSON Tool faz, para quem é, como funciona e o que propositalmente não faz. Formatador, minificador e validador de JSON gratuito no navegador." />
+    <link rel="canonical" href="https://json-tool.com/pt/about.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/about.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/about.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/about.html" />
+    <link rel="alternate" hreflang="zh" href="https://json-tool.com/zh/about.html" />
+    <link rel="alternate" hreflang="zh-hant" href="https://json-tool.com/zh-hant/about.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/about.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/about.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/about.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/about.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/about.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sobre – JSON Tool" />
+    <meta property="og:description" content="O que o JSON Tool faz, para quem é e o que propositalmente não faz." />
+    <meta property="og:url" content="https://json-tool.com/pt/about.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – formate, minimize e valide JSON no seu navegador" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sobre – JSON Tool" />
+    <meta name="twitter:description" content="O que o JSON Tool faz, para quem é e o que propositalmente não faz." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – formate, minimize e valide JSON no seu navegador" />
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Idioma">
+                    <a href="/" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/" hreflang="zh" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/" class="active" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Alternar para o modo escuro">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Escuro</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Voltar para a ferramenta de JSON</a></p>
+            <h1>Sobre</h1>
+            <p class="updated">Última atualização: 12 de setembro de 2026</p>
+
+            <p class="lead">O JSON Tool é um utilitário gratuito de página única que formata, minimiza e valida JSON. É um projeto independente mantido por um único desenvolvedor, e toda a ferramenta é um arquivo HTML sem backend próprio.</p>
+
+            <h2>O que ele faz</h2>
+            <ul>
+                <li><strong>Formatar</strong> — embeleza o JSON com uma largura de recuo que você escolhe entre 1 e 20.</li>
+                <li><strong>Minimizar</strong> — remove todos os espaços em branco para reduzir o tamanho dos dados.</li>
+                <li><strong>Validar</strong> — informa o erro exato do parser quando a entrada não é um JSON válido.</li>
+                <li><strong>Ordenar chaves</strong> — de forma recursiva, incluindo objetos aninhados dentro de arrays, para que duas cargas de dados possam ser comparadas linha por linha.</li>
+                <li><strong>Ler com conforto</strong> — números de linha, contadores de caracteres, tema claro e escuro, copiar para a área de transferência e baixar como <code>formatted.json</code>.</li>
+            </ul>
+
+            <h2>Para quem é</h2>
+            <p>Desenvolvedores analisando uma resposta de API, analistas inspecionando uma exportação JSON, qualquer pessoa depurando uma carga malformada. Também serve para quem não faz ideia do que é JSON: cole, pressione Formatar e leia o resultado.</p>
+            <p>A prioridade de design é que dados sensíveis permaneçam na sua máquina. Dumps de configuração, tokens, registros de clientes e respostas internas de API são exatamente o que não se deve colar em um site que os envia para algum lugar reformatar. Este aqui não envia.</p>
+
+            <h2>Como funciona</h2>
+            <p>A formatação ocorre no seu navegador usando o parser JSON do próprio motor JavaScript — o mesmo caminho de código que seu navegador usa para ler JSON. Nada é enviado a um servidor para processamento, e não há fila, armazenamento ou registro do que você cola. Depois que a página carrega, você pode desconectar da rede e continuar trabalhando.</p>
+
+            <h2>O que ele propositalmente não faz</h2>
+            <ul>
+                <li>Sem conta, sem login, sem limites de uso e sem paywall.</li>
+                <li>Sem processamento do seu JSON no servidor e sem possibilidade de recuperar qualquer coisa que você digitou.</li>
+            </ul>
+
+            <h2>Limitações conhecidas</h2>
+            <p>Ele aceita apenas JSON estrito. Comentários, vírgulas finais, aspas simples, JSON5, JSONC e JSON delimitado por linhas (NDJSON) são rejeitados — isso é o comportamento do parser de JSON, não um bug. Não há validação de JSON Schema, nem consulta JSONPath, nem visualização de diffs, nem conversão de/para YAML, XML ou CSV.</p>
+            <p>Como tudo roda na sua aba, entradas muito grandes ficam limitadas pela memória do navegador e podem deixar a aba sem resposta. Divida arquivos com mais de alguns megabytes em vez de colá-los inteiros.</p>
+
+            <h2>Custo</h2>
+            <p>Grátis, sem plano pago. O que é e o que não é coletado está descrito por completo na <a href="privacy.html">política de privacidade</a>.</p>
+
+            <div class="notice">
+                <p>Encontrou algo errado ou quer adicionar uma funcionalidade? <a href="contact.html">Entre em contato</a> — relatos de bugs com a entrada e o nome do seu navegador são os mais úteis.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Todos os direitos reservados.</span>
+            <span>
+                <a href="index.html">Início</a> &middot;
+                <a href="about.html">Sobre</a> &middot;
+                <a href="privacy.html">Privacidade</a> &middot;
+                <a href="terms.html">Termos</a> &middot;
+                <a href="#" id="cookieSettings">Configurações de cookies</a> &middot;
+                <a href="contact.html">Contato</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consentimento de cookies" aria-hidden="true">
+        <p>Usamos cookies do Google Analytics para entender como os visitantes usam este site. Seu JSON é sempre processado localmente no seu navegador. Consulte nossa <a href="privacy.html">Política de Privacidade</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Recusar</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Aceitar</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

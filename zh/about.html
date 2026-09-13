@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于 – JSON Tool</title>
+    <meta name="description" content="JSON Tool 能做什么、为谁而做、如何运作，以及它刻意不做的事情。一款免费的基于浏览器的 JSON 格式化、压缩和校验工具。" />
+    <link rel="canonical" href="https://json-tool.com/zh/about.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/about.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/about.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/about.html" />
+    <link rel="alternate" hreflang="zh" href="https://json-tool.com/zh/about.html" />
+    <link rel="alternate" hreflang="zh-hant" href="https://json-tool.com/zh-hant/about.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/about.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/about.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/about.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/about.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/about.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="关于 – JSON Tool" />
+    <meta property="og:description" content="JSON Tool 能做什么、为谁而做，以及它刻意不做的事情。" />
+    <meta property="og:url" content="https://json-tool.com/zh/about.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="关于 – JSON Tool" />
+    <meta name="twitter:description" content="JSON Tool 能做什么、为谁而做，以及它刻意不做的事情。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/" class="active" hreflang="zh" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切换深色模式">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">深色</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; 返回 JSON 工具</a></p>
+            <h1>关于</h1>
+            <p class="updated">最后更新：2026年9月12日</p>
+
+            <p class="lead">JSON Tool 是一款免费的轻量级页面工具，可以对 JSON 进行格式化、压缩和校验。它是由一位开发者维护的独立项目，整个工具就是一个 HTML 文件，没有自己的后端。</p>
+
+            <h2>它的功能</h2>
+            <ul>
+                <li><strong>格式化</strong> — 以您选择的 1 到 20 缩进宽度美化 JSON。</li>
+                <li><strong>压缩</strong> — 去除所有空白以缩小数据体积。</li>
+                <li><strong>校验</strong> — 当输入不是有效 JSON 时，报告准确的解析错误。</li>
+                <li><strong>键排序</strong> — 递归进行，包括数组内嵌套的对象，方便两个数据逐行对比。</li>
+                <li><strong>舒适阅读</strong> — 行号、字符计数、浅色和深色主题、复制到剪贴板，以及下载为 <code>formatted.json</code>。</li>
+            </ul>
+
+            <h2>为谁而做</h2>
+            <p>检查 API 响应的开发者、检查 JSON 导出数据的分析师，以及所有调试异常数据的人。即使完全不了解 JSON 也能使用：粘贴、按下格式化、阅读结果。</p>
+            <p>设计上的首要原则是让敏感数据留在您的设备上。配置文件导出、令牌、客户记录和内部 API 响应，恰恰是不应该粘贴到会上传数据再重新格式化的网站上的内容。所以本工具不会上传。</p>
+
+            <h2>工作原理</h2>
+            <p>格式化在您的浏览器中通过 JavaScript 引擎自带的 JSON 解析器完成，也就是您的浏览器读取 JSON 时使用的同一套代码路径。没有任何内容被发送到服务器处理，也不存在您所粘贴内容的队列、存储或日志。页面加载完成后，您可以断开网络继续使用。</p>
+
+            <h2>它刻意不做的事情</h2>
+            <ul>
+                <li>没有账户、没有登录、没有使用限制，也没有付费墙。</li>
+                <li>不对您的 JSON 进行任何服务器端处理，也无法恢复您输入的任何内容。</li>
+            </ul>
+
+            <h2>已知限制</h2>
+            <p>它只接受严格的 JSON。注释、尾随逗号、单引号、JSON5、JSONC 以及换行分隔的 JSON（NDJSON）都会被拒绝，这是 JSON 解析器的行为，并非缺陷。没有 JSON Schema 校验、JSONPath 查询、差异视图，也没有与 YAML、XML 或 CSV 之间的转换。</p>
+            <p>由于一切都在您的浏览器标签页中运行，非常大的输入会受到浏览器内存的限制，并可能导致标签页无响应。对于超过几兆字节的文件，请拆分后再粘贴，而不是整份粘贴。</p>
+
+            <h2>费用</h2>
+            <p>免费，没有付费层级。收集什么、不收集什么，详见<a href="privacy.html">隐私政策</a>。</p>
+
+            <div class="notice">
+                <p>发现问题，或希望增加某项功能？<a href="contact.html">请联系我们</a> — 附上输入内容和浏览器名称的缺陷报告最有帮助。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 保留所有权利。</span>
+            <span>
+                <a href="index.html">首页</a> &middot;
+                <a href="about.html">关于</a> &middot;
+                <a href="privacy.html">隐私政策</a> &middot;
+                <a href="terms.html">服务条款</a> &middot;
+                <a href="#" id="cookieSettings">Cookie 设置</a> &middot;
+                <a href="contact.html">联系我们</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie 同意" aria-hidden="true">
+        <p>我们使用 Google Analytics Cookie 来了解访问者如何使用本网站。您的 JSON 始终在浏览器中本地处理。请参阅我们的<a href="privacy.html">隐私政策</a>。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒绝</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">接受</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

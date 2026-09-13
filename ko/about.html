@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>소개 – JSON Tool</title>
+    <meta name="description" content="JSON Tool이 하는 일, 대상 사용자, 운영 방식, 의도적으로 하지 않는 일. 무료 브라우저 기반 JSON 포맷터, 미니파이어, 검증기." />
+    <link rel="canonical" href="https://json-tool.com/ko/about.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/about.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/about.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/about.html" />
+    <link rel="alternate" hreflang="zh" href="https://json-tool.com/zh/about.html" />
+    <link rel="alternate" hreflang="zh-hant" href="https://json-tool.com/zh-hant/about.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/about.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/about.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/about.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/about.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/about.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="소개 – JSON Tool" />
+    <meta property="og:description" content="JSON Tool이 하는 일, 대상 사용자, 의도적으로 하지 않는 일." />
+    <meta property="og:url" content="https://json-tool.com/ko/about.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – 브라우저에서 JSON 포맷, 미니파이, 검증" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="소개 – JSON Tool" />
+    <meta name="twitter:description" content="JSON Tool이 하는 일, 대상 사용자, 의도적으로 하지 않는 일." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – 브라우저에서 JSON 포맷, 미니파이, 검증" />
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/" class="active" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/" hreflang="zh" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="다크 모드 전환">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">다크</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; JSON 도구로 돌아가기</a></p>
+            <h1>소개</h1>
+            <p class="updated">최종 업데이트: 2026년 9월 12일</p>
+
+            <p class="lead">JSON Tool은 JSON을 포맷, 미니파이, 검증하는 무료 단일 페이지 유틸리티입니다. 한 명의 개발자가 운영하는 독립 프로젝트이며, 도구 전체가 HTML 파일 하나로 구성되어 있고 자체 백엔드가 없습니다.</p>
+
+            <h2>하는 일</h2>
+            <ul>
+                <li><strong>포맷</strong> — 선택한 들여쓰기 너비(1~20)로 JSON을 보기 좋게 출력합니다.</li>
+                <li><strong>미니파이</strong> — 모든 공백을 제거하여 페이로드를 줄입니다.</li>
+                <li><strong>검증</strong> — 입력이 유효한 JSON이 아닐 때 정확한 파서 오류를 보고합니다.</li>
+                <li><strong>키 정렬</strong> — 배열 안에 중첩된 객체를 포함해 재귀적으로 수행되므로 두 페이로드를 줄 단위로 비교할 수 있습니다.</li>
+                <li><strong>편안하게 읽기</strong> — 줄 번호, 문자 수, 라이트/다크 테마, 클립보드 복사, <code>formatted.json</code> 다운로드.</li>
+            </ul>
+
+            <h2>대상 사용자</h2>
+            <p>API 응답을 살펴보는 개발자, JSON 내보내기를 확인하는 분석가, 잘못된 페이로드를 디버깅하는 모든 사람. JSON이 무엇인지 전혀 모르는 사람도 쓸 수 있습니다. 붙여넣고 포맷을 누른 다음 결과를 읽으면 됩니다.</p>
+            <p>설계의 최우선 순위는 민감한 페이로드를 내 기기에 보관하는 것입니다. 설정 덤프, 토큰, 고객 기록, 내부 API 응답은 정확히 다른 곳에 업로드해서 다시 포맷하면 안 되는 것들입니다. 그래서 이 도구는 업로드하지 않습니다.</p>
+
+            <h2>작동 방식</h2>
+            <p>포맷은 브라우저에서 JavaScript 엔진 자체의 JSON 파서를 사용해 이루어집니다. 브라우저가 JSON을 읽을 때 사용하는 것과 같은 코드 경로입니다. 처리를 위해 서버로 전송되는 것은 없으며, 붙여넣은 내용의 대기열, 저장, 로그도 없습니다. 페이지가 로드된 후에는 네트워크를 끊고 계속 작업할 수 있습니다.</p>
+
+            <h2>의도적으로 하지 않는 일</h2>
+            <ul>
+                <li>계정 없음, 로그인 없음, 사용 제한 없음, 유료화 없음.</li>
+                <li>JSON에 대한 서버 측 처리 없음, 입력한 내용을 복구할 방법 없음.</li>
+            </ul>
+
+            <h2>알려진 제한 사항</h2>
+            <p>엄격한 JSON만 허용합니다. 주석, 후행 쉼표, 작은따옴표, JSON5, JSONC, 줄바꿈 구분 JSON(NDJSON)은 거부됩니다. 이는 JSON 파서의 동작이며 버그가 아닙니다. JSON Schema 검증, JSONPath 쿼리, diff 보기, YAML/XML/CSV 변환은 없습니다.</p>
+            <p>모든 것이 브라우저 탭에서 실행되므로 매우 큰 입력은 브라우저 메모리에 제약을 받아 탭이 응답하지 않을 수 있습니다. 몇 메가바이트가 넘는 파일은 통째로 붙여넣지 말고 분할하세요.</p>
+
+            <h2>비용</h2>
+            <p>무료이며 유료 요금제가 없습니다. 무엇을 수집하고 수집하지 않는지는 <a href="privacy.html">개인정보처리방침</a>에 자세히 설명되어 있습니다.</p>
+
+            <div class="notice">
+                <p>무언가 잘못된 점을 발견했거나 기능 추가를 원하시나요? <a href="contact.html">연락해 주세요</a> — 입력 내용과 브라우저 이름이 포함된 버그 보고가 가장 유용합니다.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 모든 권리 보유.</span>
+            <span>
+                <a href="index.html">홈</a> &middot;
+                <a href="about.html">소개</a> &middot;
+                <a href="privacy.html">개인정보처리방침</a> &middot;
+                <a href="terms.html">이용약관</a> &middot;
+                <a href="#" id="cookieSettings">쿠키 설정</a> &middot;
+                <a href="contact.html">문의</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="쿠키 동의" aria-hidden="true">
+        <p>Google Analytics 쿠키를 사용하여 방문자의 사이트 이용 방식을 파악합니다. JSON은 항상 브라우저 안에서 로컬로 처리됩니다. 자세한 내용은 <a href="privacy.html">개인정보처리방침</a>을 참조하세요.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">거부</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">동의</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>
