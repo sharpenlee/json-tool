@@ -10,8 +10,8 @@
     <link rel="alternate" hreflang="en" href="https://json-tool.com/about.html" />
     <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/about.html" />
     <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/about.html" />
-    <link rel="alternate" hreflang="zh" href="https://json-tool.com/zh/about.html" />
-    <link rel="alternate" hreflang="zh-hant" href="https://json-tool.com/zh-hant/about.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/about.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/about.html" />
     <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/about.html" />
     <link rel="alternate" hreflang="es" href="https://json-tool.com/es/about.html" />
     <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/about.html" />
@@ -46,7 +46,7 @@
                     <a href="/" hreflang="en" lang="en">EN</a>
                     <a href="/ko/" hreflang="ko" lang="ko">한국어</a>
                     <a href="/ja/" hreflang="ja" lang="ja">日本語</a>
-                    <a href="/zh/" hreflang="zh" lang="zh-Hans">简体</a>
+                    <a href="/zh/" hreflang="zh-Hans" lang="zh-Hans">简体</a>
                     <a href="/zh-hant/" class="active" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
                     <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
                     <a href="/es/" hreflang="es" lang="es">Español</a>
@@ -70,7 +70,7 @@
             <ul>
                 <li><strong>格式化</strong> — 以您選擇的 1 到 20 縮排寬度美化 JSON。</li>
                 <li><strong>壓縮</strong> — 移除所有空白以縮小資料體積。</li>
-                <li><strong>驗證</strong> — 當輸入不是有效 JSON 時，報告準確的剖析錯誤。</li>
+                <li><strong>驗證</strong> — 當輸入不是有效 JSON 時，報告準確的解析錯誤。</li>
                 <li><strong>鍵排序</strong> — 遞迴進行，包括陣列內巢狀的物件，方便兩個資料逐行比對。</li>
                 <li><strong>舒適閱讀</strong> — 行號、字元計數、淺色和深色主題、複製到剪貼簿，以及下載為 <code>formatted.json</code>。</li>
             </ul>
@@ -80,7 +80,7 @@
             <p>設計上的首要原則是讓敏感資料留在您的裝置上。組態匯出、權杖、客戶記錄和內部 API 回應，恰恰是不應該貼上到會上傳資料再重新格式化的網站上的內容。所以本工具不會上傳。</p>
 
             <h2>運作原理</h2>
-            <p>格式化在您的瀏覽器中透過 JavaScript 引擎內建的 JSON 剖析器完成，也就是您的瀏覽器讀取 JSON 時使用的同一套程式碼路徑。沒有內容被送到伺服器處理，也不存在您所貼上內容的佇列、儲存或日誌。頁面載入完成後，您可以中斷網路繼續使用。</p>
+            <p>格式化在您的瀏覽器中透過 JavaScript 引擎內建的 JSON 解析器完成，也就是您的瀏覽器讀取 JSON 時使用的同一套程式碼路徑。沒有內容被送到伺服器處理，也不存在您所貼上內容的佇列、儲存或日誌。頁面載入完成後，您可以中斷網路繼續使用。</p>
 
             <h2>它刻意不做的事情</h2>
             <ul>
@@ -89,7 +89,7 @@
             </ul>
 
             <h2>已知限制</h2>
-            <p>它只接受嚴格的 JSON。註解、尾端逗號、單引號、JSON5、JSONC 以及換行分隔的 JSON（NDJSON）都會被拒絕，這是 JSON 剖析器的行為，並非缺陷。沒有 JSON Schema 驗證、JSONPath 查詢、差異檢視，也沒有與 YAML、XML 或 CSV 之間的轉換。</p>
+            <p>它只接受嚴格的 JSON。註解、尾端逗號、單引號、JSON5、JSONC 以及換行分隔的 JSON（NDJSON）都會被拒絕，這是 JSON 解析器的行為，並非缺陷。沒有 JSON Schema 驗證、JSONPath 查詢、差異檢視，也沒有與 YAML、XML 或 CSV 之間的轉換。</p>
             <p>由於一切都在您的瀏覽器分頁中執行，非常大的輸入會受到瀏覽器記憶體的限制，並可能導致分頁沒有回應。對於超過數百萬位元組的檔案，請拆分後再貼上，而不是整份貼上。</p>
 
             <h2>費用</h2>
