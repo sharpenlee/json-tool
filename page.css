@@ -97,6 +97,37 @@ header {
 }
 .theme-toggle:hover { background: var(--btn-hover); }
 
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.lang-select {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.1rem 0.35rem;
+    font-size: 0.78rem;
+}
+.lang-select a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.2rem 0.45rem;
+    border-radius: 20px;
+    transition: background 0.15s, color 0.15s;
+}
+.lang-select a:hover {
+    color: var(--text-primary);
+    background: var(--btn-hover);
+}
+.lang-select a.active {
+    color: var(--primary);
+    font-weight: 700;
+}
+
 main {
     background: var(--bg-tool);
     border-radius: 1.25rem;
