@@ -1,6 +1,8 @@
 # JSON Tool
 
-A browser-only JSON formatter. The app itself is a single `index.html` at the repo root — no build step and no third-party dependencies.
+A browser-only JSON toolkit: [json-tool.com](https://json-tool.com/). The app is plain HTML, CSS and JavaScript with no build step, no bundler and no third-party dependencies — every file in this repo is what gets served.
+
+Licensed under MIT; see [LICENSE](LICENSE).
 
 ## Features
 
@@ -11,6 +13,20 @@ A browser-only JSON formatter. The app itself is a single `index.html` at the re
 - Download the result as `formatted.json`, clear the editor, or load sample data
 - Light/dark theme, remembered in `localStorage`
 - `Ctrl/Cmd + Enter` formats the input
+
+## Repository structure
+
+Fifty published pages, all at fixed paths, plus the shared assets they reference:
+
+| Path | What it is |
+| --- | --- |
+| `index.html` | The formatter — the tool itself, in English |
+| `json-validator.html`, `json-minifier.html`, `sort-json-keys.html`, `pretty-print-json.html`, `json-syntax.html` | English-only long-tail pages; the tool pages share `tool-page.css` |
+| `about.html`, `privacy.html`, `terms.html`, `contact.html` | Informational and legal pages |
+| `es/ fr/ ja/ ko/ pt/ ru/ zh/ zh-hant/` | Eight locales, each a translated copy of those five page types |
+| `page.css`, `page.js`, `tool-page.css`, `consent.css`, `consent.js` | Shared styles and behaviour — the only non-page code in the repo |
+| `sitemap.xml`, `robots.txt`, `<32-hex>.txt` | Crawl files; the hex file is the IndexNow key, which the protocol requires to sit at the site root |
+| `og-image.html`, `og-image.png`, `favicon.svg`, `favicon.ico` | Social card and icons. `og-image.html` is the design source for the PNG and is listed in `.vercelignore`, so it is never published |
 
 ## Running locally
 
@@ -49,3 +65,9 @@ English is the source of truth and lives at the repo root. Eight locale director
 - Every page declares `<link rel="alternate" hreflang="…">` for all nine locales plus `x-default` in its `<head>`, and `sitemap.xml` groups the locales of each page type into one `<url>` entry carrying the same alternates.
 
 **Maintenance note:** the tool page's inline `<script>` is duplicated across all nine copies (only its user-facing string literals differ), so any change to the tool's logic must be applied to `index.html` and every locale's `index.html`. `consent.js`, `page.js` and `page.css` contain no user-facing text and are already shared.
+
+## Contributing
+
+Issues and pull requests are welcome, especially for incorrect behaviour in the parser or validator, awkward translations, and accessibility problems. Please open an issue before a large change so the effort is not wasted.
+
+Two boundaries are deliberate, and both are stated on the [about page](https://json-tool.com/about.html): the tool does not send anything anywhere, so there is no account, no history and no server-side storage; and it does not offer a diff view. A diff would be a different product with different guarantees, and the site is better off being one thing done well. Proposals that would cross either line are unlikely to be merged — that is a positioning decision, not an oversight.
