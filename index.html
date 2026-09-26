@@ -54,7 +54,7 @@
         }
     </script>
 
-    <!-- Structured Data: FAQPage -->
+    <!-- Structured Data: FAQPage — every entry below mirrors the visible FAQ text verbatim -->
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -62,15 +62,47 @@
             "mainEntity": [{
                 "@type": "Question",
                 "name": "Is this JSON formatter free?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Yes, it is completely free to use with no hidden charges or limits." }
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes, it is completely free to use with no limits or sign‑up required." }
             }, {
                 "@type": "Question",
-                "name": "Is my JSON data uploaded to a server?",
-                "acceptedAnswer": { "@type": "Answer", "text": "No. All processing is done locally in your browser. Your JSON never leaves your device." }
+                "name": "Is my JSON data safe?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. Your data never leaves your browser. We do not store, transmit, or share any JSON you paste." }
             }, {
                 "@type": "Question",
-                "name": "What JSON formats are supported?",
-                "acceptedAnswer": { "@type": "Answer", "text": "You can format (beautify), minify (compress), and validate any valid JSON data." }
+                "name": "What does this tool do?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It formats (beautifies) JSON with custom indentation, minifies it to reduce size, and validates syntax. It also shows line numbers and supports key sorting." }
+            }, {
+                "@type": "Question",
+                "name": "Can I use it offline?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes, once the page loads, it works entirely offline. You can even save it for offline use." }
+            }, {
+                "@type": "Question",
+                "name": "How do I format JSON?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Paste it into the box at the top of the page and press Format, or hit Ctrl/Cmd + Enter. The document is parsed and rewritten with indentation, and the indent width is yours to choose from 1 to 20." }
+            }, {
+                "@type": "Question",
+                "name": "Can I use this as a JSON validator?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Formatting, minifying and sorting all require the input to parse first, and when it does not, the parser's own error is reported. For the exact line, column and likely cause there is a validator page on this site." }
+            }, {
+                "@type": "Question",
+                "name": "Can I sort JSON keys alphabetically?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. The Sort keys toggle rebuilds every object with its keys in alphabetical order, recursively through objects nested inside arrays, while array element order is left untouched." }
+            }, {
+                "@type": "Question",
+                "name": "What is the difference between formatting and minifying?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Formatting adds indentation and line breaks so people can read the data; minifying removes exactly that whitespace so machines transfer less of it. Both are reversible and neither changes the data." }
+            }, {
+                "@type": "Question",
+                "name": "Does it handle large JSON files?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Everything runs in your browser tab, so the limit is your available memory. Multi-megabyte documents can make the tab unresponsive, so split them or work with one section at a time." }
+            }, {
+                "@type": "Question",
+                "name": "How do I indent JSON with 4 spaces?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Set the Indent field to 4 before pressing Format. It accepts any width from 1 to 20, and changing it re-runs the last action, so you can switch a document between 2 and 4 spaces without pasting it again." }
+            }, {
+                "@type": "Question",
+                "name": "Does it work on JSON arrays, not just objects?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. A document whose top-level value is an array formats and minifies the same way, and nested arrays inside objects are handled too. Array element order is never changed — only object keys are sorted, when you turn that option on." }
             }]
         }
     </script>
@@ -648,6 +680,18 @@
             list-style: disc;
             padding-left: 1.5rem;
         }
+        .seo-content ol {
+            list-style: decimal;
+            padding-left: 1.5rem;
+        }
+        .seo-content code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.88em;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 0.08rem 0.32rem;
+            border-radius: 5px;
+        }
         .seo-content .faq-item {
             margin-bottom: 1.1rem;
         }
@@ -883,7 +927,51 @@
                     <a href="json-validator.html">JSON Validator</a> for the exact line and column of a syntax error,
                     <a href="json-minifier.html">JSON Minifier</a> to compress a payload and see the bytes saved,
                     <a href="pretty-print-json.html">pretty-printing JSON</a> in a terminal or in code,
+                    <a href="sort-json-keys.html">sorting JSON keys</a> recursively for a clean diff,
                     and a <a href="json-syntax.html">JSON syntax cheat sheet</a>.</p>
+            </div>
+            <div>
+                <h2>How to Format JSON</h2>
+                <ol>
+                    <li>Paste your JSON into the input box above — an API response, a config file, a log line.</li>
+                    <li>Press <strong>Format</strong>, or hit <code>Ctrl</code>/<code>Cmd + Enter</code>. The document is parsed and re‑written with indentation.</li>
+                    <li>Choose the indent width from 1 to 20 if you need to match your project's style — changing it re‑runs the last action.</li>
+                    <li>Copy the result, download it as <code>formatted.json</code>, or switch to <strong>Minify</strong> when you want the opposite.</li>
+                </ol>
+                <p>If the input is not valid JSON, nothing is reformatted: the parser's own error is shown instead, and <a href="json-validator.html">the validator</a> gives its exact line and column with the likely cause.</p>
+            </div>
+            <div>
+                <h2>What Is JSON?</h2>
+                <p>JSON (JavaScript Object Notation) is a text format for structured data, defined by RFC 8259 and used by almost every HTTP API, config file and document store today. It has six value types — string, number, object, array, <code>true</code>/<code>false</code> and <code>null</code> — and one document holds exactly one of them.</p>
+                <ul style="margin-top:0.75rem;">
+                    <li><strong>Objects</strong> are quoted keys mapped to values: <code>{"port": 8080}</code>.</li>
+                    <li><strong>Arrays</strong> are ordered lists of any values: <code>[1, "two", null]</code>.</li>
+                    <li><strong>Nothing else is allowed:</strong> no comments, no trailing commas, no single quotes.</li>
+                </ul>
+                <p style="margin-top:0.75rem;">Because it is written by machines and read by people, almost every real workflow needs both directions: formatted for review, minified for transport. The rules and the mistakes that break parsers are listed on the <a href="json-syntax.html">JSON syntax cheat sheet</a>.</p>
+            </div>
+            <div>
+                <h2>Formatter, Beautifier, Pretty Printer or Minifier?</h2>
+                <p>These four names describe two operations on opposite ends of the same spectrum, and the words get used
+                    interchangeably — which is why searching for one often lands you on a page that does another:</p>
+                <ul style="margin-top:0.75rem;">
+                    <li><strong>Formatting</strong> is the general term: rewrite JSON so each value sits on its own line,
+                        indented by depth. <a href="pretty-print-json.html">Pretty‑printing</a> means the same thing;
+                        “pretty printer” is the name the tool world uses for the output side of it.</li>
+                    <li><strong>Beautifying</strong> is formatting with the extras — consistent spacing, sorted keys,
+                        sometimes syntax colouring. This page’s <strong>Sort keys</strong> and indent width are the
+                        “beautify” part of that definition.</li>
+                    <li><strong>Minifying</strong> is the exact reverse: delete the same whitespace to shrink the payload
+                        for transport. It is not compression — <a href="json-minifier.html">the minifier</a> shows the
+                        byte count before and after.</li>
+                    <li><strong>Validating and linting</strong> answer a different question entirely: does this parse at
+                        all? Nothing here reformats a document that fails, and
+                        <a href="json-validator.html">the validator</a> reports where.</li>
+                </ul>
+                <p style="margin-top:0.75rem;">Because they are all the same parse‑and‑serialise step, one page can do
+                    all of it — that is what the buttons above are for. Array order is never changed by any of them:
+                    in JSON, an array’s order is data, while an object’s key order is not
+                    (<a href="json-syntax.html">syntax rules</a>).</p>
             </div>
             <div>
                 <h2>Frequently Asked Questions</h2>
@@ -902,6 +990,34 @@
                 <div class="faq-item">
                     <h3>Can I use it offline?</h3>
                     <p>Yes, once the page loads, it works entirely offline. You can even save it for offline use.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I format JSON?</h3>
+                    <p>Paste it into the box at the top of the page and press <strong>Format</strong>, or hit <code>Ctrl/Cmd + Enter</code>. The document is parsed and rewritten with indentation, and the indent width is yours to choose from 1 to 20.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I use this as a JSON validator?</h3>
+                    <p>Yes. Formatting, minifying and sorting all require the input to parse first, and when it does not, the parser's own error is reported. For the exact line, column and likely cause there is a <a href="json-validator.html">validator page</a> on this site.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I sort JSON keys alphabetically?</h3>
+                    <p>Yes. The <strong>Sort keys</strong> toggle rebuilds every object with its keys in alphabetical order, recursively through objects nested inside arrays, while array element order is left untouched.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What is the difference between formatting and minifying?</h3>
+                    <p>Formatting adds indentation and line breaks so people can read the data; minifying removes exactly that whitespace so machines transfer less of it. Both are reversible and neither changes the data.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Does it handle large JSON files?</h3>
+                    <p>Everything runs in your browser tab, so the limit is your available memory. Multi-megabyte documents can make the tab unresponsive, so split them or work with one section at a time.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>How do I indent JSON with 4 spaces?</h3>
+                    <p>Set the Indent field to 4 before pressing Format. It accepts any width from 1 to 20, and changing it re-runs the last action, so you can switch a document between 2 and 4 spaces without pasting it again.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Does it work on JSON arrays, not just objects?</h3>
+                    <p>Yes. A document whose top-level value is an array formats and minifies the same way, and nested arrays inside objects are handled too. Array element order is never changed — only object keys are sorted, when you turn that option on.</p>
                 </div>
             </div>
         </section>
