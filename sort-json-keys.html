@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sort JSON Keys – Alphabetical and Recursive, Free Online</title>
+    <meta name="description" content="Sort JSON keys alphabetically, recursively through arrays, so two payloads compare line by line. Runs in your browser, plus the jq and Python one-liners." />
+    <link rel="canonical" href="https://json-tool.com/sort-json-keys.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sort JSON Keys – Alphabetical and Recursive, Free Online" />
+    <meta property="og:description" content="Put every JSON object's keys in alphabetical order, recursively, so two documents diff cleanly. No upload, and the jq and Python one-liners too." />
+    <meta property="og:url" content="https://json-tool.com/sort-json-keys.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sort JSON Keys – Alphabetical and Recursive, Free Online" />
+    <meta name="twitter:description" content="Put every JSON object's keys in alphabetical order, recursively, so two documents diff cleanly. No upload." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Sort JSON Keys",
+            "url": "https://json-tool.com/sort-json-keys.html",
+            "description": "Sort the keys of every JSON object alphabetically, recursively through arrays, without changing array order. Runs locally in the browser.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Does sorting JSON keys change the data?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. The JSON specification defines an object as an unordered set of name/value pairs, so reordering keys leaves the document semantically identical and parsing either form yields the same value. Arrays are the opposite case: their order is part of the data, so a sorter must reorder keys only and leave array elements exactly where they were." }
+            }, {
+                "@type": "Question",
+                "name": "Why would I want sorted keys?",
+                "acceptedAnswer": { "@type": "Answer", "text": "To compare two documents. API responses and generated configs often carry the same fields in different orders, which makes a text diff look like everything changed. Sorting keys recursively first turns that noise into a diff that shows only real differences, and the same trick stabilises snapshot tests and reviewable config files." }
+            }, {
+                "@type": "Question",
+                "name": "How do I sort JSON keys in jq?",
+                "acceptedAnswer": { "@type": "Answer", "text": "jq 'walk(if type == \"object\" then to_entries | sort_by(.key) | from_entries else . end)' rewrites every object in the document, including objects nested inside arrays, while leaving array order untouched. jq 1.6 or newer is required for walk." }
+            }, {
+                "@type": "Question",
+                "name": "How do I sort keys in Python or JavaScript?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Python does it in one call: json.dumps(data, sort_keys=True) sorts recursively through every object it finds. JavaScript has no built-in option, so either walk the structure and rebuild each object with sorted keys, or pass a sorted key array as the JSON.stringify replacer — noting that the replacer only affects the top level unless you build it recursively." }
+            }, {
+                "@type": "Question",
+                "name": "Does JSON have a canonical key order?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Because objects are unordered by definition, parsers are free to preserve insertion order — JavaScript does — or reorder them. That is precisely why sorting deliberately, with the same collation on both sides, is the reliable way to compare two files." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>Sort JSON Keys</h1>
+            <p class="updated">Last updated: 26 September 2026</p>
+
+            <p class="lead">Put every object's keys in alphabetical order — recursively, so objects nested inside arrays are sorted too — while leaving array element order exactly as it was. The point is comparison: two payloads that differ only in key order start lining up line by line.</p>
+
+            <div class="tools-nav">
+                <span>Related:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Runs locally</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">Recursive</span>
+                    <span class="badge">Array order preserved</span>
+                </div>
+
+                <label class="field-label" for="jsonInput">JSON to sort <span aria-hidden="true" class="count" id="inputCount">0 characters</span></label>
+                <textarea id="jsonInput" class="json-field" spellcheck="false" placeholder='{"b":1,"a":{"z":1,"y":2}}'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="order">Order
+                        <select id="order">
+                            <option value="asc" selected>A → Z</option>
+                            <option value="desc">Z → A</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="indentOut">Output
+                        <select id="indentOut">
+                            <option value="2" selected>Indented</option>
+                            <option value="0">Single line</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary" id="sortBtn" type="button">Sort keys</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Try an example</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button">Copy result</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                </div>
+
+                <div class="result" id="result" role="status"></div>
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="jsonOutput" style="margin-top:1.1rem;">Sorted JSON <span aria-hidden="true" class="count" id="outputCount">0 characters</span></label>
+                    <textarea id="jsonOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                </div>
+            </div>
+
+            <h2>What sorting does to each shape</h2>
+            <ul>
+                <li><strong>Objects</strong> — keys are emitted in the order you choose. Keys are compared as plain strings, so <code>"B"</code> sorts before <code>"a"</code> in ASCII order; mixed-case keys may not interleave the way a spreadsheet would sort them.</li>
+                <li><strong>Arrays</strong> — never reordered. Element position is data in JSON, so <code>[3, 1, 2]</code> stays <code>[3, 1, 2]</code>. Objects <em>inside</em> the array still get their keys sorted.</li>
+                <li><strong>Nesting</strong> — the walk is depth-first through every object and array in the document, so a config file with objects inside arrays inside objects comes out fully sorted.</li>
+                <li><strong>Duplicates</strong> — if the input repeats a key, one of the values survives and the other is dropped when the document is parsed, before sorting begins. That is JSON's own behaviour, not this tool's.</li>
+            </ul>
+
+            <h2>Why sorted keys make diffs readable</h2>
+            <p>Two API responses can describe the identical record yet produce a wall of red and green, because one backend emitted <code>{"id": 7, "state": "paid"}</code> and the other <code>{"state": "paid", "id": 7}</code>. The JSON grammar calls an object an unordered set of pairs, so both are equally correct — and every text diff is order-sensitive. Sort both sides first and the comparison collapses to the fields that actually changed. The same habit fixes three common situations:</p>
+            <ul>
+                <li><strong>Snapshot and golden-file tests</strong> — a serialised expectation stops failing when a library changes the order it inserts keys.</li>
+                <li><strong>Config review</strong> — committed JSON that is always sorted produces readable history instead of churn.</li>
+                <li><strong>Merging two documents</strong> — matching structures sit next to each other, so manual merges stop being blind.</li>
+            </ul>
+
+            <h2>Sorting outside the browser</h2>
+            <ul>
+                <li><strong>jq</strong> — <code>jq 'walk(if type == "object" then to_entries | sort_by(.key) | from_entries else . end)'</code> sorts every object recursively and leaves arrays alone. Needs jq 1.6 or newer for <code>walk</code>.</li>
+                <li><strong>Python</strong> — <code>json.dumps(data, sort_keys=True, indent=2, ensure_ascii=False)</code>. The <code>sort_keys</code> flag already applies at every depth.</li>
+                <li><strong>Node</strong> — <code>JSON.stringify(value, keys, 2)</code> accepts an array of keys to order output, but that replacer only governs the top level, so a recursive rebuild is what you usually want.</li>
+                <li><strong>Go</strong> — <code>map[string]T</code> marshals with keys sorted already; ordered structs keep field order, so the language decides for you.</li>
+                <li><strong>Command line against a file</strong> — <code>python3 -m json.tool --sort-keys config.json</code> writes the sorted document to stdout.</li>
+            </ul>
+
+            <h2>Where this differs from the formatter</h2>
+            <p><a href="index.html">The main tool</a> does this same recursive sort as a toggle next to formatting, and adds line numbers, an indent width from 1 to 20, minification, download and character counts. Use it when sorting is one step in reading or cleaning a payload; use this page when sorting is all you want.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>Does sorting JSON keys change the data?</h3>
+                <p>No. The JSON specification defines an object as an unordered set of name/value pairs, so reordering keys leaves the document semantically identical and parsing either form yields the same value. Arrays are the opposite case: their order is part of the data, so a sorter must reorder keys only and leave array elements exactly where they were.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why would I want sorted keys?</h3>
+                <p>To compare two documents. API responses and generated configs often carry the same fields in different orders, which makes a text diff look like everything changed. Sorting keys recursively first turns that noise into a diff that shows only real differences, and the same trick stabilises snapshot tests and reviewable config files.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do I sort JSON keys in jq?</h3>
+                <p><code>jq 'walk(if type == "object" then to_entries | sort_by(.key) | from_entries else . end)'</code> rewrites every object in the document, including objects nested inside arrays, while leaving array order untouched. jq 1.6 or newer is required for <code>walk</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do I sort keys in Python or JavaScript?</h3>
+                <p>Python does it in one call: <code>json.dumps(data, sort_keys=True)</code> sorts recursively through every object it finds. JavaScript has no built-in option, so either walk the structure and rebuild each object with sorted keys, or pass a sorted key array as the <code>JSON.stringify</code> replacer — noting that the replacer only affects the top level unless you build it recursively.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does JSON have a canonical key order?</h3>
+                <p>No. Because objects are unordered by definition, parsers are free to preserve insertion order — JavaScript does — or reorder them. That is precisely why sorting deliberately, with the same collation on both sides, is the reliable way to compare two files.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="sort-json-keys.html">Sort keys</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print</a> &middot;
+                <a href="json-syntax.html">JSON syntax</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var input = document.getElementById('jsonInput');
+            var output = document.getElementById('jsonOutput');
+            var order = document.getElementById('order');
+            var indentOut = document.getElementById('indentOut');
+            var wrap = document.getElementById('outputWrap');
+            var result = document.getElementById('result');
+            var stats = document.getElementById('stats');
+            var inputCount = document.getElementById('inputCount');
+            var outputCount = document.getElementById('outputCount');
+            var EXAMPLE = '{"user":{"name":"Ada","id":7},"roles":[{"admin":true,"scope":"all"},{"region":"eu","level":3}],"active":true,"beta":false}';
+
+            function plural(n) { return n.toLocaleString() + ' character' + (n === 1 ? '' : 's'); }
+            function paint() {
+                inputCount.textContent = plural(input.value.length);
+                outputCount.textContent = plural(output.value.length);
+            }
+            function flash(cls, head, text) {
+                result.className = 'result show ' + cls;
+                result.textContent = '';
+                var strong = document.createElement('strong');
+                strong.textContent = head;
+                result.appendChild(strong);
+                var span = document.createElement('span');
+                span.textContent = text;
+                result.appendChild(span);
+            }
+            function link(text, href) {
+                var a = document.createElement('a');
+                a.href = href;
+                a.textContent = text;
+                a.style.display = 'block';
+                a.style.marginTop = '0.6rem';
+                result.appendChild(a);
+            }
+
+            /* Depth-first rebuild: objects get sorted keys, arrays keep their order. */
+            function sortDeep(value, desc) {
+                if (Array.isArray(value)) return value.map(function (v) { return sortDeep(v, desc); });
+                if (value && typeof value === "object") {
+                    var keys = Object.keys(value).sort();
+                    if (desc) keys.reverse();
+                    var rebuilt = {};
+                    keys.forEach(function (k) { rebuilt[k] = sortDeep(value[k], desc); });
+                    return rebuilt;
+                }
+                return value;
+            }
+
+            function countObjects(value) {
+                if (Array.isArray(value)) return value.reduce(function (n, v) { return n + countObjects(v); }, 0);
+                if (value && typeof value === "object") {
+                    return 1 + Object.keys(value).reduce(function (n, k) { return n + countObjects(value[k]); }, 0);
+                }
+                return 0;
+            }
+
+            function sort() {
+                paint();
+                var text = input.value;
+                if (!text.trim()) {
+                    result.className = 'result';
+                    wrap.hidden = true;
+                    output.value = '';
+                    stats.textContent = '';
+                    return;
+                }
+                try {
+                    var parsed = JSON.parse(text);
+                    var sorted = sortDeep(parsed, order.value === 'desc');
+                    var indent = indentOut.value === '0' ? undefined : 2;
+                    output.value = JSON.stringify(sorted, null, indent);
+                    wrap.hidden = false;
+                    var objects = countObjects(parsed);
+                    var moved = JSON.stringify(parsed) !== JSON.stringify(sorted);
+                    flash('valid', moved ? '✓ Keys sorted' : '✓ Already sorted',
+                        objects.toLocaleString() + ' object' + (objects === 1 ? '' : 's') + ' checked'
+                        + (moved ? ', order changed' : ', nothing needed moving')
+                        + '. Array elements were left in place, since their order is data.');
+                    stats.textContent = 'Input ' + plural(text.length) + ' · Output ' + plural(output.value.length);
+                    link('Need indentation and line numbers too? The formatter does both.', 'index.html');
+                    paint();
+                } catch (err) {
+                    wrap.hidden = true;
+                    output.value = '';
+                    stats.textContent = '';
+                    flash('invalid', '✕ Not valid JSON', err.message + '. Sorting needs a document that parses.');
+                    link('Find the exact line and column with the validator →', 'json-validator.html');
+                }
+            }
+
+            document.getElementById('sortBtn').addEventListener('click', sort);
+            document.getElementById('exampleBtn').addEventListener('click', function () {
+                input.value = EXAMPLE;
+                sort();
+                input.focus();
+            });
+            document.getElementById('copyBtn').addEventListener('click', function () {
+                if (!output.value) return;
+                var btn = this;
+                navigator.clipboard.writeText(output.value).then(function () {
+                    btn.textContent = 'Copied ✓';
+                    setTimeout(function () { btn.textContent = 'Copy result'; }, 1400);
+                });
+            });
+            document.getElementById('clearBtn').addEventListener('click', function () {
+                input.value = '';
+                output.value = '';
+                wrap.hidden = true;
+                stats.textContent = '';
+                result.className = 'result';
+                paint();
+                input.focus();
+            });
+            order.addEventListener('change', function () { if (output.value) sort(); });
+            indentOut.addEventListener('change', function () { if (output.value) sort(); });
+            input.addEventListener('input', paint);
+            input.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    sort();
+                }
+            });
+            paint();
+        })();
+    </script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>

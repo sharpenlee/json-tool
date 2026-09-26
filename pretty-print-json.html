@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pretty-Print JSON – Format JSON in Browser, Terminal or Code</title>
-    <meta name="description" content="Pretty-print JSON with indentation so it can be read: a free browser tool plus the exact commands for jq, Python, Node, curl, VS Code and Go. Nothing is uploaded." />
+    <meta name="description" content="Pretty-print JSON in the browser, or with jq, Python, Node and curl. Adds indentation without touching the data, and nothing is uploaded." />
     <link rel="canonical" href="https://json-tool.com/pretty-print-json.html" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
 
@@ -34,6 +34,9 @@
             "url": "https://json-tool.com/pretty-print-json.html",
             "description": "How to pretty-print JSON: reformat minified or single-line JSON with indentation in the browser, from the command line, or inside application code.",
             "inLanguage": "en",
+            "datePublished": "2026-09-26",
+            "dateModified": "2026-09-26",
+            "publisher": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" },
             "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
         }
     </script>
@@ -89,7 +92,8 @@
                 <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
                 <a href="json-validator.html">JSON Validator</a> &middot;
                 <a href="json-minifier.html">JSON Minifier</a> &middot;
-                <a href="json-syntax.html">JSON syntax cheat sheet</a>
+                <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
+                <a href="sort-json-keys.html">Sort JSON keys</a>
             </div>
 
             <div class="tool-card">
@@ -163,11 +167,11 @@
             </div>
             <div class="faq-item">
                 <h3>How do I pretty-print JSON in a terminal?</h3>
-                <p>With <code>jq '.' file.json</code> to print it indented. Without jq, <code>python3 -m json.tool file.json</code> does the same job, and <code>node -e</code> with <code>JSON.parse</code> plus <code>JSON.stringify</code> using a two-space indent works too. Any of them can read a pipe, so <code>curl -s https://api.example.com/data | jq .</code> pretty-prints a live response.</p>
+                <p>With <code>jq</code>: run <code>jq '.' file.json</code> to print it indented. Without jq, <code>python3 -m json.tool file.json</code> does the same job, and <code>node -e</code> with <code>JSON.parse</code> plus <code>JSON.stringify</code> using a two-space indent works too. Any of them can read a pipe, so <code>curl -s https://api.example.com/data | jq .</code> pretty-prints a live response.</p>
             </div>
             <div class="faq-item">
                 <h3>Why does my pretty-printed JSON have escaped unicode?</h3>
-                <p>Some writers escape every non-ASCII character by default — Python's <code>json.dump</code> turns an accented letter into a six-character <code>\u00e9</code> sequence. Pass <code>ensure_ascii=False</code> to keep the real characters, which stays valid JSON and is far easier to read.</p>
+                <p>Some writers escape every non-ASCII character by default — Python's <code>json.dump</code> turns an accented letter into a six-character <code>\uXXXX</code> escape. Pass <code>ensure_ascii=False</code> to keep the real characters, which stays valid JSON and is far easier to read.</p>
             </div>
             <div class="faq-item">
                 <h3>Should pretty-printed JSON be committed to Git?</h3>
