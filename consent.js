@@ -31,6 +31,9 @@
         rejectBtn.focus();
     }
     function hideBanner() {
+        // Focus inside the banner would be hidden from assistive tech, which
+        // browsers refuse to do; move it out before marking the banner hidden.
+        if (banner.contains(document.activeElement)) document.activeElement.blur();
         banner.classList.remove('show');
         banner.setAttribute('aria-hidden', 'true');
     }
