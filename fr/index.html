@@ -4,8 +4,8 @@
     <link rel="stylesheet" href="/consent.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formatteur et beautifieur JSON – outil JSON gratuit en ligne</title>
-    <meta name="description" content="Formatez, validez et minifiez votre code JSON instantanément dans votre navigateur. Aucun envoi vers un serveur, 100 % privé et sécurisé. Outil gratuit en ligne pour embellir votre JSON." />
+    <title>Formatteur JSON – outil JSON gratuit en ligne</title>
+    <meta name="description" content="Formatez, validez et minifiez votre JSON dans votre navigateur. Aucun envoi vers un serveur, 100 % privé et sécurisé. Outil gratuit en ligne." />
     <link rel="canonical" href="https://json-tool.com/fr/" />
     <link rel="alternate" hreflang="en" href="https://json-tool.com/" />
     <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/" />
@@ -22,7 +22,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Formatteur et beautifieur JSON – outil JSON gratuit en ligne" />
+    <meta property="og:title" content="Formatteur JSON – outil JSON gratuit en ligne" />
     <meta property="og:description" content="Formatez, validez et minifiez du JSON dans votre navigateur. Rapide, sécurisé et gratuit. Vos données ne sont jamais envoyées au serveur." />
     <meta property="og:url" content="https://json-tool.com/fr/" />
     <meta property="og:type" content="website" />
@@ -34,7 +34,7 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Formatteur et beautifieur JSON – outil JSON gratuit en ligne" />
+    <meta name="twitter:title" content="Formatteur JSON – outil JSON gratuit en ligne" />
     <meta name="twitter:description" content="Formatez, validez et minifiez du JSON dans votre navigateur. Rapide, sécurisé et gratuit. Vos données ne sont jamais envoyées au serveur." />
     <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
     <meta name="twitter:image:alt" content="JSON Tool – formater, minifier et valider du JSON dans votre navigateur" />
@@ -44,7 +44,7 @@
         {
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "Formatteur et beautifieur JSON",
+            "name": "Formatteur JSON",
             "url": "https://json-tool.com/",
             "description": "Formatez, validez et minifiez du JSON instantanément dans votre navigateur. 100 % privé, aucun envoi de données.",
             "applicationCategory": "Application pour développeurs",
@@ -59,19 +59,40 @@
         {
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": [{
-                "@type": "Question",
-                "name": "Ce formatteur de JSON est-il gratuit ?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Oui, il est entièrement gratuit, sans frais cachés ni limites." }
-            }, {
-                "@type": "Question",
-                "name": "Mes données JSON sont-elles envoyées à un serveur ?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Non. Tout le traitement est effectué localement dans votre navigateur. Votre JSON ne quitte jamais votre appareil." }
-            }, {
-                "@type": "Question",
-                "name": "Quels formats de JSON sont pris en charge ?",
-                "acceptedAnswer": { "@type": "Answer", "text": "Vous pouvez formater (embellir), minifier (compresser) et valider toutes les données JSON valides." }
-            }]
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "Ce formatteur de JSON est-il gratuit ?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Oui, il est entièrement gratuit, sans limites et sans inscription."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Mes données JSON sont-elles en sécurité ?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Absolument. Vos données ne quittent jamais votre navigateur. Nous ne stockons, n'envoyons ni ne partageons aucun JSON que vous collez."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Que fait cet outil ?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Il formate (embellit) le JSON avec une indentation personnalisée, le minifie pour réduire sa taille et valide la syntaxe. Il affiche aussi les numéros de ligne et prend en charge le tri des clés."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Puis-je l'utiliser hors ligne ?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Oui. Une fois la page chargée, il fonctionne entièrement hors ligne. Vous pouvez même l'enregistrer pour une utilisation hors ligne."
+                    }
+                }
+            ]
         }
     </script>
 
@@ -765,7 +786,7 @@
         <main class="tool-wrapper">
 
             <!-- ===== PAGE TITLE ===== -->
-            <h1 style="margin:0 0 1.5rem; text-align:center; font-size:1.8rem; line-height:1.4; color:var(--text-primary);">Formatteur et beautifieur JSON – gratuit, sans envoi, privé</h1>
+            <h1 style="margin:0 0 1.5rem; text-align:center; font-size:1.8rem; line-height:1.4; color:var(--text-primary);">Formatteur JSON – gratuit, sans envoi, privé</h1>
 
             <!-- Tool Header: Badges + Controls -->
             <div class="tool-header">
