@@ -26,9 +26,9 @@ Parsing happens entirely in the browser, so pasted JSON never leaves the machine
 
 ## Deploying
 
-The tool page is self-contained, and the published site is now `index.html`, the four extra English-only pages (`json-validator.html`, `json-minifier.html`, `pretty-print-json.html`, `json-syntax.html`) that share `tool-page.css`, the four informational pages (`about.html`, `privacy.html`, `terms.html`, `contact.html`) with their shared `page.css`, `page.js`, `consent.css` and `consent.js`, plus `robots.txt`, `sitemap.xml`, an IndexNow key file (`<32-hex-key>.txt`, used to notify Bing/Yandex/DuckDuckGo of new URLs) and `og-image.png`. Everything is served from the repo root as-is, so any static host works. The live domain is `json-tool.com`.
+The tool page is self-contained, and the published site is now `index.html`, the five extra English-only long-tail pages (`json-validator.html`, `json-minifier.html`, `sort-json-keys.html`, `pretty-print-json.html`, `json-syntax.html`) that share `tool-page.css`, the four informational pages (`about.html`, `privacy.html`, `terms.html`, `contact.html`) with their shared `page.css`, `page.js`, `consent.css` and `consent.js`, plus `robots.txt`, `sitemap.xml`, an IndexNow key file (`<32-hex-key>.txt`, used to notify Bing/Yandex/DuckDuckGo of new URLs) and `og-image.png`. Everything is served from the repo root as-is, so any static host works. The live domain is `json-tool.com`.
 
-Those four extra pages target long-tail queries and exist in English only, so they carry no `hreflang` alternates and are absent from the locale directories; each one is a plain `<url>` entry at the end of `sitemap.xml`. If they are ever translated, convert their entries into grouped entries with alternates, the way the other pages are listed.
+Those five extra pages target long-tail queries and exist in English only, so they carry no `hreflang` alternates and are absent from the locale directories; each one is a plain `<url>` entry at the end of `sitemap.xml`. If they are ever translated, convert their entries into grouped entries with alternates, the way the other pages are listed.
 
 `og-image.html` is the design source for the social card, not a page: it is listed in `.vercelignore` so it never gets published. To regenerate the image after editing it:
 
