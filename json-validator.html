@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Validator – Free Online Syntax Check with Error Location</title>
+    <meta name="description" content="Validate JSON online and see the exact line and column of every syntax error, with the likely cause. Strict JSON checks run in your browser, so nothing is uploaded. Free, no sign-up." />
+    <link rel="canonical" href="https://json-tool.com/json-validator.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Validator – Free Online Syntax Check with Error Location" />
+    <meta property="og:description" content="Check whether your JSON is valid and get the exact line and column of the problem, plus the likely cause. Runs entirely in your browser." />
+    <meta property="og:url" content="https://json-tool.com/json-validator.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Validator – Free Online Syntax Check with Error Location" />
+    <meta name="twitter:description" content="Check whether your JSON is valid and get the exact line and column of the problem, plus the likely cause. Runs entirely in your browser." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON Validator",
+            "url": "https://json-tool.com/json-validator.html",
+            "description": "Validate JSON syntax in your browser and get the exact line, column and likely cause of any error. 100% private, no data upload.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "How do I know if my JSON is valid?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Paste it into the validator above. It uses your browser's own JSON parser, the same one your application uses at runtime, so a green result means the string will parse in real code and a red one points at the exact line and column where parsing stops." }
+            }, {
+                "@type": "Question",
+                "name": "Why does the validator reject a file my editor accepts?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Most editors relax the rules: they allow comments, trailing commas, single-quoted strings, unquoted keys or JSON5 syntax. Strict JSON permits none of those. The validator follows the strict grammar, because that is what JSON.parse enforces in production." }
+            }, {
+                "@type": "Question",
+                "name": "Is it safe to paste sensitive JSON here?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Validation happens locally with JSON.parse in your own browser tab. The text is never sent to a server, stored or logged, and after the page loads you can disconnect from the network and keep working." }
+            }, {
+                "@type": "Question",
+                "name": "Does this validator check JSON Schema?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. It checks syntax only — whether the document is well-formed JSON. It does not verify that required fields exist or that values have the expected types, which is what JSON Schema is for." }
+            }, {
+                "@type": "Question",
+                "name": "What is the difference between validating and formatting JSON?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Validation answers one question: is this syntactically legal JSON? Formatting takes valid JSON and rewrites it with indentation and line breaks so people can read it. Start with the validator when something is broken, then use the formatter to inspect the structure." }
+            }, {
+                "@type": "Question",
+                "name": "Can I validate very large JSON files?",
+                "acceptedAnswer": { "@type": "Answer", "text": "You can, within reason. Everything runs in your browser tab, so a multi-megabyte document is limited by available memory and can make the tab slow to respond. For very large files, split the input or validate a representative section." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>JSON Validator</h1>
+            <p class="updated">Last updated: 26 September 2026</p>
+
+            <p class="lead">Paste any text and find out in a split second whether it is valid JSON — and if it is not, which line and column break the parser and what usually causes it. Nothing leaves your browser.</p>
+
+            <div class="tools-nav">
+                <span>Other free tools:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Local parsing</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">Strict JSON</span>
+                    <span class="badge">Error line &amp; column</span>
+                </div>
+
+                <label class="field-label" for="jsonInput">JSON to validate <span aria-hidden="true" class="count" id="inputCount">0 characters</span></label>
+                <textarea id="jsonInput" class="json-field" spellcheck="false" placeholder='Paste JSON here, e.g. {"name":"John","age":30}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="validateBtn" type="button">Validate JSON</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Try a broken example</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+            </div>
+
+            <h2>How to use this validator</h2>
+            <ol>
+                <li>Copy the JSON you want to check — an API response, a config file, a fixture, a request body.</li>
+                <li>Paste it into the box above and press <strong>Validate JSON</strong>, or hit <code>Ctrl</code>/<code>Cmd + Enter</code>.</li>
+                <li>If it fails, read the reported line and column, then check the cause listed underneath. Most failures are one of the eleven mistakes in the next section.</li>
+                <li>Once it is valid, <a href="index.html">open the formatter</a> to pretty-print it, or <a href="json-minifier.html">the minifier</a> to shrink it.</li>
+            </ol>
+
+            <h2>What makes JSON invalid</h2>
+            <p>JSON is a small, strict grammar. Almost every rejection comes down to one of these:</p>
+            <ul>
+                <li><strong>Trailing comma</strong> — <code>{"a": 1, "b": 2,}</code>. JavaScript tolerates it in object literals; JSON does not allow a comma before the closing <code>}</code> or <code>]</code>.</li>
+                <li><strong>Single quotes</strong> — <code>{'name': 'John'}</code>. Strings and property names must use double quotes.</li>
+                <li><strong>Unquoted keys</strong> — <code>{name: "John"}</code>. Every property name has to be a quoted string.</li>
+                <li><strong>Comments</strong> — <code>// …</code> and <code>/* … */</code> are not part of JSON. Files that need them are JSONC, which you must strip before parsing.</li>
+                <li><strong>Python-style literals</strong> — <code>True</code>, <code>False</code>, <code>None</code>. The JSON equivalents are <code>true</code>, <code>false</code> and <code>null</code>, all lowercase.</li>
+                <li><strong><code>NaN</code> and <code>Infinity</code></strong> — unrepresentable in JSON; serialise them as <code>null</code> or a string.</li>
+                <li><strong>Smart quotes</strong> — text pasted from a word processor or a slide deck arrives as <code>“name”</code> instead of <code>"name"</code>.</li>
+                <li><strong>A raw newline inside a string</strong> — line breaks must be escaped as <code>\n</code>.</li>
+                <li><strong>Bad escapes</strong> — <code>\d</code> or a lone backslash in a Windows path (<code>"C:\new"</code>). Backslashes need doubling.</li>
+                <li><strong>NDJSON or concatenated objects</strong> — one JSON value per document, so <code>{...}{...}</code> or newline-delimited records will not parse as one value.</li>
+                <li><strong>An invisible byte-order mark</strong> — a UTF-8 BOM saved at the start of a file makes the very first token illegal.</li>
+            </ul>
+
+            <h2>Reading the error message</h2>
+            <p>Browsers word parser errors differently, which is why the same file can produce three different messages, and some of those forms name no place at all. Newer Chrome and Safari report both an offset and a pair — <code>at position 142 (line 5 column 12)</code>; older builds report only <code>at position 142</code>, an offset counted in characters; Firefox reports <code>at line 5 column 12</code> directly. For a handful of errors, such as a trailing comma inside an array, Chrome quotes the surrounding text instead and gives neither number. This page converts all of those into a line, a column and a quoted snippet, and falls back to scanning your text for the mistakes listed above when the engine names no location, so you are not left counting characters by hand.</p>
+            <p>One trap worth knowing: the reported position is where parsing <em>stopped</em>, which is often a character or two after the actual mistake. A trailing comma is reported at the closing bracket, and a missing comma is reported at the token that follows it. Look slightly left of the caret.</p>
+
+            <h2>Validate JSON from the command line</h2>
+            <p>For files you cannot paste into a browser — CI checks, gigabyte exports — parse them locally instead. Each of these exits non-zero on invalid input, which makes them usable as a build step:</p>
+            <ul>
+                <li><code>python3 -m json.tool config.json &gt; /dev/null</code> — prints the error with a character offset.</li>
+                <li><code>jq empty config.json</code> — the shortest strict check, and it names the line and column.</li>
+                <li><code>node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" config.json</code> — the same parser your application uses.</li>
+            </ul>
+            <p>For a quick check of an HTTP response without saving it, pipe the request into one of them: <code>curl -s https://api.example.com/status | jq empty</code>.</p>
+
+            <h2>What this validator does not do</h2>
+            <p>It checks syntax, not meaning. It will not run JSON Schema checks, will not tell you a required field is missing, will not compare two documents, and will not repair broken input for you — a tool that silently “fixed” your JSON would only hide the mistake until it reached production. If you want the document restructured instead, that is the <a href="index.html">formatter's</a> job.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>How do I know if my JSON is valid?</h3>
+                <p>Paste it into the validator above. It uses your browser's own JSON parser, the same one your application uses at runtime, so a green result means the string will parse in real code and a red one points at the exact line and column where parsing stops.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why does the validator reject a file my editor accepts?</h3>
+                <p>Most editors relax the rules: they allow comments, trailing commas, single-quoted strings, unquoted keys or JSON5 syntax. Strict JSON permits none of those. The validator follows the strict grammar, because that is what <code>JSON.parse</code> enforces in production.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is it safe to paste sensitive JSON here?</h3>
+                <p>Yes. Validation happens locally with <code>JSON.parse</code> in your own browser tab. The text is never sent to a server, stored or logged, and after the page loads you can disconnect from the network and keep working.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does this validator check JSON Schema?</h3>
+                <p>No. It checks syntax only — whether the document is well-formed JSON. It does not verify that required fields exist or that values have the expected types, which is what JSON Schema is for.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What is the difference between validating and formatting JSON?</h3>
+                <p>Validation answers one question: is this syntactically legal JSON? Formatting takes valid JSON and rewrites it with indentation and line breaks so people can read it. Start with the validator when something is broken, then use the formatter to inspect the structure.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I validate very large JSON files?</h3>
+                <p>You can, within reason. Everything runs in your browser tab, so a multi-megabyte document is limited by available memory and can make the tab slow to respond. For very large files, split the input or validate a representative section.</p>
+            </div>
+
+            <div class="notice">
+                <p>Error location looks wrong for your case, or want a check added? <a href="contact.html">Send the offending snippet</a> — a short input plus your browser name is enough to reproduce almost anything.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var input = document.getElementById('jsonInput');
+            var count = document.getElementById('inputCount');
+            var result = document.getElementById('result');
+            var BROKEN = '{\n  "id": 7,\n  "tags": ["a", "b",],\n  name: "example"\n}';
+
+            function paint() {
+                var n = input.value.length;
+                count.textContent = n.toLocaleString() + ' character' + (n === 1 ? '' : 's');
+            }
+
+            function show(cls, html) {
+                result.className = 'result show ' + cls;
+                result.textContent = '';
+                var head = document.createElement('strong');
+                head.textContent = cls === 'valid' ? '✓ Valid JSON' : '✕ Not valid JSON';
+                result.appendChild(head);
+                var body = document.createElement('span');
+                body.textContent = html.text;
+                result.appendChild(body);
+                if (html.snippet) {
+                    var pre = document.createElement('pre');
+                    pre.textContent = html.snippet;
+                    result.appendChild(pre);
+                }
+                if (html.link) {
+                    var a = document.createElement('a');
+                    a.href = html.link;
+                    a.textContent = 'Open this document in the formatter →';
+                    a.style.display = 'block';
+                    a.style.marginTop = '0.6rem';
+                    result.appendChild(a);
+                }
+            }
+
+            function lineColFromIndex(text, at) {
+                var before = text.slice(0, at).split('\n');
+                return { line: before.length, col: before[before.length - 1].length + 1 };
+            }
+
+            function indexFromLineCol(text, line, col) {
+                var lines = text.split('\n');
+                var at = 0;
+                for (var i = 0; i < line - 1 && i < lines.length; i++) at += lines[i].length + 1;
+                return Math.min(at + col - 1, text.length);
+            }
+
+            function causeAt(text, at) {
+                var ch = text.charAt(at);
+                var prev = text.slice(0, at).replace(/\s+$/, '').slice(-1);
+                if ((ch === '}' || ch === ']') && prev === ',') return 'A trailing comma sits before this bracket — JSON forbids it.';
+                if (ch === ',') return 'The value after this comma is missing or malformed.';
+                if (ch === "'") return 'Single quotes: JSON requires double quotes for strings and property names.';
+                if (/[‘“’”]/.test(ch)) return 'A curly (smart) quote, typically pasted from a document — use a straight double quote.';
+                if (ch === '/' && (text.charAt(at + 1) === '/' || text.charAt(at + 1) === '*')) return 'Comments are not part of JSON. Strip them before parsing.';
+                if (/^(NaN|Infinity)/.test(text.slice(at, at + 8))) return 'NaN and Infinity are not JSON values — use null or a string instead.';
+                if (/^(True|False|None)/.test(text.slice(at, at + 5))) return 'A Python literal: JSON uses lowercase true, false and null.';
+                if (prev === '{' || prev === ',') return 'An unquoted property name is the usual cause here — wrap keys in double quotes.';
+                if (ch === '}') return 'Look slightly left of the caret for a missing comma or an unquoted key.';
+                return 'Check just before the caret for a missing comma, quote or bracket.';
+            }
+
+            /* Fallback for engines that report an error without any position,
+               which V8 does for trailing commas. Ordered by how often they happen. */
+            var FAULTS = [
+                [/,\s*([}\]])/, function (h) { return 'a trailing comma before the ' + h[1] + ' it sits next to'; }],
+                [/'/, function () { return "a single-quoted string, where JSON requires double quotes"; }],
+                [/(^|[^:\\])\/\/|\/\*/, function () { return 'a comment, which JSON does not have'; }],
+                [/[{,]\s*([A-Za-z_$][\w$]*)\s*:/, function (h) { return 'an unquoted property name (' + h[1] + ')'; }],
+                [/\b(True|False|None)\b/, function (h) { return 'a Python literal (' + h[1] + '), not valid JSON'; }],
+                [/\b(NaN|Infinity)\b/, function (h) { return 'a ' + h[1] + ', which JSON cannot represent'; }],
+                [/[‘“’”]/, function () { return 'a curly (smart) quote from a word processor'; }]
+            ];
+
+            function diagnose(text, message) {
+                var m = message.match(/line (\d+) column (\d+)/i);
+                var pos = m ? { line: +m[1], col: +m[2] } : null;
+                if (!pos) {
+                    m = message.match(/position (\d+)/i);
+                    if (m) pos = lineColFromIndex(text, Math.min(+m[1], text.length));
+                }
+                if (pos) {
+                    pos.at = indexFromLineCol(text, pos.line, pos.col);
+                    try {
+                        JSON.parse(text.slice(0, pos.at));
+                        return { pos: pos, note: 'A complete document ends right here, so everything from the caret on is a second value where only one is allowed.' };
+                    } catch (ignored) {}
+                    return { pos: pos, note: causeAt(text, pos.at) };
+                }
+                for (var i = 0; i < FAULTS.length; i++) {
+                    var hit = FAULTS[i][0].exec(text);
+                    if (hit) {
+                        return {
+                            pos: lineColFromIndex(text, hit.index),
+                            inferred: true,
+                            note: 'It looks like ' + FAULTS[i][1](hit) + '.'
+                        };
+                    }
+                }
+                return { pos: null, note: 'Nothing obviously wrong was found in the text — compare the failing line against the list below.' };
+            }
+
+            function excerpt(text, line, col) {
+                var lines = text.split('\n');
+                if (!lines.length || line > lines.length) return '';
+                var raw = lines[line - 1] || '';
+                var src = raw.replace(/\t/g, '    ');
+                // col counts original characters, so expand the tabs before it the same way.
+                var shown = raw.slice(0, col - 1).replace(/\t/g, '    ').length + 1;
+                var clipped = src.length > 88 ? src.slice(0, 88) + '…' : src;
+                var prefix = 'Line ' + line + ':  ';
+                return prefix + clipped + '\n' + ' '.repeat(prefix.length + Math.max(0, shown - 1)) + '^ here';
+            }
+
+            function summarise(data) {
+                var type = Array.isArray(data) ? 'array' : (data === null ? 'null' : typeof data);
+                var parts = ['Top level: ' + type];
+                if (type === 'object') parts.push(Object.keys(data).length + (Object.keys(data).length === 1 ? ' key' : ' keys'));
+                if (type === 'array') parts.push(data.length + (data.length === 1 ? ' item' : ' items'));
+                parts.push('max depth ' + depth(data));
+                return parts.join(' · ');
+            }
+
+            function depth(value) {
+                if (Array.isArray(value)) return value.length ? 1 + Math.max.apply(null, value.map(depth)) : 1;
+                if (value && typeof value === 'object') {
+                    var keys = Object.keys(value);
+                    return keys.length ? 1 + Math.max.apply(null, keys.map(function (k) { return depth(value[k]); })) : 1;
+                }
+                return 0;
+            }
+
+            function validate() {
+                paint();
+                var text = input.value;
+                if (!text.trim()) {
+                    result.className = 'result';
+                    return;
+                }
+                try {
+                    var data = JSON.parse(text);
+                    show('valid', { text: summarise(data) + ' · ' + text.length.toLocaleString() + ' characters. Safe to parse anywhere. ', link: 'index.html' });
+                } catch (err) {
+                    var d = diagnose(text, err.message);
+                    var where = d.pos
+                        ? (d.inferred
+                            ? 'The most likely cause in your text is at line ' + d.pos.line + ', column ' + d.pos.col + '. '
+                            : 'Parsing stops at line ' + d.pos.line + ', column ' + d.pos.col + '. ')
+                        : '';
+                    show('invalid', {
+                        text: where + d.note + ' — reported as: ' + err.message,
+                        snippet: d.pos ? excerpt(text, d.pos.line, d.pos.col) : ''
+                    });
+                }
+            }
+
+            document.getElementById('validateBtn').addEventListener('click', validate);
+            document.getElementById('exampleBtn').addEventListener('click', function () {
+                input.value = BROKEN;
+                validate();
+                input.focus();
+            });
+            document.getElementById('clearBtn').addEventListener('click', function () {
+                input.value = '';
+                result.className = 'result';
+                paint();
+                input.focus();
+            });
+            input.addEventListener('input', paint);
+            input.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    validate();
+                }
+            });
+            paint();
+        })();
+    </script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>

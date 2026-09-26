@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Minifier – Compress JSON and Remove Whitespace Online</title>
+    <meta name="description" content="Minify JSON online to shrink API payloads, bundles and config files. Whitespace removal happens in your browser, so nothing is uploaded — and you see the exact bytes saved." />
+    <link rel="canonical" href="https://json-tool.com/json-minifier.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Minifier – Compress JSON and Remove Whitespace Online" />
+    <meta property="og:description" content="Strip formatting whitespace from JSON in your browser and see exactly how many bytes you saved. Free, private, no upload." />
+    <meta property="og:url" content="https://json-tool.com/json-minifier.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Minifier – Compress JSON and Remove Whitespace Online" />
+    <meta name="twitter:description" content="Strip formatting whitespace from JSON in your browser and see exactly how many bytes you saved. Free, private, no upload." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON Minifier",
+            "url": "https://json-tool.com/json-minifier.html",
+            "description": "Compress JSON by removing formatting whitespace, right in your browser. Shows the exact byte savings. 100% private, no data upload.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "What does minifying JSON actually remove?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Only whitespace that is not part of the data: indentation, line breaks and the spaces after commas and colons. Property names, values, array order and the characters inside strings are untouched, so the minified document parses to exactly the same value as the original." }
+            }, {
+                "@type": "Question",
+                "name": "Does minifying JSON change the data?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Whitespace between tokens carries no meaning in JSON, so removing it produces an equivalent document. The one thing to remember is that whitespace inside a string is data and is preserved — a value like \"  hello  \" keeps its spaces." }
+            }, {
+                "@type": "Question",
+                "name": "How much smaller does JSON get when minified?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Typically 20 to 45 percent for pretty-printed documents, and much more when the input uses wide indentation or one property per line. Data dominated by long strings barely shrinks, because there is little formatting to remove." }
+            }, {
+                "@type": "Question",
+                "name": "Is minified JSON still readable?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Not really — it collapses onto a single line, which is what makes it good for transport and bad for review. Keep readable JSON in version control and minify only at build or request time. This tool is reversible: paste minified JSON into the formatter to pretty-print it again." }
+            }, {
+                "@type": "Question",
+                "name": "Should I minify JSON config files in Git?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Usually no. Humans and code reviewers have to read those files, and the byte saving is irrelevant on disk. Minify what crosses a network or a storage quota, and keep what people edit formatted." }
+            }, {
+                "@type": "Question",
+                "name": "Does minifying replace compression like gzip?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No, the two stack. Minification removes formatting first, then gzip or Brotli compress what is left, and transfer-encoding is normally the far bigger win. Still worth doing when the payload is stored rather than streamed, such as in localStorage or a bundled asset." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>JSON Minifier</h1>
+            <p class="updated">Last updated: 26 September 2026</p>
+
+            <p class="lead">Compress any JSON to its shortest legal form by stripping indentation and line breaks — and see exactly how many bytes that saved. It runs in your browser, so the payload never leaves the machine.</p>
+
+            <div class="tools-nav">
+                <span>Other free tools:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Local compression</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">Byte savings</span>
+                    <span class="badge">Lossless</span>
+                </div>
+
+                <label class="field-label" for="jsonInput">Input JSON <span aria-hidden="true" class="count" id="inputCount">0 characters</span></label>
+                <textarea id="jsonInput" class="json-field" spellcheck="false" placeholder='Paste pretty-printed JSON here, e.g. {"name": "John","age": 30} formatted across lines'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="minifyBtn" type="button">Minify JSON</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Try an example</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="jsonOutput" style="margin-top:1.1rem;">Minified JSON <span aria-hidden="true" class="count" id="outputCount">0 characters</span></label>
+                    <textarea id="jsonOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button">Copy result</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button">Download minified.json</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>What minifying JSON does</h2>
+            <p>A pretty-printed document spends a surprising amount of its length on characters the parser ignores: two-space indents, one property per line, the space after every <code>:</code> and <code>,</code>. Minifying removes all of it and collapses the file onto a single line. The result is byte-for-byte equivalent as data — <code>JSON.parse</code> returns the identical value before and after — because whitespace between tokens is not part of the information.</p>
+            <p>The one thing minification never touches is whitespace <em>inside</em> a string. A value such as <code>"  keep me  "</code> survives intact, since there it is data rather than formatting.</p>
+
+            <h2>When you want minified JSON</h2>
+            <ul>
+                <li><strong>HTTP request and response bodies</strong> — every kilobyte is paid for on each call, and mobile round trips are the ones users feel.</li>
+                <li><strong>Embedding JSON in a page or bundle</strong> — an <code>application/json</code> script block, a fixture inlined in a test, a config object shipped to a client.</li>
+                <li><strong><code>localStorage</code> and <code>sessionStorage</code></strong> — the quota is a fixed per-origin budget (about 5 MB in most browsers), and exceeding it throws a <code>QuotaExceededError</code> rather than degrading quietly.</li>
+                <li><strong>Query parameters and form fields</strong> — percent-encoding inflates whitespace roughly threefold, so the savings are bigger than they look.</li>
+                <li><strong>Storing documents in a database column or cache entry</strong> where the size is billed or bounded.</li>
+            </ul>
+            <p>Conversely, leave config files that humans edit and review formatted. The byte saving is irrelevant on disk, and single-line JSON in a diff is unreadable.</p>
+
+            <h2>How much smaller does it get?</h2>
+            <p>Roughly what the formatting costs you. A document indented two spaces per level with one key per line commonly loses 20–45% of its length; deeply nested payloads with wide indents lose more. Payloads dominated by long strings barely move, because there is almost no formatting in them to remove. The tool reports the real number for your own data rather than an estimate.</p>
+
+            <h2>Minify from the command line or code</h2>
+            <p>A browser tab is the right tool for pasting one-off payloads. For pipelines, do it where the file already is:</p>
+            <ul>
+                <li><code>jq -c . config.json &gt; config.min.json</code> — compact output, one line per top-level value.</li>
+                <li><code>python3 -c "import json,sys;sys.stdout.write(json.dumps(json.load(sys.stdin),separators=(',',':')))" &lt; config.json</code> — the tightest form, no space after separators.</li>
+                <li><code>node -e "process.stdout.write(JSON.stringify(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))))" config.json</code> — the same semantics as this page.</li>
+            </ul>
+            <p>In application code the last two matter more than the file: build the payload with <code>JSON.stringify(value)</code> and it is already minified — the <code>null</code> second argument is what keeps it compact, since <code>JSON.stringify(value, null, 2)</code> is what adds the indentation back.</p>
+
+            <h2>Minification and compression are different jobs</h2>
+            <p>They stack rather than compete. Minification removes formatting first; gzip or Brotli then compresses what is left, and for anything sent over the wire the transfer encoding is the bigger win — a minified-then-gzipped payload often ends up far smaller than either step alone. Minify anyway when the bytes are <em>stored</em> rather than streamed, because nothing is compressing them for you.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What does minifying JSON actually remove?</h3>
+                <p>Only whitespace that is not part of the data: indentation, line breaks and the spaces after commas and colons. Property names, values, array order and the characters inside strings are untouched, so the minified document parses to exactly the same value as the original.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does minifying JSON change the data?</h3>
+                <p>No. Whitespace between tokens carries no meaning in JSON, so removing it produces an equivalent document. The one thing to remember is that whitespace inside a string is data and is preserved — a value like <code>"  hello  "</code> keeps its spaces.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How much smaller does JSON get when minified?</h3>
+                <p>Typically 20 to 45 percent for pretty-printed documents, and much more when the input uses wide indentation or one property per line. Data dominated by long strings barely shrinks, because there is little formatting to remove.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is minified JSON still readable?</h3>
+                <p>Not really — it collapses onto a single line, which is what makes it good for transport and bad for review. Keep readable JSON in version control and minify only at build or request time. This tool is reversible: paste minified JSON into the formatter to pretty-print it again.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Should I minify JSON config files in Git?</h3>
+                <p>Usually no. Humans and code reviewers have to read those files, and the byte saving is irrelevant on disk. Minify what crosses a network or a storage quota, and keep what people edit formatted.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does minifying replace compression like gzip?</h3>
+                <p>No, the two stack. Minification removes formatting first, then gzip or Brotli compress what is left, and transfer-encoding is normally the far bigger win. Still worth doing when the payload is stored rather than streamed, such as in <code>localStorage</code> or a bundled asset.</p>
+            </div>
+
+            <div class="notice">
+                <p>Want the other direction? <a href="index.html">The formatter</a> pretty-prints with an indent width from 1 to 20, sorts keys recursively and shows line numbers. Spotted a bug? <a href="contact.html">Get in touch</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var input = document.getElementById('jsonInput');
+            var output = document.getElementById('jsonOutput');
+            var outputWrap = document.getElementById('outputWrap');
+            var inputCount = document.getElementById('inputCount');
+            var outputCount = document.getElementById('outputCount');
+            var stats = document.getElementById('stats');
+            var result = document.getElementById('result');
+            var EXAMPLE = '{\n  "service": "orders",\n  "regions": ["eu-west-1", "us-east-2"],\n  "limits": {\n    "qps": 250,\n    "burst": 900\n  },\n  "enabled": true\n}';
+
+            function bytes(text) {
+                return new Blob([text]).size;
+            }
+            function fmt(n) {
+                return n.toLocaleString();
+            }
+            function paintCounts() {
+                inputCount.textContent = fmt(input.value.length) + ' character' + (input.value.length === 1 ? '' : 's');
+                outputCount.textContent = fmt(output.value.length) + ' character' + (output.value.length === 1 ? '' : 's');
+            }
+            function showError(text) {
+                result.className = 'result show invalid';
+                result.textContent = '';
+                var head = document.createElement('strong');
+                head.textContent = '✕ Not valid JSON';
+                result.appendChild(head);
+                var body = document.createElement('span');
+                body.textContent = text;
+                result.appendChild(body);
+                var link = document.createElement('a');
+                link.href = 'json-validator.html';
+                link.textContent = 'Find the syntax error with the validator →';
+                link.style.display = 'block';
+                link.style.marginTop = '0.6rem';
+                result.appendChild(link);
+            }
+
+            function minify() {
+                paintCounts();
+                var text = input.value;
+                if (!text.trim()) {
+                    result.className = 'result';
+                    outputWrap.hidden = true;
+                    output.value = '';
+                    return;
+                }
+                try {
+                    var compact = JSON.stringify(JSON.parse(text));
+                    var before = bytes(text);
+                    var after = bytes(compact);
+                    var saved = before - after;
+                    var pct = before ? Math.round((saved / before) * 100) : 0;
+                    output.value = compact;
+                    outputWrap.hidden = false;
+                    result.className = 'result show valid';
+                    result.textContent = '';
+                    var head = document.createElement('strong');
+                    head.textContent = saved > 0 ? '✓ Minified — ' + fmt(saved) + ' bytes removed' : '✓ Minified — no whitespace to remove';
+                    result.appendChild(head);
+                    var body = document.createElement('span');
+                    body.textContent = saved > 0
+                        ? 'That is ' + pct + '% smaller than the input. Equivalent as data: parsing either form gives the same value.'
+                        : 'This document was already compact, so the output is the same length as the input.';
+                    result.appendChild(body);
+                    stats.innerHTML = '';
+                    var rows = [
+                        ['Input', fmt(before) + ' B'],
+                        ['Minified', fmt(after) + ' B'],
+                        ['Saved', fmt(saved) + ' B (' + pct + '%)']
+                    ];
+                    rows.forEach(function (row, idx) {
+                        if (idx) stats.appendChild(document.createTextNode(' · '));
+                        var span = document.createElement('span');
+                        span.appendChild(document.createTextNode(row[0] + ' '));
+                        var b = document.createElement('b');
+                        b.textContent = row[1];
+                        span.appendChild(b);
+                        stats.appendChild(span);
+                    });
+                    paintCounts();
+                } catch (err) {
+                    outputWrap.hidden = true;
+                    output.value = '';
+                    stats.innerHTML = '';
+                    showError(err.message + '. This document was left unchanged.');
+                }
+            }
+
+            document.getElementById('minifyBtn').addEventListener('click', minify);
+            document.getElementById('exampleBtn').addEventListener('click', function () {
+                input.value = EXAMPLE;
+                minify();
+                input.focus();
+            });
+            document.getElementById('clearBtn').addEventListener('click', function () {
+                input.value = '';
+                output.value = '';
+                outputWrap.hidden = true;
+                stats.innerHTML = '';
+                result.className = 'result';
+                paintCounts();
+                input.focus();
+            });
+            document.getElementById('copyBtn').addEventListener('click', function () {
+                if (!output.value) return;
+                var btn = this;
+                navigator.clipboard.writeText(output.value).then(function () {
+                    btn.textContent = 'Copied ✓';
+                    setTimeout(function () { btn.textContent = 'Copy result'; }, 1400);
+                });
+            });
+            document.getElementById('downloadBtn').addEventListener('click', function () {
+                if (!output.value) return;
+                var url = URL.createObjectURL(new Blob([output.value], { type: 'application/json' }));
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'minified.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+            input.addEventListener('input', paintCounts);
+            input.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    minify();
+                }
+            });
+            paintCounts();
+        })();
+    </script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>

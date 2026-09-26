@@ -2,7 +2,7 @@
 <urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://json-tool.com/</loc>
-    <lastmod>2026-09-14</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/"/>
@@ -44,7 +44,7 @@
   </url>
   <url>
     <loc>https://json-tool.com/zh/</loc>
-    <lastmod>2026-09-14</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/"/>
@@ -170,7 +170,7 @@
   </url>
   <url>
     <loc>https://json-tool.com/zh/about.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/about.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/about.html"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/about.html"/>
@@ -296,7 +296,7 @@
   </url>
   <url>
     <loc>https://json-tool.com/zh/privacy.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/privacy.html"/>
@@ -422,7 +422,7 @@
   </url>
   <url>
     <loc>https://json-tool.com/zh/terms.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/terms.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/terms.html"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/terms.html"/>
@@ -548,7 +548,7 @@
   </url>
   <url>
     <loc>https://json-tool.com/zh/contact.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/contact.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/contact.html"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/contact.html"/>
@@ -618,7 +618,7 @@
   </url>
   <url>
     <loc>https://json-tool.com/fr/contact.html</loc>
-    <lastmod>2026-09-13</lastmod>
+    <lastmod>2026-09-26</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/contact.html"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/contact.html"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/contact.html"/>
@@ -629,5 +629,21 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/contact.html"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/contact.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/contact.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/json-validator.html</loc>
+    <lastmod>2026-09-26</lastmod>
+  </url>
+  <url>
+    <loc>https://json-tool.com/json-minifier.html</loc>
+    <lastmod>2026-09-26</lastmod>
+  </url>
+  <url>
+    <loc>https://json-tool.com/pretty-print-json.html</loc>
+    <lastmod>2026-09-26</lastmod>
+  </url>
+  <url>
+    <loc>https://json-tool.com/json-syntax.html</loc>
+    <lastmod>2026-09-26</lastmod>
   </url>
 </urlset>

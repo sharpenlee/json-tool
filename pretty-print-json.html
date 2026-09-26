@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pretty-Print JSON – Format JSON in Browser, Terminal or Code</title>
+    <meta name="description" content="Pretty-print JSON with indentation so it can be read: a free browser tool plus the exact commands for jq, Python, Node, curl, VS Code and Go. Nothing is uploaded." />
+    <link rel="canonical" href="https://json-tool.com/pretty-print-json.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Pretty-Print JSON – Format JSON in Browser, Terminal or Code" />
+    <meta property="og:description" content="Turn minified JSON back into indented, readable JSON — in the browser, from the shell, or inside your code." />
+    <meta property="og:url" content="https://json-tool.com/pretty-print-json.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pretty-Print JSON – Format JSON in Browser, Terminal or Code" />
+    <meta name="twitter:description" content="Turn minified JSON back into indented, readable JSON — in the browser, from the shell, or inside your code." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: TechArticle -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": "Pretty-Print JSON",
+            "url": "https://json-tool.com/pretty-print-json.html",
+            "description": "How to pretty-print JSON: reformat minified or single-line JSON with indentation in the browser, from the command line, or inside application code.",
+            "inLanguage": "en",
+            "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "What does pretty-printing JSON do?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It rewrites JSON with line breaks and indentation, one value per line, so a human can read the structure. Only formatting whitespace is added: the data, key order and every string value stay exactly as they were, and parsing the pretty version gives the same result as parsing the original." }
+            }, {
+                "@type": "Question",
+                "name": "How do I pretty-print JSON in a terminal?",
+                "acceptedAnswer": { "@type": "Answer", "text": "With jq: run jq '.' file.json to print it indented. Without jq, python3 -m json.tool file.json does the same job, and node -e with JSON.parse plus JSON.stringify using a two-space indent works too. Any of them can read a pipe, so curl -s https://api.example.com/data | jq . pretty-prints a live response." }
+            }, {
+                "@type": "Question",
+                "name": "Why does my pretty-printed JSON have escaped unicode?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Some writers escape every non-ASCII character by default — Python's json.dump turns an accented letter into a six-character \\uXXXX escape. Pass ensure_ascii=False to keep the real characters, which stays valid JSON and is far easier to read." }
+            }, {
+                "@type": "Question",
+                "name": "Should pretty-printed JSON be committed to Git?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes, when people edit the file, because a diff of one-property-per-line JSON shows exactly what changed. The opposite is true for generated payloads: minify what crosses the network and keep formatted JSON for anything a human reads." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>Pretty-Print JSON</h1>
+            <p class="updated">Last updated: 26 September 2026</p>
+
+            <p class="lead">Pretty-printing means rewriting JSON with indentation and line breaks so a person can read it. Here is a box that does it in your browser, followed by the one-liners for terminals, editors and code.</p>
+
+            <div class="tools-nav">
+                <span>Related:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Runs locally</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">Keeps key order</span>
+                </div>
+
+                <label class="field-label" for="jsonInput">Paste minified or messy JSON <span aria-hidden="true" class="count" id="inputCount">0 characters</span></label>
+                <textarea id="jsonInput" class="json-field" spellcheck="false" placeholder='{"service":"orders","regions":["eu-west-1","us-east-2"],"limits":{"qps":250}}'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="indent">Indent
+                        <select id="indent">
+                            <option value="2" selected>2 spaces</option>
+                            <option value="4">4 spaces</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary" id="prettyBtn" type="button">Pretty-print</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button">Copy result</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="jsonOutput" style="margin-top:1.1rem;">Pretty-printed JSON <span aria-hidden="true" class="count" id="outputCount">0 characters</span></label>
+                    <textarea id="jsonOutput" class="json-field" readonly spellcheck="false"></textarea>
+                </div>
+            </div>
+
+            <h2>What changes and what does not</h2>
+            <p>Pretty-printing inserts whitespace between tokens: line breaks, indentation, and a space after each <code>:</code> and <code>,</code>. Nothing else moves. Property order is preserved, string contents are untouched — including spaces inside them — and no numbers are rounded. Parse the file before and after and you get identical data, which is why minifying and pretty-printing are reversible operations on the same document.</p>
+
+            <h2>Pretty-print JSON in a terminal</h2>
+            <p>For files too large or too sensitive to paste into a browser:</p>
+            <ul>
+                <li><code>jq '.' config.json</code> — the standard choice; <code>.</code> is the identity filter, so all the work is the pretty output.</li>
+                <li><code>python3 -m json.tool config.json</code> — ships with Python; add <code>--indent 4</code> to change the width and <code>--sort-keys</code> to reorder them.</li>
+                <li><code>node -e 'const f=require("fs");f.writeFileSync(1,JSON.stringify(JSON.parse(f.readFileSync(process.argv[1],"utf8")),null,2))' config.json</code> — the same parser your application uses.</li>
+            </ul>
+            <p>All three read stdin, so a live API response works without saving it first:</p>
+            <ul>
+                <li><code>curl -s https://api.example.com/status | jq .</code></li>
+                <li><code>curl -s https://api.example.com/status | python3 -m json.tool</code></li>
+            </ul>
+            <p>When you only want one branch of a big document, filter instead of scrolling: <code>jq '.limits' config.json</code> prints just that object, and <code>jq -r '.regions[]'</code> lists array items one per line.</p>
+
+            <h2>Pretty-print inside your code</h2>
+            <ul>
+                <li><strong>JavaScript</strong> — <code>JSON.stringify(value, null, 2)</code>. The third argument is the indent; omitting it gives compact output.</li>
+                <li><strong>Python</strong> — <code>json.dumps(data, indent=2, ensure_ascii=False)</code>. Without <code>ensure_ascii=False</code> every non-ASCII character becomes a <code>\uXXXX</code> escape, which is valid but unreadable.</li>
+                <li><strong>Go</strong> — <code>json.MarshalIndent(v, "", "  ")</code>; <code>json.Marshal</code> alone is always compact.</li>
+                <li><strong>Rust</strong> — <code>serde_json::to_string_pretty(&amp;value)?</code>.</li>
+                <li><strong>Java</strong> — <code>new GsonBuilder().setPrettyPrinting().create().toJson(value)</code>.</li>
+                <li><strong>PHP</strong> — <code>json_encode($value, JSON_PRETTY_PRINT)</code>.</li>
+            </ul>
+
+            <h2>In an editor</h2>
+            <p>VS Code: paste, then <code>Shift+Option+F</code> on macOS or <code>Shift+Alt+F</code> on Windows and Linux to format the document; set <code>"editor.tabSize": 2</code> to control the width. IntelliJ and WebStorm: <code>Cmd+Option+L</code> (<code>Ctrl+Alt+L</code>) to reformat. Sublime Text needs a package such as <em>Pretty JSON</em>. Most editors will refuse to format a file with a syntax error, so fix the error first — <a href="json-validator.html">the validator</a> reports the line and column.</p>
+
+            <h2>When you should not pretty-print</h2>
+            <p>Pretty output is bigger — often 20–45% bigger, and more for deeply nested data — so sending it over the network costs real bytes on every request. Anything a machine consumes should stay compact: API responses, bundled assets, <code>localStorage</code> values. <a href="json-minifier.html">Minify those instead</a>, and keep indentation for files a human reads and reviews in a diff.</p>
+            <p>Two other cases worth knowing: a several-megabyte document will make a browser tab or editor crawl, so slice it with <code>jq</code> rather than opening it whole; and if the goal is comparing two payloads, sort the keys first — <a href="index.html">the formatter's</a> recursive key sort puts two files in the same order so a diff shows only real changes.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What does pretty-printing JSON do?</h3>
+                <p>It rewrites JSON with line breaks and indentation, one value per line, so a human can read the structure. Only formatting whitespace is added: the data, key order and every string value stay exactly as they were, and parsing the pretty version gives the same result as parsing the original.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do I pretty-print JSON in a terminal?</h3>
+                <p>With <code>jq '.' file.json</code> to print it indented. Without jq, <code>python3 -m json.tool file.json</code> does the same job, and <code>node -e</code> with <code>JSON.parse</code> plus <code>JSON.stringify</code> using a two-space indent works too. Any of them can read a pipe, so <code>curl -s https://api.example.com/data | jq .</code> pretty-prints a live response.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why does my pretty-printed JSON have escaped unicode?</h3>
+                <p>Some writers escape every non-ASCII character by default — Python's <code>json.dump</code> turns an accented letter into a six-character <code>\u00e9</code> sequence. Pass <code>ensure_ascii=False</code> to keep the real characters, which stays valid JSON and is far easier to read.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Should pretty-printed JSON be committed to Git?</h3>
+                <p>Yes, when people edit the file, because a diff of one-property-per-line JSON shows exactly what changed. The opposite is true for generated payloads: minify what crosses the network and keep formatted JSON for anything a human reads.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="json-syntax.html">JSON syntax</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var input = document.getElementById('jsonInput');
+            var output = document.getElementById('jsonOutput');
+            var indent = document.getElementById('indent');
+            var wrap = document.getElementById('outputWrap');
+            var result = document.getElementById('result');
+            var inputCount = document.getElementById('inputCount');
+            var outputCount = document.getElementById('outputCount');
+            var EXAMPLE = '{"service":"orders","regions":["eu-west-1","us-east-2"],"limits":{"qps":250,"burst":900},"enabled":true}';
+
+            function plural(n) { return n.toLocaleString() + ' character' + (n === 1 ? '' : 's'); }
+            function paint() {
+                inputCount.textContent = plural(input.value.length);
+                outputCount.textContent = plural(output.value.length);
+            }
+            function message(cls, head, text) {
+                result.className = 'result show ' + cls;
+                result.textContent = '';
+                var strong = document.createElement('strong');
+                strong.textContent = head;
+                result.appendChild(strong);
+                var span = document.createElement('span');
+                span.textContent = text;
+                result.appendChild(span);
+            }
+
+            function pretty() {
+                paint();
+                var text = input.value;
+                if (!text.trim()) {
+                    result.className = 'result';
+                    wrap.hidden = true;
+                    output.value = '';
+                    return;
+                }
+                var width = indent.value === 'tab' ? '\t' : parseInt(indent.value, 10);
+                try {
+                    output.value = JSON.stringify(JSON.parse(text), null, width);
+                    wrap.hidden = false;
+                    var lines = output.value.split('\n').length;
+                    message('valid', '✓ Pretty-printed', lines.toLocaleString() + ' lines, ' + plural(output.value.length) + '. Data unchanged: key order and string contents are preserved.');
+                    paint();
+                } catch (err) {
+                    wrap.hidden = true;
+                    output.value = '';
+                    message('invalid', '✕ Not valid JSON', err.message + '. Pretty-printing needs legal input — the validator can point at the line.');
+                }
+            }
+
+            document.getElementById('prettyBtn').addEventListener('click', pretty);
+            indent.addEventListener('change', function () { if (output.value) pretty(); });
+            document.getElementById('copyBtn').addEventListener('click', function () {
+                if (!output.value) return;
+                var btn = this;
+                navigator.clipboard.writeText(output.value).then(function () {
+                    btn.textContent = 'Copied ✓';
+                    setTimeout(function () { btn.textContent = 'Copy result'; }, 1400);
+                });
+            });
+            document.getElementById('clearBtn').addEventListener('click', function () {
+                input.value = '';
+                output.value = '';
+                wrap.hidden = true;
+                result.className = 'result';
+                paint();
+                input.focus();
+            });
+            input.addEventListener('input', paint);
+            input.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    pretty();
+                }
+            });
+            // Seed the box so the tool is demonstrably working before any typing.
+            input.value = EXAMPLE;
+            pretty();
+            paint();
+        })();
+    </script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>

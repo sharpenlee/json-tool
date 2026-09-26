@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Syntax Rules – Cheat Sheet With Valid and Invalid Examples</title>
+    <meta name="description" content="The complete JSON syntax rules in one page: six value types, object and array form, string escapes, number limits, and the mistakes that cause parser errors — with valid and invalid examples." />
+    <link rel="canonical" href="https://json-tool.com/json-syntax.html" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='bold' fill='white' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Syntax Rules – Cheat Sheet With Valid and Invalid Examples" />
+    <meta property="og:description" content="Six value types, object and array rules, the full escape list, number limits and the eight mistakes that break every parser." />
+    <meta property="og:url" content="https://json-tool.com/json-syntax.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Syntax Rules – Cheat Sheet With Valid and Invalid Examples" />
+    <meta name="twitter:description" content="Six value types, object and array rules, the full escape list, number limits and the eight mistakes that break every parser." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: TechArticle -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": "JSON Syntax Rules",
+            "url": "https://json-tool.com/json-syntax.html",
+            "description": "A reference for the JSON data-interchange syntax: value types, object and array structure, string escapes, number format and the syntax errors that parsers reject.",
+            "proficiencyLevel": "Beginner to intermediate",
+            "inLanguage": "en",
+            "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "What are the six JSON value types?",
+                "acceptedAnswer": { "@type": "Answer", "text": "String, number, object, array, true and false, and null. Those are the only kinds of value JSON can represent — there is no date, binary, undefined or comment type." }
+            }, {
+                "@type": "Question",
+                "name": "Are trailing commas allowed in JSON?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. A comma must sit between two values, so the last item in an object or array is never followed by one. JavaScript object literals and JSON5 allow trailing commas, which is why files that look fine in an editor still fail to parse." }
+            }, {
+                "@type": "Question",
+                "name": "Do JSON keys have to be in double quotes?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every property name must be a double-quoted string. Unquoted keys, single quotes and backticks are all invalid, and keys are case-sensitive: name and Name are two different properties." }
+            }, {
+                "@type": "Question",
+                "name": "Can JSON store dates?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Not as a distinct type. Dates are conventionally written as ISO 8601 strings such as 2026-09-26T09:00:00Z, or as a Unix timestamp number, and converted back to a date object in the code that reads them." }
+            }, {
+                "@type": "Question",
+                "name": "Is JSON case-sensitive?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes, for keys and for string values. The literals are also case-sensitive: true, false and null must be lowercase, and True or NULL will not parse." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>JSON Syntax Rules</h1>
+            <p class="updated">Last updated: 26 September 2026</p>
+
+            <p class="lead">JSON is a deliberately small grammar: six value types, two container shapes, and a handful of characters with special meaning. Everything a parser can reject comes from one of those rules, so the whole language fits on one page.</p>
+
+            <div class="tools-nav">
+                <span>Related:</span>
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a>
+            </div>
+
+            <h2>The six value types</h2>
+            <table>
+                <thead><tr><th>Type</th><th>Example</th><th>Notes</th></tr></thead>
+                <tbody>
+                    <tr><td>String</td><td><code>"order-7"</code></td><td>Double quotes only; a few characters must be escaped</td></tr>
+                    <tr><td>Number</td><td><code>250</code>, <code>-1.5e7</code></td><td>Integers and decimals; no <code>NaN</code>, <code>Infinity</code> or hex</td></tr>
+                    <tr><td>Object</td><td><code>{"qps": 250}</code></td><td>Empty <code>{}</code> is legal; keys are quoted strings</td></tr>
+                    <tr><td>Array</td><td><code>[1, "two", null]</code></td><td>Ordered, mixed types allowed, empty <code>[]</code> is legal</td></tr>
+                    <tr><td>Boolean</td><td><code>true</code>, <code>false</code></td><td>Lowercase; not quoted, and not 0/1</td></tr>
+                    <tr><td>Null</td><td><code>null</code></td><td>Lowercase; means "a value that is absent", distinct from missing key</td></tr>
+                </tbody>
+            </table>
+            <p>A JSON document is <strong>exactly one value</strong> at the top level. That value may be an object, an array, a string, a number, <code>true</code> or <code>null</code> — so <code>"hello"</code> and <code>42</code> are both valid documents, even though most people expect the outer braces.</p>
+
+            <h2>Objects</h2>
+            <ul>
+                <li>Written as <code>{ }</code> containing zero or more <em>key: value</em> pairs separated by commas.</li>
+                <li>Every key is a double-quoted string: <code>{"name": "Ada"}</code>, never <code>{name: "Ada"}</code> or <code>{'name': 'Ada'}</code>.</li>
+                <li>No comma after the final pair. <code>{"a": 1,}</code> is an error.</li>
+                <li>Keys are case-sensitive, and duplicate keys parse without an error but keep only one value — the winner depends on the parser, so never rely on duplicates.</li>
+                <li>Objects are unordered collections by specification. If you need a stable order for comparison or diffs, sort the keys deliberately; <a href="index.html">the formatter</a> does it recursively.</li>
+            </ul>
+
+            <h2>Arrays</h2>
+            <ul>
+                <li>Written as <code>[ ]</code> with values separated by commas, and the same no-trailing-comma rule.</li>
+                <li>Elements may mix types freely: <code>[1, "one", true, null, {}, []]</code> is legal.</li>
+                <li>Arrays are ordered, which is what makes <code>[ ]</code> the right shape for a list you will index into.</li>
+            </ul>
+
+            <h2>Strings and escapes</h2>
+            <p>A string is any Unicode text between double quotes, except that two characters cannot appear literally: the double quote itself, and the backslash. Control characters below U+007F must be escaped too.</p>
+            <table>
+                <thead><tr><th>Escape</th><th>Means</th></tr></thead>
+                <tbody>
+                    <tr><td><code>\"</code></td><td>double quote</td></tr>
+                    <tr><td><code>\\</code></td><td>backslash</td></tr>
+                    <tr><td><code>\/</code></td><td>slash (optional; always safe to write)</td></tr>
+                    <tr><td><code>\b \f \n \r \t</code></td><td>backspace, form feed, newline, carriage return, tab</td></tr>
+                    <tr><td><code>\uXXXX</code></td><td>any character by four-digit hex code point; characters outside the basic plane need a surrogate pair</td></tr>
+                </tbody>
+            </table>
+            <p>Anything else after a backslash is invalid — <code>\d</code>, <code>\x41</code> and <code>\0</code> all fail. This is where Windows paths bite: <code>"C:\new\report.json"</code> parses as <code>C:</code> followed by an escape, so write <code>"C:\\new\\report.json"</code>.</p>
+
+            <h2>Numbers</h2>
+            <ul>
+                <li>Optional minus, digits, optional fraction, optional exponent: <code>-1.5e+7</code> is fine.</li>
+                <li>No leading zeros (<code>01</code> is invalid; <code>0</code> and <code>0.1</code> are fine), no trailing decimal point, no <code>+</code> sign, no hexadecimal, no octal, no digit separators.</li>
+                <li>Numbers must not be quoted if you want arithmetic: <code>"250"</code> is a string as far as any parser is concerned, and that single mistake causes a large share of integration bugs.</li>
+                <li>The grammar itself puts no bound on magnitude, but most parsers read numbers as IEEE-754 doubles, so integers above 2<sup>53</sup> lose precision — snowflake IDs and Twitter IDs should travel as strings.</li>
+            </ul>
+
+            <h2>What JSON does not have</h2>
+            <p>Knowing the absences settles most arguments with an editor that seems more permissive than the parser:</p>
+            <ul>
+                <li><strong>Comments</strong> — no <code>//</code>, no <code>/* */</code>. Files that need them are JSONC, common in TypeScript configs, and must be stripped before parsing.</li>
+                <li><strong>undefined</strong> — omit the key instead, or use <code>null</code>.</li>
+                <li><strong>Dates, binary, functions, sets, maps</strong> — encode as a string, or a base64 string, and decide the convention with whoever reads it.</li>
+                <li><strong>Single quotes, multiline raw strings, trailing commas</strong> — all invalid, all commonly produced by copy-pasting from JavaScript.</li>
+                <li><strong>Multiple values per document</strong> — one JSON value only. Newline-delimited records are NDJSON, a different format with its own parser.</li>
+            </ul>
+
+            <h2>The eight mistakes that cause almost every parse error</h2>
+            <ol>
+                <li><code>{"a": 1,}</code> — trailing comma. <strong>Fix:</strong> remove it.</li>
+                <li><code>{'a': 1}</code> — single quotes. <strong>Fix:</strong> use double quotes on both key and value.</li>
+                <li><code>{a: 1}</code> — unquoted key. <strong>Fix:</strong> <code>{"a": 1}</code>.</li>
+                <li><code>// config</code> at the top — a comment. <strong>Fix:</strong> delete it, or parse as JSONC with a tool that supports it.</li>
+                <li><code>{"ok": True}</code> — capitalised literal. <strong>Fix:</strong> <code>true</code>.</li>
+                <li><code>{"v": NaN}</code> — non-finite number. <strong>Fix:</strong> <code>null</code> or a string.</li>
+                <li><code>{"p": "C:\new"}</code> — bad escape. <strong>Fix:</strong> double the backslash.</li>
+                <li><code>{“a”: 1}</code> — smart quotes pasted from a document or slide. <strong>Fix:</strong> retype them as straight quotes.</li>
+            </ol>
+            <p>Each of these is reported with its exact line and column by <a href="json-validator.html">the JSON validator</a>, along with the cause in words.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What are the six JSON value types?</h3>
+                <p>String, number, object, array, <code>true</code> and <code>false</code>, and <code>null</code>. Those are the only kinds of value JSON can represent — there is no date, binary, undefined or comment type.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Are trailing commas allowed in JSON?</h3>
+                <p>No. A comma must sit between two values, so the last item in an object or array is never followed by one. JavaScript object literals and JSON5 allow trailing commas, which is why files that look fine in an editor still fail to parse.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Do JSON keys have to be in double quotes?</h3>
+                <p>Yes. Every property name must be a double-quoted string. Unquoted keys, single quotes and backticks are all invalid, and keys are case-sensitive: <code>name</code> and <code>Name</code> are two different properties.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can JSON store dates?</h3>
+                <p>Not as a distinct type. Dates are conventionally written as ISO 8601 strings such as <code>2026-09-26T09:00:00Z</code>, or as a Unix timestamp number, and converted back to a date object in the code that reads them.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is JSON case-sensitive?</h3>
+                <p>Yes, for keys and for string values. The literals are also case-sensitive: <code>true</code>, <code>false</code> and <code>null</code> must be lowercase, and <code>True</code> or <code>NULL</code> will not parse.</p>
+            </div>
+
+            <div class="notice">
+                <p>Something missing or wrong on this page? <a href="contact.html">Tell us</a> — this cheat sheet follows RFC 8259, and corrections that quote the grammar are the most useful kind.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="json-syntax.html">JSON syntax</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>
