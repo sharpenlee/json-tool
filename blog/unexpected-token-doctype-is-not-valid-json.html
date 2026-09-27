@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Consent mode defaults: everything denied until the banner is answered.
+         This must run before any Google tag, so it is first in <head>. -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            wait_for_update: 500
+        });
+    </script>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Why "Unexpected token '&lt;'" Means Your API Returned HTML</title>
+    <meta name="description" content="The response was HTML — an error page, a login redirect or a proxy block page — not JSON. How to confirm it in one request and fix the real cause." />
+    <link rel="canonical" href="https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Why &quot;Unexpected token '&lt;'&quot; Means Your API Returned HTML" />
+    <meta property="og:description" content="The response was HTML — an error page, a login redirect or a proxy block page — not JSON. How to confirm it in one request and fix the real cause." />
+    <meta property="og:url" content="https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Why &quot;Unexpected token '&lt;'&quot; Means Your API Returned HTML" />
+    <meta name="twitter:description" content="The response was HTML, not JSON. How to confirm it in one request and fix the real cause." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "Why \"Unexpected token '<'\" Means Your API Returned HTML",
+            "description": "The response was HTML, not JSON. How to confirm it in one request and fix the real cause.",
+            "url": "https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html",
+            "mainEntityOfPage": { "@type": "WebPage", "@id": "https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html" },
+            "image": "https://json-tool.com/og-image.png",
+            "datePublished": "2026-09-27",
+            "dateModified": "2026-09-27",
+            "inLanguage": "en",
+            "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" },
+            "publisher": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+                "@type": "ListItem",
+                "position": 1,
+                "name": "JSON Tool",
+                "item": "https://json-tool.com/"
+            }, {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "JSON guides",
+                "item": "https://json-tool.com/blog/"
+            }, {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Why APIs return HTML"
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="/index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="/index.html">JSON Tool</a><span>/</span><a href="/blog/">JSON guides</a><span>/</span>Why APIs return HTML
+            </nav>
+            <h1>Why "Unexpected token '&lt;'" means your API returned HTML</h1>
+            <p class="post-meta">Published 27 September 2026</p>
+
+            <p class="lead">You called an endpoint, expected data, and the parser stopped on the very first character. The message is not about your payload — it is about the shape of the response, and the response was a web page.</p>
+
+            <pre><code>Uncaught SyntaxError: Unexpected token '&lt;', "&lt;!DOCTYPE "... is not valid JSON</code></pre>
+
+            <p>Older engines report the same failure with different wording, and a search for any of these strings means the same thing:</p>
+
+            <pre><code>SyntaxError: Unexpected token &lt; in JSON at position 0</code></pre>
+
+            <h2>What the parser is telling you</h2>
+            <p>A JSON document may begin with <code>{</code>, <code>[</code>, <code>"</code>, a digit, a minus sign, or one of the literals <code>true</code>, <code>false</code> and <code>null</code>. Leading whitespace is allowed. Nothing else is. A <code>&lt;</code> is not in that set, so a body that starts with <code>&lt;!DOCTYPE html&gt;</code> fails at offset zero.</p>
+            <p>Newer V8 builds — Chrome, Edge and Node 20 and later — make the message far more useful by quoting the beginning of what they actually received. Those five characters, <code>"&lt;!DOCTYPE "</code>, are the whole diagnosis: something gave you a hypertext document where you expected a data envelope.</p>
+
+            <h2>The five things that actually happened</h2>
+            <ol>
+                <li><strong>The endpoint returned an error page.</strong> A 404, a 500, or a framework's HTML error renderer answered instead of the route you meant. A path segment is missing, the route only exists for a different HTTP method, or the resource genuinely is not there.</li>
+                <li><strong>A single-page app fallback answered instead of the API.</strong> Dev servers and static hosts commonly serve <code>index.html</code> for any unmatched path, so a request to a typo such as <code>/api/uers</code> returns the application shell — status 200, content type <code>text/html</code>. This is the most frequent cause in local development, and it looks exactly like a successful request.</li>
+                <li><strong>You were redirected to sign-in.</strong> An expired session or a missing token turns the API call into a redirect to a login page, and <code>fetch</code> follows redirects silently. The parser then receives the sign-in form.</li>
+                <li><strong>Something in front of the API blocked the request.</strong> A WAF, a corporate proxy, a CDN security rule or a captive portal serves an HTML interstitial, frequently with a status that does not read like a failure.</li>
+                <li><strong>The base URL points at the marketing site.</strong> A missing <code>/api</code> prefix, an environment variable still set to the root domain, or a trailing-slash difference lands the request on a page that is perfectly valid HTML — just not the one you wanted.</li>
+            </ol>
+
+            <h2>Confirm it in one request</h2>
+            <p>Print the status, the content type and the first bytes <em>before</em> parsing. This is the step that turns the error from a puzzle into a fact:</p>
+
+            <pre><code>const res = await fetch(url, {
+    headers: { Accept: 'application/json' }
+});
+
+const body = await res.text();
+
+console.log(res.status, res.headers.get('content-type'));
+console.log(body.slice(0, 120));
+
+if (!res.ok) {
+    throw new Error(`HTTP ${res.status} from ${res.url}: ${body.slice(0, 200)}`);
+}
+if (!res.headers.get('content-type')?.includes('json')) {
+    throw new Error(`Expected JSON, got ${res.headers.get('content-type')}`);
+}
+
+const data = JSON.parse(body);</code></pre>
+
+            <p>Reading with <code>text()</code> and parsing it yourself is what makes this work. Calling <code>res.json()</code> directly throws the same unhelpful syntax error and discards the body, which is why the cause stays hidden.</p>
+
+            <p>From a shell, the headers and the first line are enough:</p>
+
+            <pre><code>curl -sS -i -H 'Accept: application/json' https://api.example.com/v1/users | head -n 20</code></pre>
+
+            <p>The first line gives the status and <code>content-type</code> gives the type. If the body begins with <code>&lt;!DOCTYPE</code>, you have your answer. Run it again without <code>-L</code>: curl will then print the redirect and its <code>location</code> header instead of following it, which is how you catch the login bounce that <code>fetch</code> hid from you.</p>
+
+            <h3>Why sending <code>Accept: application/json</code> does not prevent this</h3>
+            <p>It is a request header, not a contract. Servers are free to ignore it, and error paths in particular tend to bypass content negotiation altogether. It is still worth sending — some gateways route on it — but the reliable check is the status and the content type above, not the header you hoped would be honoured.</p>
+
+            <h3>It works in Postman but fails in the browser</h3>
+            <p>Two explanations cover nearly every case. Either Postman sends an API key or bearer token while the browser sends session cookies, so only the browser gets redirected to sign-in; or the server chooses its response format based on <code>X-Requested-With</code>, which <code>fetch</code> does not set by default. Compare the raw response rather than the Pretty view — Postman renders HTML without complaint.</p>
+
+            <h2>Do not fix this by stripping the HTML</h2>
+            <p>It is tempting to add a repair step that slices everything before the first <code>{</code> and parses the remainder. That converts a loud failure into a quiet one. The request is still wrong, and once the error page changes shape you will be debugging a half-parsed object instead of a 404. Fix the path, the authentication or the routing, and keep the guard from the snippet above so the next occurrence fails where you can see it.</p>
+
+            <h2>Wording across engines</h2>
+            <p>The same defect is reported differently depending on what parsed it. If your message is not the one at the top of this page, it is probably in this table:</p>
+
+            <table>
+                <thead>
+                    <tr><th>Engine</th><th>Message</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Chrome, Edge, Node 20+</td><td><code>Unexpected token '&lt;', "&lt;!DOCTYPE "... is not valid JSON</code></td></tr>
+                    <tr><td>Chrome, Node before v20</td><td><code>Unexpected token &lt; in JSON at position 0</code></td></tr>
+                    <tr><td>Firefox</td><td><code>JSON.parse: unexpected character at line 1 column 1 of the JSON data</code></td></tr>
+                    <tr><td>Safari, JavaScriptCore</td><td><code>JSON Parse error: Unexpected identifier "&lt;!DOCTYPE"</code></td></tr>
+                    <tr><td>Python <code>json.loads</code></td><td><code>json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></td></tr>
+                </tbody>
+            </table>
+
+            <h2>Where the formatter fits</h2>
+            <p>Once the endpoint returns data, paste it into the <a href="/">JSON formatter</a> to read the structure. If you are not yet sure whether a body is JSON at all, paste it in as it arrived: a <code>&lt;</code> reported at position 0 is a definitive answer that the content type was lying, and the <a href="/json-validator.html">validator</a> gives you the line and column rather than a bare offset.</p>
+
+            <div class="related">
+                <h2>Related</h2>
+                <ul>
+                    <li><a href="/blog/">JSON guides</a> — this page is the first in a set that decodes parser errors message by message.</li>
+                    <li><a href="/json-validator.html">JSON validator</a> — the exact line and column of any syntax error, parsed locally.</li>
+                    <li><a href="/json-syntax.html">JSON syntax cheat sheet</a> — what the grammar permits, with valid and invalid examples side by side.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="/index.html">Home</a> &middot;
+                <a href="/blog/">Guides</a> &middot;
+                <a href="/json-validator.html">Validator</a> &middot;
+                <a href="/about.html">About</a> &middot;
+                <a href="/privacy.html">Privacy</a> &middot;
+                <a href="/terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="/contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="/privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

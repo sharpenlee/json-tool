@@ -16,12 +16,13 @@ Licensed under MIT; see [LICENSE](LICENSE).
 
 ## Repository structure
 
-Fifty published pages, all at fixed paths, plus the shared assets they reference:
+Fifty-two published pages, all at fixed paths, plus the shared assets they reference:
 
 | Path | What it is |
 | --- | --- |
 | `index.html` | The formatter — the tool itself, in English |
 | `json-validator.html`, `json-minifier.html`, `sort-json-keys.html`, `pretty-print-json.html`, `json-syntax.html` | English-only long-tail pages; the tool pages share `tool-page.css` |
+| `blog/index.html` and `blog/*.html` | English-only articles on the parser errors people search for; they reach `/page.css` and `/page.js` with root-absolute paths |
 | `about.html`, `privacy.html`, `terms.html`, `contact.html` | Informational and legal pages |
 | `es/ fr/ ja/ ko/ pt/ ru/ zh/ zh-hant/` | Eight locales, each a translated copy of those five page types |
 | `page.css`, `page.js`, `tool-page.css`, `consent.css`, `consent.js` | Shared styles and behaviour — the only non-page code in the repo |
@@ -42,9 +43,9 @@ Parsing happens entirely in the browser, so pasted JSON never leaves the machine
 
 ## Deploying
 
-The tool page is self-contained, and the published site is now `index.html`, the five extra English-only long-tail pages (`json-validator.html`, `json-minifier.html`, `sort-json-keys.html`, `pretty-print-json.html`, `json-syntax.html`) that share `tool-page.css`, the four informational pages (`about.html`, `privacy.html`, `terms.html`, `contact.html`) with their shared `page.css`, `page.js`, `consent.css` and `consent.js`, plus `robots.txt`, `sitemap.xml`, an IndexNow key file (`<32-hex-key>.txt`, used to notify Bing/Yandex/DuckDuckGo of new URLs) and `og-image.png`. Everything is served from the repo root as-is, so any static host works. The live domain is `json-tool.com`.
+The tool page is self-contained, and the published site is now `index.html`, the five extra English-only long-tail pages (`json-validator.html`, `json-minifier.html`, `sort-json-keys.html`, `pretty-print-json.html`, `json-syntax.html`) that share `tool-page.css`, the four informational pages (`about.html`, `privacy.html`, `terms.html`, `contact.html`) with their shared `page.css`, `page.js`, `consent.css` and `consent.js`, the English-only `blog/` directory (an index and the guides beneath it) that reaches the same shared assets through root-absolute paths, plus `robots.txt`, `sitemap.xml`, an IndexNow key file (`<32-hex-key>.txt`, used to notify Bing/Yandex/DuckDuckGo of new URLs) and `og-image.png`. Everything is served from the repo root as-is, so any static host works. The live domain is `json-tool.com`.
 
-Those five extra pages target long-tail queries and exist in English only, so they carry no `hreflang` alternates and are absent from the locale directories; each one is a plain `<url>` entry at the end of `sitemap.xml`. If they are ever translated, convert their entries into grouped entries with alternates, the way the other pages are listed.
+Those five extra pages target long-tail queries and exist in English only, so they carry no `hreflang` alternates and are absent from the locale directories; each one is a plain `<url>` entry at the end of `sitemap.xml`. The `blog/` pages follow the same convention — English only, no alternates, one plain `<url>` entry each. Blog code samples must sit directly inside `<main>`: the shared `main > pre` rule is scoped that way so it cannot override the tool pages' own `.result pre` styling. If any of these pages is ever translated, convert its entry into a grouped entry with alternates, the way the other pages are listed.
 
 `og-image.html` is the design source for the social card, not a page: it is listed in `.vercelignore` so it never gets published. To regenerate the image after editing it:
 

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Consent mode defaults: everything denied until the banner is answered.
+         This must run before any Google tag, so it is first in <head>. -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            wait_for_update: 500
+        });
+    </script>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Guides — Parser Errors and Formatting Explained</title>
+    <meta name="description" content="Plain-English guides to the JSON errors you actually hit: what each parser message means, how to find the cause, and how to fix it. Nothing is uploaded." />
+    <link rel="canonical" href="https://json-tool.com/blog/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Guides — Parser Errors and Formatting Explained" />
+    <meta property="og:description" content="Plain-English guides to the JSON errors you actually hit: what each parser message means, how to find the cause, and how to fix it." />
+    <meta property="og:url" content="https://json-tool.com/blog/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Guides — Parser Errors and Formatting Explained" />
+    <meta name="twitter:description" content="Plain-English guides to the JSON errors you actually hit: what each parser message means, how to find the cause, and how to fix it." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+                "@type": "ListItem",
+                "position": 1,
+                "name": "JSON Tool",
+                "item": "https://json-tool.com/"
+            }, {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "JSON guides"
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="/index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="/index.html">JSON Tool</a><span>/</span>JSON guides
+            </nav>
+            <h1>JSON guides</h1>
+            <p class="lead">Every guide here starts from a parser message that people actually search for, stays away from guesses, and shows the smallest change that fixes the problem. They are written by the maintainer of the formatter on this site, against the same parser your code runs on.</p>
+
+            <ul class="post-list">
+                <li>
+                    <h2><a href="/blog/unexpected-token-doctype-is-not-valid-json.html">Why "Unexpected token '&lt;'" means your API returned HTML</a></h2>
+                    <p class="post-meta">27 September 2026</p>
+                    <p>The response was an HTML error page, a login redirect or a proxy block page — not JSON. How to prove it in one request, and how to stop the real cause instead of stripping the HTML and hoping.</p>
+                </li>
+            </ul>
+
+            <h2>How these are written</h2>
+            <p>Each message quoted here is the literal string produced by V8 (Chrome, Edge, Node), JavaScriptCore, SpiderMonkey or Python's own parser, and the error strings are reproduced exactly so a search for the text you saw lands on the explanation rather than on a guess. Where the wording changed between engine versions, both forms are given, because the same underlying defect now reports differently in Node 20 than it did in Node 16.</p>
+            <p>Every code sample is written to keep the original body intact: the guide tells you to inspect what actually arrived before you parse it, which is the step that usually turns a mystery into a one-line fix.</p>
+
+            <div class="notice">
+                <p>Stuck on an error that is not covered here? The <a href="/json-validator.html">validator</a> reports the line and column of any syntax error you paste into it, and you can <a href="/contact.html">send the message</a> — parser errors with no written-up cause are the ones worth adding next.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="/index.html">Home</a> &middot;
+                <a href="/blog/">Guides</a> &middot;
+                <a href="/json-validator.html">Validator</a> &middot;
+                <a href="/about.html">About</a> &middot;
+                <a href="/privacy.html">Privacy</a> &middot;
+                <a href="/terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="/contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="/privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

@@ -650,4 +650,12 @@
     <loc>https://json-tool.com/json-syntax.html</loc>
     <lastmod>2026-09-26</lastmod>
   </url>
+  <url>
+    <loc>https://json-tool.com/blog/</loc>
+    <lastmod>2026-09-27</lastmod>
+  </url>
+  <url>
+    <loc>https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html</loc>
+    <lastmod>2026-09-27</lastmod>
+  </url>
 </urlset>
