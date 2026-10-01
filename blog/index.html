@@ -74,9 +74,14 @@
                 <a href="/index.html">JSON Tool</a><span>/</span>JSON guides
             </nav>
             <h1>JSON guides</h1>
-            <p class="lead">Every guide here starts from a parser message that people actually search for, stays away from guesses, and shows the smallest change that fixes the problem. They are written by the maintainer of the formatter on this site, against the same parser your code runs on.</p>
+            <p class="lead">These are written by the maintainer of the formatter on this site, and they aim at the parts of JSON that surprise people rather than at restating the manual. Claims are produced by running code, and where something was not executed it is labelled as such — the gap between "documented" and "measured" is usually where the bugs live.</p>
 
             <ul class="post-list">
+                <li>
+                    <h2><a href="/blog/json-number-precision.html">JSON number precision — why 19-digit IDs come back wrong</a></h2>
+                    <p class="post-meta">1 October 2026</p>
+                    <p>All integers above <code>2**53</code> are silently rounded by the most common parser in the world, and the standard permits it. Measured across JavaScript, Python and Ruby — which disagree — plus the two-year-old round-trip recipe that preserves the digits.</p>
+                </li>
                 <li>
                     <h2><a href="/blog/unexpected-token-doctype-is-not-valid-json.html">Why "Unexpected token '&lt;'" means your API returned HTML</a></h2>
                     <p class="post-meta">27 September 2026</p>
@@ -85,11 +90,11 @@
             </ul>
 
             <h2>How these are written</h2>
-            <p>Each message quoted here is the literal string produced by V8 (Chrome, Edge, Node), JavaScriptCore, SpiderMonkey or Python's own parser, and the error strings are reproduced exactly so a search for the text you saw lands on the explanation rather than on a guess. Where the wording changed between engine versions, both forms are given, because the same underlying defect now reports differently in Node 20 than it did in Node 16.</p>
-            <p>Every code sample is written to keep the original body intact: the guide tells you to inspect what actually arrived before you parse it, which is the step that usually turns a mystery into a one-line fix.</p>
+            <p>Output, error strings and version-specific behaviour are produced by running the code and pasting the result, and the runtime versions are named so the reader can reproduce it. Where a claim was not executed — a setting in a language that was not on the machine — the article says so rather than presenting documentation as a measurement.</p>
+            <p>Error messages are quoted exactly as the engine prints them, so a search for the text you actually saw lands on an explanation rather than on a guess. Where the wording changed between engine versions, both forms are given, because the same underlying defect reports differently in Node 20 than it did in Node 16.</p>
 
             <div class="notice">
-                <p>Stuck on an error that is not covered here? The <a href="/json-validator.html">validator</a> reports the line and column of any syntax error you paste into it, and you can <a href="/contact.html">send the message</a> — parser errors with no written-up cause are the ones worth adding next.</p>
+                <p>Stuck on something that is not covered here? The <a href="/json-validator.html">validator</a> reports the line and column of any syntax error you paste into it, and you can <a href="/contact.html">suggest a topic</a> — a parser message with no written-up cause, or a JSON behaviour you have not seen explained, is the most useful kind of suggestion.</p>
             </div>
         </main>
 

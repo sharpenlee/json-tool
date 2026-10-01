@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Number Precision — Why 19-Digit IDs Come Back Wrong</title>
+    <meta name="description" content="JSON numbers carry no guaranteed precision: the same 19-digit ID is silently wrong in JavaScript, exact in Python and Ruby. Why, and how to stop it." />
+    <link rel="canonical" href="https://json-tool.com/blog/json-number-precision.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Number Precision — Why 19-Digit IDs Come Back Wrong" />
+    <meta property="og:description" content="The same 19-digit ID is silently wrong in JavaScript and exact in Python and Ruby. JSON is not lossy — your parser chose to be." />
+    <meta property="og:url" content="https://json-tool.com/blog/json-number-precision.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Number Precision — Why 19-Digit IDs Come Back Wrong" />
+    <meta name="twitter:description" content="The same 19-digit ID is silently wrong in JavaScript and exact in Python and Ruby. JSON is not lossy — your parser chose to be." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "JSON Number Precision — Why 19-Digit IDs Come Back Wrong",
+            "description": "The same 19-digit ID is silently wrong in JavaScript and exact in Python and Ruby. JSON is not lossy — the parser chose to be, and the standard allowed it.",
+            "url": "https://json-tool.com/blog/json-number-precision.html",
+            "mainEntityOfPage": { "@type": "WebPage", "@id": "https://json-tool.com/blog/json-number-precision.html" },
+            "image": "https://json-tool.com/og-image.png",
+            "datePublished": "2026-10-01",
+            "dateModified": "2026-10-01",
+            "inLanguage": "en",
+            "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" },
+            "publisher": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+                "@type": "ListItem",
+                "position": 1,
+                "name": "JSON Tool",
+                "item": "https://json-tool.com/"
+            }, {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "JSON guides",
+                "item": "https://json-tool.com/blog/"
+            }, {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "JSON number precision"
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="/index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="/index.html">JSON Tool</a><span>/</span><a href="/blog/">JSON guides</a><span>/</span>JSON number precision
+            </nav>
+            <h1>JSON number precision — why 19-digit IDs come back wrong</h1>
+            <p class="post-meta">Published 1 October 2026</p>
+
+            <p class="lead">Here is one line of JSON, parsed and re-serialised, changing a digit on the way through. No error, no warning, nothing to catch:</p>
+
+            <pre><code>in:  {"id": 9007199254740993}
+out: {"id": 9007199254740992}</code></pre>
+
+            <p>It is tempting to conclude that JSON is lossy. It is not. Run the same document through Python or Ruby and the ID survives intact — which means the damage was done by a choice the JavaScript engine made, and that the standard explicitly permitted.</p>
+
+            <h2>One document, three answers</h2>
+
+            <p>Every result below was produced by running the code, not by reading documentation. Three commands, one payload:</p>
+
+            <pre><code>node    -p 'JSON.parse("{\"id\":9007199254740993}").id'
+python3 -c 'import json;print(json.loads("{\"id\":9007199254740993}")["id"])'
+ruby    -rjson -e 'p JSON.parse("{\"id\":9007199254740993}")["id"]'</code></pre>
+
+            <table>
+                <thead>
+                    <tr><th>Runtime</th><th>What you get back</th><th>Type</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Node v24.18.0 (V8 15.0)</td><td><code>9007199254740992</code></td><td><code>number</code></td></tr>
+                    <tr><td>CPython 3.10.11</td><td><code>9007199254740993</code></td><td><code>int</code></td></tr>
+                    <tr><td>Ruby 2.6.10</td><td><code>9007199254740993</code></td><td><code>Integer</code></td></tr>
+                </tbody>
+            </table>
+
+            <p>Two of the three are exact. The odd one out is the language most JSON is written in, and it is the only one of the three whose integers are not arbitrary-precision: JavaScript has one numeric type, a 64-bit float, so anything above <code>2**53 - 1</code> is rounded on the way in. A 19-digit snowflake ID, a nanosecond timestamp, an Ethereum amount — all of them sit well past that line.</p>
+
+            <h2>The damage can happen before JSON is involved</h2>
+
+            <p>In JavaScript the rounding is not a property of the parser. It is a property of the number, and it applies to literals in your source too:</p>
+
+            <pre><code>9007199254740993 === 9007199254740992   // true
+1.0000000000000000001                   // 1</code></pre>
+
+            <p>So by the time <code>JSON.parse</code> is called, a numeric ID may already have been corrupted by the code that built the value. This is why "just use a bigger type" does not work in JavaScript: the bigger type does not exist, and the literal syntax will not warn you.</p>
+
+            <h2>What the standard actually promises</h2>
+
+            <p>RFC 8259 does not require a lossy parser. It permits one. It allows implementations to set their own limits on range and precision, and the only numbers it promises will interoperate are those inside the window <code>[-(2**53)+1, (2**53)-1]</code>. It names the smell itself: <q>A JSON number such as 1E400 or 3.141592653589793238462643383279 may indicate potential interoperability problems</q>.</p>
+
+            <p>That, in one sentence, is the whole problem. <strong>JSON defines a grammar for numbers, not a numeric type.</strong> The grammar says a number is an optional minus sign, digits, an optional fraction and an optional exponent. It says nothing about how many digits matter or what they mean once decoded. Every implementation then binds that grammar to whatever number type it already had, and the binding is where your ID dies.</p>
+
+            <h3>It applies to keys as well</h3>
+
+            <p>The same laissez-faire applies to object keys. RFC 8259 says <q>The names within an object SHOULD be unique</q>, and then concedes what happens when they are not: <q>the behavior of software that receives such an object is unpredictable</q>. All three runtimes I tested take the last value, but nothing in the standard requires that, which is why a duplicated key is a live security question rather than a style question — a proxy and the service behind it can disagree about which value the document means.</p>
+
+            <h2>Reading is only half of it</h2>
+
+            <p>The write side is worse, because it destroys information that was never in doubt. These are measured, not theoretical:</p>
+
+            <table>
+                <thead>
+                    <tr><th>Value</th><th>JavaScript</th><th>Python</th><th>Ruby</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>1.0</code></td><td><code>1</code></td><td><code>1.0</code></td><td><code>1.0</code></td></tr>
+                    <tr><td><code>1.10</code></td><td><code>1.1</code></td><td><code>1.1</code></td><td><code>1.1</code></td></tr>
+                    <tr><td><code>NaN</code></td><td><code>null</code></td><td><code>NaN</code> — invalid JSON</td><td>raises <code>GeneratorError</code></td></tr>
+                    <tr><td><code>Infinity</code></td><td><code>null</code></td><td><code>Infinity</code> — invalid JSON</td><td>raises <code>GeneratorError</code></td></tr>
+                    <tr><td><code>-0.0</code></td><td><code>0</code></td><td><code>-0.0</code></td><td><code>-0.0</code></td></tr>
+                    <tr><td><code>2**53 + 1</code></td><td><code>9007199254740992</code></td><td><code>9007199254740993</code></td><td><code>9007199254740993</code></td></tr>
+                </tbody>
+            </table>
+
+            <p>Three things are worth pulling out of that table.</p>
+
+            <p><strong>JavaScript turns <code>NaN</code> and <code>Infinity</code> into <code>null</code>.</strong> Not an error, not a string — <code>null</code>, which is indistinguishable from a genuine absent value. Python takes the opposite risk and writes <code>NaN</code> into the output, producing a document that is not valid JSON and that a strict reader will reject. Ruby refuses to write it at all, which is the correct behaviour and the least popular one.</p>
+
+            <p><strong><code>1.10</code> loses its trailing zero everywhere.</strong> Not because a parser is lazy, but because <code>1.10</code> and <code>1.1</code> are the same IEEE 754 double — the trailing zero was never a value, only spelling. Only a reader that declines to convert to a double keeps it. That is the real dividing line in this whole subject: <em>did the parser commit to a floating-point type, or did it keep the text?</em></p>
+
+            <p><strong>The round trip is not a function.</strong> If you cannot recover your input from <code>parse(stringify(x))</code>, then comparing serialised JSON as text for equality is a bug waiting to happen. <code>1.0</code> becomes <code>1</code>, <code>-0.0</code> becomes <code>0</code>, and <code>2**53 + 1</code> becomes <code>2**53</code> — all before you look at it.</p>
+
+            <p>The sign of zero shows how per-language this gets. Given the source text <code>-0</code>, JavaScript keeps the negative zero when parsing and then writes it back as <code>0</code>; Python reads the very same token as the integer <code>0</code>, losing the sign on the way in rather than on the way out. Identical bytes, two languages, two different places to drop the same bit.</p>
+
+            <h3>And it silently discards non-numbers too</h3>
+
+            <p>While we are on the write side, <code>JSON.stringify</code> in JavaScript does the following without complaint:</p>
+
+            <table>
+                <thead>
+                    <tr><th>Input</th><th>Output</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>{ a: undefined, b: 1 }</code></td><td><code>{"b":1}</code> — the key disappears</td></tr>
+                    <tr><td><code>[undefined]</code></td><td><code>[null]</code> — in an array the slot survives as null</td></tr>
+                    <tr><td><code>new Map([[1, 2]])</code></td><td><code>{}</code> — every entry gone, no error</td></tr>
+                    <tr><td><code>new Set([1])</code></td><td><code>{}</code></td></tr>
+                    <tr><td><code>1n</code> (BigInt)</td><td>throws <code>TypeError</code></td></tr>
+                    <tr><td><code>new Date(0)</code></td><td><code>"1970-01-01T00:00:00.000Z"</code>, and parsing it back gives a string, not a Date</td></tr>
+                </tbody>
+            </table>
+
+            <p>Note the inconsistency between the first two rows: the same <code>undefined</code> is dropped from an object and replaced with <code>null</code> in an array. Neither is wrong per the standard — an array cannot have a hole, so something has to go there — but a reader who assumes symmetry will be surprised.</p>
+
+            <h2>The 1e21 cliff</h2>
+
+            <p>One more JavaScript-only oddity, because it breaks text diffs rather than values:</p>
+
+            <pre><code>JSON.stringify(1e20)   // "100000000000000000000"
+JSON.stringify(1e21)   // "1e+21"</code></pre>
+
+            <p>Below <code>1e21</code> a number prints in full; at and above it, exponential notation. The value is identical, the bytes are not. Any tool that compares two payloads by their text — a cache key, a deduplication hash, a diff — will declare these different while any parser will say they are the same.</p>
+
+            <h2>The escape hatch almost nobody knows</h2>
+
+            <p>There is now a way to make <code>JSON.parse</code> and <code>JSON.stringify</code> round-trip byte-for-byte in JavaScript, and it is barely two years old. It comes from the TC39 <em>JSON.parse source text access</em> proposal, which is at stage 4, and it does two things: it gives the reviver a third argument carrying the <strong>original source text</strong> of each value, and it adds <code>JSON.rawJSON</code> for writing that text back out untouched.</p>
+
+            <p>That is enough to preserve a number exactly:</p>
+
+            <pre><code>const keep = (key, value, ctx) =&gt;
+    ctx &amp;&amp; 'source' in ctx ? JSON.rawJSON(ctx.source) : value;
+
+const src  = '{"id":9007199254740993,"amount":1.10,"tag":"x"}';
+const back = JSON.stringify(JSON.parse(src, keep));
+
+// back === src  ->  true</code></pre>
+
+            <p>Without the reviver the same transform silently rewrites the document — a changed digit <em>and</em> a reformatted decimal:</p>
+
+            <pre><code>plain:  {"id":9007199254740992,"amount":1.1,"tag":"x"}
+kept:   {"id":9007199254740993,"amount":1.10,"tag":"x"}</code></pre>
+
+            <p>It works inside arrays too, and <code>JSON.isRawJSON</code> tells you when you are holding one of these wrappers. Two things to know before reaching for it. It is not a number — you cannot do arithmetic on it, so it belongs in pass-through code (a proxy, a logger, a formatter) and not in business logic. And the argument must be valid JSON on its own: <code>JSON.rawJSON('01')</code> throws immediately rather than corrupting anything downstream, which is a good failure to have.</p>
+
+            <p>Availability is the real limit. It is present in the runtime I tested, Node v24.18.0 on V8 15.0, and absent from older ones — check with <code>typeof JSON.rawJSON</code> before relying on it. On an engine without it, no reviver will help you, because the digits were gone before your callback ran.</p>
+
+            <h2>What to do instead</h2>
+
+            <ol>
+                <li><strong>Send identifiers as strings.</strong> This is what every large API eventually does, and it is the only fix that holds across languages, proxies and databases simultaneously. <code>"9007199254740993"</code> is exact everywhere; <code>9007199254740993</code> is exact in two of the three runtimes above and wrong in the third. A string is also self-documenting: nobody will accidentally sum it.</li>
+                <li><strong>If you must keep numbers, parse with a reader that does not commit to a double.</strong> Python's default already keeps integers exact, and <code>parse_float=decimal.Decimal</code> keeps decimals exact too. Go's <code>json.Decoder.UseNumber()</code> and Jackson's <code>USE_BIG_DECIMAL_FOR_FLOATS</code> are the equivalent switches elsewhere; neither was executed here, so treat their exact semantics as documented rather than measured. In JavaScript, the reviver above is the option that exists today.</li>
+                <li><strong>Refuse to write <code>NaN</code> and <code>Infinity</code>.</strong> Python needs <code>json.dumps(..., allow_nan=False)</code> to stop producing invalid JSON; Ruby does it already. In JavaScript there is nothing to enable — they are silently <code>null</code>, so the check has to be yours.</li>
+                <li><strong>Never compare serialised JSON as text.</strong> <code>1.0</code> versus <code>1</code> and <code>1e20</code> versus <code>100000000000000000000</code> are the same values in different spelling. Compare parsed structures, and if you need a stable hash, canonicalise first — which means deciding what "equal" means for numbers before you hash, not after.</li>
+            </ol>
+
+            <h2>Where this bites in practice</h2>
+
+            <p>The failure is concentrated in identifiers, and identifiers are exactly the values people are most reluctant to make strings because of how much legacy code compares them. Snowflake IDs from Twitter, Discord and the like; nanosecond timestamps at 19 digits; Ethereum amounts in wei, up to 78 digits; 64-bit hashes used as keys. Every one of them is past <code>2**53</code>, and every one of them fails quietly — you get a valid-looking number that is off by a little, and the error surfaces three services later as "record not found".</p>
+
+            <h2>Check your own payload</h2>
+
+            <p>Paste the document into the <a href="/">JSON formatter</a> to see the structure, and be aware of what you are looking at: this tool parses with <strong>your browser's</strong> engine, which is a V8-family parser, so a 19-digit ID will already be rounded when it appears on screen. That is not a limitation to hide — it is the same thing <code>JSON.parse</code> will do to that data in your application, demonstrated before you ship it. If the number looks wrong in the formatter, it is wrong in your code.</p>
+
+            <p>For documents that will not parse at all, the <a href="/json-validator.html">validator</a> reports the line and column, and the <a href="/json-syntax.html">syntax cheat sheet</a> covers what the grammar allows.</p>
+
+            <h2>Provenance</h2>
+
+            <p>Every result in this article was produced by executing the code shown, on Node v24.18.0 (V8 15.0.245.15), CPython 3.10.11 and Ruby 2.6.10. The quoted sentences are from RFC 8259, <em>The JavaScript Object Notation (JSON) Data Interchange Format</em>, sections 4 and 6; the proposal status is from the TC39 <em>JSON.parse source text access</em> repository. Where a claim was not executed here — the Go and Jackson settings — it is labelled as documented behaviour rather than measured, because the difference between those two things is the entire subject of this article.</p>
+
+            <div class="related">
+                <h2>Related</h2>
+                <ul>
+                    <li><a href="/blog/unexpected-token-doctype-is-not-valid-json.html">Why "Unexpected token '&lt;'" means your API returned HTML</a> — the other way a payload arrives in a shape you did not expect.</li>
+                    <li><a href="/json-syntax.html">JSON syntax cheat sheet</a> — the grammar this article keeps referring to, with valid and invalid examples.</li>
+                    <li><a href="/blog/">JSON guides</a> — everything published so far.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="/index.html">Home</a> &middot;
+                <a href="/blog/">Guides</a> &middot;
+                <a href="/json-validator.html">Validator</a> &middot;
+                <a href="/about.html">About</a> &middot;
+                <a href="/privacy.html">Privacy</a> &middot;
+                <a href="/terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="/contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="/privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

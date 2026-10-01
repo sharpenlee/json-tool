@@ -295,6 +295,9 @@ th, td {
     vertical-align: top;
 }
 th { font-weight: 650; color: var(--text-primary); }
+/* Long unbroken tokens (19-digit IDs, hashes) inside a cell must not force the
+   whole page wider than the viewport on a narrow screen. */
+table code { overflow-wrap: anywhere; }
 
 footer {
     margin-top: 2.5rem;

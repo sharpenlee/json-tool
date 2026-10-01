@@ -16,7 +16,7 @@ Licensed under MIT; see [LICENSE](LICENSE).
 
 ## Repository structure
 
-Fifty-two published pages, all at fixed paths, plus the shared assets they reference:
+Fifty-three published pages, all at fixed paths, plus the shared assets they reference:
 
 | Path | What it is |
 | --- | --- |
