@@ -1,12 +1,15 @@
 /* Google Analytics is loaded only after explicit acceptance (strict gating):
    no visitor request is made to Google until the banner is answered. A stored
    "accepted" from a previous visit loads GA immediately. The no-op gtag stub
-   keeps the tool page's event calls safe before any consent is given. */
+   keeps the tool page's event calls safe before any consent is given, and each
+   page's <head> snippet sets consent mode to denied before any Google tag runs;
+   this file only sends the matching update once the banner is answered. */
 (function () {
     'use strict';
 
     var STORAGE_KEY = 'cookie-consent';
     var GA_ID = 'G-S1RYL7MXPJ';
+    var CONSENT_KEYS = ['ad_storage', 'ad_user_data', 'ad_personalization', 'analytics_storage'];
 
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
@@ -37,15 +40,14 @@
         banner.classList.remove('show');
         banner.setAttribute('aria-hidden', 'true');
     }
+    function updateConsent(state) {
+        var update = {};
+        for (var i = 0; i < CONSENT_KEYS.length; i++) update[CONSENT_KEYS[i]] = state;
+        gtag('consent', 'update', update);
+    }
     function loadGtag() {
         if (window.__gaLoaded) return;
         window.__gaLoaded = true;
-        gtag('consent', 'default', {
-            analytics_storage: 'granted',
-            ad_storage: 'denied',
-            ad_user_data: 'denied',
-            ad_personalization: 'denied'
-        });
         gtag('js', new Date());
         gtag('config', GA_ID);
         var s = document.createElement('script');
@@ -53,36 +55,32 @@
         s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
         document.head.appendChild(s);
     }
-    function setAnalytics(state) {
-        gtag('consent', 'update', { analytics_storage: state });
-    }
     function onAccept() {
         save('accepted');
-        if (window.__gaLoaded) {
-            setAnalytics('granted');
-        } else {
-            loadGtag();
-        }
+        updateConsent('granted');
+        loadGtag();
         hideBanner();
     }
     function onReject() {
         save('rejected');
-        setAnalytics('denied');
+        updateConsent('denied');
         hideBanner();
     }
     window.showCookieSettings = function () {
         clear();
-        setAnalytics('denied');
+        updateConsent('denied');
         showBanner();
     };
 
     var stored = read();
     if (stored === 'accepted') {
+        updateConsent('granted');
         loadGtag();
-    } else if (!stored) {
+    } else if (stored === 'rejected') {
+        updateConsent('denied');
+    } else {
         setTimeout(showBanner, 600);
     }
-    // stored === 'rejected': GA never loads; events queue into the unused dataLayer.
 
     if (acceptBtn) acceptBtn.addEventListener('click', onAccept);
     if (rejectBtn) rejectBtn.addEventListener('click', onReject);

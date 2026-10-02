@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
+    <!-- Consent mode defaults: everything denied until the banner is answered.
+         This must run before any Google tag, so it is first in <head>. -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            wait_for_update: 500
+        });
+    </script>
     <link rel="stylesheet" href="/consent.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
