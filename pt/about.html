@@ -90,11 +90,22 @@
             </ul>
 
             <h2>Limitações conhecidas</h2>
-            <p>Ele aceita apenas JSON estrito. Comentários, vírgulas finais, aspas simples, JSON5, JSONC e JSON delimitado por linhas (NDJSON) são rejeitados — isso é o comportamento do parser de JSON, não um bug. Não há validação de JSON Schema, nem consulta JSONPath, nem visualização de diffs, nem conversão de/para YAML, XML ou CSV.</p>
-            <p>Como tudo roda na sua aba, entradas muito grandes ficam limitadas pela memória do navegador e podem deixar a aba sem resposta. Divida arquivos com mais de alguns megabytes em vez de colá-los inteiros.</p>
+            <p>Ele aceita apenas JSON estrito. Comentários, vírgulas finais, aspas simples, JSON5, JSONC e JSON delimitado por linhas (NDJSON) são rejeitados — isso é o comportamento do parser de JSON, não um bug. Não há conversão de/para YAML ou XML, nem visão em árvore. As outras ferramentas são deliberadamente focadas em vez de completas: o diff emparelha os itens de um array por posição e não emite patch, e o validador de esquema cobre as palavras-chave que a maioria dos esquemas usa, não a especificação inteira. Cada página de ferramenta declara seus próprios limites.</p>
+            Como tudo roda na sua aba, entradas muito grandes ficam limitadas pela memória do navegador. O formatador entrega documentos acima de algumas centenas de kilobytes a um worker e recusa o que passa do teto declarado, mas uma colagem de vários megabytes ainda precisa ser disposta pelo próprio navegador — um custo do navegador, não deste site.
 
             <h2>Custo</h2>
             <p>Grátis, sem plano pago. O que é e o que não é coletado está descrito por completo na <a href="privacy.html">política de privacidade</a>.</p>
+
+            <h2>Código-fonte</h2>
+            <p>Todo o site — cada página, estilo e script — é HTML e JavaScript sem etapa de build, e é open source sob a licença MIT: <a href="https://github.com/sharpenlee/json-tool" rel="noopener">o repositório json-tool no GitHub</a>. Se encontrar um bug na formatação de um valor ou uma tradução ruim, uma issue lá é tão útil quanto um e-mail.</p>
+
+            <h2>Verifique você mesmo</h2>
+            <p>Três checagens levam cerca de um minuto, e são a razão de o código ser público em vez de uma promessa em um documento de política:</p>
+            <ul>
+                <li><strong>Leia o código.</strong> Todos os arquivos servidos estão no <a href="https://github.com/sharpenlee/json-tool" rel="noopener">repositório</a>. Não há bundler nem dependência de terceiros, então o arquivo que você audita é o que roda.</li>
+                <li><strong>Olhe a rede.</strong> Abra as ferramentas de desenvolvedor, deixe a aba Rede à vista e cole um documento. Nada o transporta: formatar é uma chamada ao <code>JSON.parse</code> do próprio navegador. A única requisição a terceiros que o site faz é o Google Analytics, e só depois que você aceita o banner de cookies.</li>
+                <li><strong>Desconecte.</strong> Carregue uma página de ferramenta e depois desconecte da rede. Ela continua funcionando, porque nada do que precisa está em um servidor.</li>
+            </ul>
 
             <div class="notice">
                 <p>Encontrou algo errado ou quer adicionar uma funcionalidade? <a href="contact.html">Entre em contato</a> — relatos de bugs com a entrada e o nome do seu navegador são os mais úteis.</p>

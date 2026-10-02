@@ -90,11 +90,22 @@
             </ul>
 
             <h2>Limites connues</h2>
-            <p>Il n'accepte que du JSON strict. Les commentaires, les virgules finales, les guillemets simples, JSON5, JSONC et le JSON délimité par des retours à la ligne (NDJSON) sont rejetés — c'est le comportement de l'analyseur JSON, pas un bug. Il n'y a pas de validation JSON Schema, pas de requête JSONPath, pas de vue des différences et pas de conversion vers/depuis YAML, XML ou CSV.</p>
-            <p>Comme tout s'exécute dans votre onglet, les saisies très volumineuses sont limitées par la mémoire du navigateur et peuvent rendre l'onglet lent. Découpez les fichiers de plus de quelques mégaoctets plutôt que de les coller entiers.</p>
+            <p>Il n'accepte que du JSON strict. Les commentaires, les virgules finales, les guillemets simples, JSON5, JSONC et le JSON délimité par des retours à la ligne (NDJSON) sont rejetés — c'est le comportement de l'analyseur JSON, pas un bug. Il n'y a pas de conversion vers/depuis YAML ou XML, ni de vue arborescente. Les autres outils sont volontairement ciblés plutôt qu'exhaustifs : le diff apparie les éléments d'un tableau par position et ne produit pas de correctif, et le validateur de schéma couvre les mots-clés que la plupart des schémas utilisent, pas toute la spécification. Chaque page d'outil déclare ses propres limites.</p>
+            Comme tout s'exécute dans votre onglet, les entrées très volumineuses sont limitées par la mémoire de votre navigateur. Le formateur confie les documents de plus de quelques centaines de kilo-octets à un worker et refuse ce qui dépasse son plafond annoncé, mais un collage de plusieurs mégaoctets doit encore être mis en page par le navigateur lui-même — un coût du navigateur, non de ce site.
 
             <h2>Coût</h2>
             <p>Gratuit, sans offre payante. Ce qui est collecté et ce qui ne l'est pas est décrit en détail dans la <a href="privacy.html">politique de confidentialité</a>.</p>
+
+            <h2>Code source</h2>
+            <p>Tout le site — chaque page, style et script — est en HTML et JavaScript, sans étape de compilation, et il est open source sous licence MIT : <a href="https://github.com/sharpenlee/json-tool" rel="noopener">le dépôt json-tool sur GitHub</a>. Si vous trouvez un bug de formatage ou une traduction qui se lit mal, une issue là-bas est aussi utile qu'un e-mail.</p>
+
+            <h2>Vérifiez-le vous-même</h2>
+            <p>Trois vérifications prennent environ une minute, et c'est la raison pour laquelle le code est public plutôt qu'une promesse dans un document juridique :</p>
+            <ul>
+                <li><strong>Lisez le code.</strong> Tous les fichiers servis sont dans <a href="https://github.com/sharpenlee/json-tool" rel="noopener">le dépôt</a>. Il n'y a ni bundler ni dépendance tierce, donc le fichier que vous auditez est celui qui s'exécute.</li>
+                <li><strong>Regardez le réseau.</strong> Ouvrez les outils de développement, laissez l'onglet Réseau visible et collez un document. Rien ne le transporte : le formatage est un appel au <code>JSON.parse</code> du navigateur. La seule requête tierce du site est Google Analytics, et seulement après acceptation de la bannière de cookies.</li>
+                <li><strong>Coupez le réseau.</strong> Chargez une page d'outil, puis déconnectez-vous. Elle continue de fonctionner, car rien de ce dont elle a besoin ne réside sur un serveur.</li>
+            </ul>
 
             <div class="notice">
                 <p>Vous avez repéré un problème ou souhaitez une fonctionnalité supplémentaire ? <a href="contact.html">Contactez-nous</a> — les rapports de bug avec la saisie et le nom de votre navigateur sont les plus utiles.</p>

@@ -90,11 +90,22 @@
             </ul>
 
             <h2>Límites conocidos</h2>
-            <p>Solo acepta JSON estricto. Los comentarios, las comas finales, las comillas simples, JSON5, JSONC y el JSON delimitado por líneas (NDJSON) se rechazan: ese es el comportamiento del analizador, no un error. No hay validación de JSON Schema, ni consultas JSONPath, ni vista de diferencias, ni conversión a/de YAML, XML o CSV.</p>
-            <p>Como todo ocurre en tu pestaña, las entradas muy grandes están limitadas por la memoria del navegador y pueden hacer que la pestaña deje de responder. Divide los archivos de más de unos pocos megabytes en lugar de pegarlos enteros.</p>
+            <p>Solo acepta JSON estricto. Los comentarios, las comas finales, las comillas simples, JSON5, JSONC y el JSON delimitado por líneas (NDJSON) se rechazan: ese es el comportamiento del analizador, no un error. No hay conversión a/de YAML ni a/de XML, ni vista de árbol. Las demás herramientas son deliberadamente acotadas más que completas: el diff empareja los elementos de un array por posición y no emite un parche, y el validador de esquemas cubre las palabras clave que la mayoría de los esquemas usa, no toda la especificación. Cada página de herramienta declara sus propios límites.</p>
+            Como todo se ejecuta en tu pestaña, las entradas muy grandes están limitadas por la memoria de tu navegador. El formateador pasa los documentos de más de unos cientos de kilobytes a un worker y rechaza lo que supera su límite declarado, pero una entrada de varios megabytes todavía tiene que ser maquetada por el propio navegador, y ese es un coste del navegador, no de este sitio.
 
             <h2>Precio</h2>
             <p>Gratis, sin nivel de pago. Qué se recopila y qué no se describe por completo en la <a href="privacy.html">política de privacidad</a>.</p>
+
+            <h2>Código fuente</h2>
+            <p>Todo el sitio —cada página, estilo y script— es HTML y JavaScript sin paso de compilación, y es código abierto bajo la licencia MIT: <a href="https://github.com/sharpenlee/json-tool" rel="noopener">el repositorio de json-tool en GitHub</a>. Si encuentras un fallo al formatear un valor o una traducción que se lee mal, un issue allí sirve tanto como un correo.</p>
+
+            <h2>Verifícalo tú mismo</h2>
+            <p>Tres comprobaciones llevan alrededor de un minuto, y son la razón de que el código sea público en lugar de una promesa en un documento legal:</p>
+            <ul>
+                <li><strong>Lee el código.</strong> Todos los archivos servidos están en <a href="https://github.com/sharpenlee/json-tool" rel="noopener">el repositorio</a>. No hay empaquetador ni dependencias de terceros, así que el archivo que auditas es el que se ejecuta.</li>
+                <li><strong>Mira la red.</strong> Abre las herramientas de desarrollo del navegador, deja la pestaña Red a la vista y pega un documento. Nada lo transporta: dar formato es una llamada al propio <code>JSON.parse</code> del navegador. La única petición a terceros que hace el sitio es Google Analytics, y solo después de que aceptes el aviso de cookies.</li>
+                <li><strong>Desconecta.</strong> Carga una página de herramienta y luego desconéctate de la red. Sigue funcionando, porque nada de lo que necesita vive en un servidor.</li>
+            </ul>
 
             <div class="notice">
                 <p>¿Has encontrado algo que no funciona o quieres que se añada una función? <a href="contact.html">Ponte en contacto</a> — los informes de errores con la entrada y el nombre de tu navegador son los más útiles.</p>

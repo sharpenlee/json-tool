@@ -74,6 +74,9 @@
                 <li><strong>Validate</strong> — reports the exact parser error when the input is not valid JSON.</li>
                 <li><strong>Sort keys</strong> — recursively, including objects nested inside arrays, so two payloads can be compared line by line.</li>
                 <li><strong>Read it comfortably</strong> — line numbers, character counts, a light and dark theme, copy to clipboard, and download as <code>formatted.json</code>.</li>
+                <li><strong>Point at the problem</strong> — when the input will not parse, the failing line and column are shown with a caret under the offending character.</li>
+                <li><strong>Compare, validate, query, convert</strong> — a structural <a href="json-diff.html">JSON diff</a>, <a href="json-schema.html">JSON Schema validation</a>, <a href="jsonpath.html">JSONPath queries</a> and <a href="json-to-csv.html">JSON ⇄ CSV</a> conversion, each on its own page.</li>
+                <li><strong>Large documents</strong> — past a few hundred kilobytes the work is handed to a background worker so the page stays responsive, up to a stated ceiling.</li>
             </ul>
 
             <h2>Who it is for</h2>
@@ -81,7 +84,7 @@
             <p>The design priority is that sensitive payloads stay on your machine. Config dumps, tokens, customer records and internal API responses are exactly the things that should not be pasted into a website that uploads them somewhere to reformat them. So this one does not.</p>
 
             <h2>How it works</h2>
-            <p>Formatting happens in your browser using the JavaScript engine's own JSON parser — the same code path your browser uses to read JSON. Nothing is sent to a server for processing, and there is no queue, storage or log of what you paste. After the page has loaded you can disconnect from the network and keep working.</p>
+            <p>Formatting happens in your browser using the JavaScript engine's own JSON parser — the same code path your browser uses to read JSON. Nothing is sent to a server for processing, and there is no queue, storage or log of what you paste. Large documents are parsed, sorted and stringified in a background worker so the page stays responsive, and that worker is a file served from this same site — it never talks to anything else. After the page has loaded you can disconnect from the network and keep working.</p>
 
             <h2>What it deliberately does not do</h2>
             <ul>
@@ -90,14 +93,22 @@
             </ul>
 
             <h2>Known limits</h2>
-            <p>It accepts strict JSON only. Comments, trailing commas, single quotes, JSON5, JSONC and newline-delimited JSON (NDJSON) are rejected — that is the JSON parser's behaviour, not a bug. There is no JSON Schema validation, no JSONPath query, no diff view and no conversion to or from YAML, XML or CSV.</p>
-            <p>Because everything runs in your tab, very large inputs are bounded by your browser's memory and can make the tab unresponsive. Split files over a few megabytes rather than pasting them whole.</p>
+            <p>It accepts strict JSON only. Comments, trailing commas, single quotes, JSON5, JSONC and newline-delimited JSON (NDJSON) are rejected — that is the JSON parser's behaviour, not a bug. There is no YAML or XML conversion and no tree or grid view. The other tools are deliberately focused rather than complete: the diff matches array items by position and does not emit a patch, and the schema validator covers the keywords most schemas actually use rather than the whole specification. Each tool page states its own limits.</p>
+            <p>Because everything runs in your tab, very large inputs are bounded by your browser's memory. The formatter moves documents past a few hundred kilobytes into a worker and refuses anything over its stated ceiling, but a multi-megabyte paste still has to be laid out by the browser itself, and that is the browser's cost rather than this site's.</p>
 
             <h2>Cost</h2>
             <p>Free, with no paid tier. What is and is not collected is described in full in the <a href="privacy.html">privacy policy</a>.</p>
 
             <h2>Source code</h2>
             <p>The whole site — every page, style and script — is plain HTML and JavaScript with no build step, and it is open source under the MIT licence: <a href="https://github.com/sharpenlee/json-tool" rel="noopener">the json-tool repository on GitHub</a>. If you find a bug in how a value is formatted or a translation reads badly, an issue there is as useful as an email.</p>
+
+            <h2>Verify it yourself</h2>
+            <p>Three checks take about a minute, and they are the reason the source is public rather than a promise in a policy document:</p>
+            <ul>
+                <li><strong>Read the code.</strong> Every file served is in <a href="https://github.com/sharpenlee/json-tool" rel="noopener">the repository</a>. There is no bundler and no third-party dependency, so the file you audit is the file that runs.</li>
+                <li><strong>Watch the network.</strong> Open your browser's developer tools, keep the Network tab in view and paste a document. Nothing carries it: formatting is a call to the browser's own <code>JSON.parse</code>. The only third-party request the site ever makes is Google Analytics, and only after you accept the cookie banner.</li>
+                <li><strong>Pull the plug.</strong> Load a tool page, then disconnect from the network. It keeps working, because nothing it needs lives on a server.</li>
+            </ul>
 
             <div class="notice">
                 <p>Spotted something wrong, or want a capability added? <a href="contact.html">Get in touch</a> — bug reports with the input and your browser name are the most useful kind.</p>
