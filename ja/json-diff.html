@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON 差分 – 2 つの JSON ドキュメントを構造で比較</title>
+    <meta name="description" content="ブラウザ内で 2 つの JSON ドキュメントを比較します。差分は構造で判定するため、キーの順序や空白は無視され、本当の違いだけがパスごとに一覧されます。アップロードは不要です。" />
+    <link rel="canonical" href="https://json-tool.com/ja/json-diff.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON 差分 – 2 つの JSON ドキュメントを構造で比較" />
+    <meta property="og:description" content="ブラウザ内で 2 つの JSON ドキュメントを比較します。キーの順序や空白は無視され、本当の違いだけがパスごとに一覧されます。ローカルで動作し、アップロードはありません。" />
+    <meta property="og:url" content="https://json-tool.com/ja/json-diff.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – ブラウザ内で JSON を整形・圧縮・検証" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON 差分 – 2 つの JSON ドキュメントを構造で比較" />
+    <meta name="twitter:description" content="ブラウザ内で 2 つの JSON ドキュメントを比較します。キーの順序や空白は無視され、本当の違いだけがパスごとに一覧されます。ローカルで動作し、アップロードはありません。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – ブラウザ内で JSON を整形・圧縮・検証" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON 差分",
+            "url": "https://json-tool.com/ja/json-diff.html",
+            "description": "ブラウザ内で 2 つの JSON ドキュメントを構造で比較します。キーの順序や空白は差分になりません。追加・削除・変更された値だけを、それぞれのパスとともに一覧します。データは端末から出ません。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "JavaScript が必要です",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "キーの順序は比較結果に影響しますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "いいえ。両方のドキュメントは比較の前に解析され、オブジェクトのキーは位置ではなく名前で突き合わせます。したがって、再フォーマットしたりキーを別の順序で出力したりしても差分は空になり、これは正しい結果です。データは同じだからです。" }
+            }, {
+                "@type": "Question",
+                "name": "配列の先頭に 1 項目を挿入しただけで、なぜこんなに多くの差分が出るのですか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "配列は位置で突き合わせます。これはほとんどすべての構造差分ツールと同じです。長い配列の先頭に項目を挿入すると、それ以降の要素が 1 つずつ後ろにずれるため、値が移動しただけでもそれぞれが変更として報告されます。突き合わせるキーがなければ、どの項目が挿入でどれが変更かを知る方法はありません。項目に安定した id があるなら、比較の前に両側をその id で並べ替えてください。" }
+            }, {
+                "@type": "Question",
+                "name": "片側が有効な JSON でない場合はどうなりますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "比較は停止し、失敗した側のパーサー自身のメッセージを、左か右かを示して表示します。両方が解析できないと 2 つのドキュメントを一緒に走査できないため、比較は行われません。" }
+            }, {
+                "@type": "Question",
+                "name": "私の JSON はどこかにアップロードされますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "いいえ。両方のドキュメントはブラウザ内で JSON.parse によって解析され、メモリ上で比較されます。それらを運ぶリクエストはなく、アカウントもサーバー側の保存もありません。ページを読み込んだあとにネットワークを切断しても、比較は動作します。" }
+            }, {
+                "@type": "Question",
+                "name": "値が変更ではなく移動したことを判定できますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "いいえ。このツールは差分を報告するもので、パッチを作るものではありません。JSON Patch ドキュメントを出力せず、ある場所から別の場所へ移動した値を検出しません。古いパスでの削除と、新しいパスでの追加として表示されます。" }
+            }, {
+                "@type": "Question",
+                "name": "コメントや末尾カンマのある JSON も比較できますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "いいえ。比較はサイトの他のツールと同じ厳格なパーサーを使うため、JSON5、コメント、末尾カンマは拒否されます。解析に失敗する場合は、まずフォーマッターかバリデーターで問題の位置を確認してください。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-diff-mode="json-diff">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/json-diff.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-diff.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-diff.html" class="active" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-diff.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-diff.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-diff.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-diff.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-diff.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-diff.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="ダークモードの切り替え">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">ダーク</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; JSON ツールに戻る</a></p>
+            <h1>JSON 差分</h1>
+            <p class="updated">最終更新：2026年10月2日</p>
+
+            <p class="lead">2 つの JSON ドキュメントを比較し、本当に違う部分だけを表示します。比較は構造で行うため、キーの並べ替えや再フォーマットは差分になりません。実際の変更をパスごとに一覧します。すべてブラウザ内で完結します。</p>
+
+            <div class="tools-nav">
+                <span>その他の無料ツール：</span>
+                <a href="json-to-csv.html">JSON を CSV に変換</a> &middot;
+                <a href="csv-to-json.html">CSV を JSON に変換</a> &middot;
+                <a href="index.html">JSON の整形と美化</a> &middot;
+                <a href="/json-validator.html">JSON 検証</a> &middot;
+                <a href="/json-minifier.html">JSON の圧縮</a> &middot;
+                <a href="/pretty-print-json.html">JSON の整形表示</a> &middot;
+                <a href="/json-syntax.html">JSON 構文チートシート</a> &middot;
+                <a href="/sort-json-keys.html">JSON キーの並べ替え</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">テキストではなく構造</span>
+                    <span class="badge">キーの順序を無視</span>
+                    <span class="badge">ブラウザ内で動作</span>
+                    <span class="badge">アップロード不要</span>
+                </div>
+
+                <label class="field-label" for="leftInput">左の JSON <span aria-hidden="true" class="count" id="leftCount">0文字</span></label>
+                <textarea id="leftInput" class="json-field" spellcheck="false" placeholder='{"name": "before", "items": [1, 2]}'></textarea>
+
+                <label class="field-label" for="rightInput" style="margin-top:0.9rem;">右の JSON <span aria-hidden="true" class="count" id="rightCount">0文字</span></label>
+                <textarea id="rightInput" class="json-field" spellcheck="false" placeholder='{"name": "after", "items": [1, 2, 3]}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="compareBtn" type="button">比較</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='{"left": {"name": "JSON Tool", "version": "1.0.0", "features": ["format", "minify"], "settings": {"indent": 3, "sort": true}, "deprecated": true}, "right": {"name": "JSON Tool", "version": "1.1.0", "features": ["format", "minify", "diff"], "settings": {"indent": 2, "sort": true}}}'>✨ 例を試す</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">クリア</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>レポートをコピー</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>レポートをダウンロード</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="diffOutput"></div>
+            </div>
+
+            <h2>構造による比較が見るもの</h2>
+            <p>両方のドキュメントはまず解析され、それから一緒に走査されます。報告されるのはデータそのものの違いだけです。片側にしかないキー、値の変更、型の変更——数値が文字列になった、オブジェクトが配列になった、といったものです。空白とキーの順序は比較に一切関与しません。解析後には存在しないからです。</p>
+            <p>型の変更は、それが起きたパスで 1 回だけ報告されます。下にある葉ノードごとに削除と追加へ展開されることはありません。サブツリー全体が形を変えたときに、レポートを読みやすく保てます。</p>
+
+            <h2>これがテキストの行差分ではない理由</h2>
+            <p>テキストの差分——<code>git diff</code> が示すもの——は行を比較します。JSON では、これがしばしば誤解を招きます。JSON を別のツールや別のバージョンのライブラリが生成すると、再インデントや、同じキーを違う順序で出力することはごく普通に起こり、行差分はそれを、データが同一であるにもかかわらず大量の変更に見せてしまいます。</p>
+            <p>次の 2 つのドキュメントは同じドキュメントです。行差分は 4 行の変更を報告しますが、このツールは何も報告しません。</p>
+            <pre><code>{"a": 1, "b": 2}
+
+{
+  "b": 2,
+  "a": 1
+}</code></pre>
+            <p>逆も成り立ち、そこが役に立つところです。キー名の 1 文字の変更や、数値が <code>3</code> から <code>4</code> への変更は、ちょうど 1 件の変更として示され、整形のノイズに埋もれません。</p>
+
+            <h2>パス表記の読み方</h2>
+            <p>すべての変更はパスで報告されます。<code>$</code> はドキュメントのルート、ドットはオブジェクトのキーへ進み、角括弧は配列の添字です。つまり <code>$.settings.indent</code> は <code>settings</code> の中の <code>indent</code> キー、<code>$.features[2]</code> は <code>features</code> 配列の 3 番目の項目、<code>$["weird key"]</code> は単純な識別子でないキーを表します。表記は JSON Pointer と同じ流儀なので、レポートのパスはそのまま他の JSON ツールに貼り付けられます。</p>
+
+            <h2>差分が教えてくれないこと</h2>
+            <ul>
+                <li><strong>配列は位置で突き合わせます。</strong>長い配列の先頭に項目を挿入すると、それ以降の要素が 1 つずつ後ろにずれ、値が移動しただけでもそれぞれが変更として報告されます。突き合わせるキーを持たない差分の、正直な限界です。項目に安定した <code>id</code> があれば、先に両側をその id で並べ替えるか、その id で索引した版を比較してください。</li>
+                <li><strong>パッチではありません。</strong>これは差分を報告するものであり、JSON Patch（RFC 6902）ドキュメントを出力せず、移動した塊も検出しません。移動した値は、古いパスでの削除と新しいパスでの追加として現れます。</li>
+                <li><strong>値は完全一致で比較します。</strong><code>1</code> と <code>1.0</code> はパーサーにとって同じ数ですが、<code>1</code> と <code>"1"</code> は違い、キーが無いことと <code>null</code> を明示したキーは違います。</li>
+            </ul>
+
+            <h2>よくある質問</h2>
+            <div class="faq-item">
+                <h3>キーの順序は比較結果に影響しますか？</h3>
+                <p>いいえ。両方のドキュメントは比較の前に解析され、オブジェクトのキーは位置ではなく名前で突き合わせます。したがって、再フォーマットしたりキーを別の順序で出力したりしても差分は空になり、これは正しい結果です。データは同じだからです。</p>
+            </div>
+            <div class="faq-item">
+                <h3>配列の先頭に 1 項目を挿入しただけで、なぜこんなに多くの差分が出るのですか？</h3>
+                <p>配列は位置で突き合わせます。これはほとんどすべての構造差分ツールと同じです。長い配列の先頭に項目を挿入すると、それ以降の要素が 1 つずつ後ろにずれるため、値が移動しただけでもそれぞれが変更として報告されます。突き合わせるキーがなければ、どの項目が挿入でどれが変更かを知る方法はありません。項目に安定した id があるなら、比較の前に両側をその id で並べ替えてください。</p>
+            </div>
+            <div class="faq-item">
+                <h3>片側が有効な JSON でない場合はどうなりますか？</h3>
+                <p>比較は停止し、失敗した側のパーサー自身のメッセージを、左か右かを示して表示します。両方が解析できないと 2 つのドキュメントを一緒に走査できないため、比較は行われません。</p>
+            </div>
+            <div class="faq-item">
+                <h3>私の JSON はどこかにアップロードされますか？</h3>
+                <p>いいえ。両方のドキュメントはブラウザ内で <code>JSON.parse</code> によって解析され、メモリ上で比較されます。それらを運ぶリクエストはなく、アカウントもサーバー側の保存もありません。ページを読み込んだあとにネットワークを切断しても、比較は動作します。</p>
+            </div>
+            <div class="faq-item">
+                <h3>値が変更ではなく移動したことを判定できますか？</h3>
+                <p>いいえ。このツールは差分を報告するもので、パッチを作るものではありません。JSON Patch ドキュメントを出力せず、ある場所から別の場所へ移動した値を検出しません。古いパスでの削除と、新しいパスでの追加として表示されます。</p>
+            </div>
+            <div class="faq-item">
+                <h3>コメントや末尾カンマのある JSON も比較できますか？</h3>
+                <p>いいえ。比較はサイトの他のツールと同じ厳格なパーサーを使うため、JSON5、コメント、末尾カンマは拒否されます。解析に失敗する場合は、まず<a href="index.html">フォーマッター</a>か<a href="/json-validator.html">バリデーター</a>で問題の位置を確認してください。</p>
+            </div>
+
+            <div class="notice">
+                <p>JSON を表にしたいですか？<a href="json-to-csv.html">JSON を CSV に変換</a> が使えます。不具合を見つけましたか？<a href="contact.html">お問い合わせ</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 無断転載を禁じます。</span>
+            <span>
+                <a href="index.html">ホーム</a> &middot;
+                <a href="json-diff.html">JSON 差分</a> &middot;
+                <a href="about.html">概要</a> &middot;
+                <a href="privacy.html">プライバシー</a> &middot;
+                <a href="terms.html">利用規約</a> &middot;
+                <a href="#" id="cookieSettings">Cookie設定</a> &middot;
+                <a href="contact.html">お問い合わせ</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/diff.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookieの同意" aria-hidden="true">
+        <p>当サイトでは、訪問者の利用状況を把握するためにGoogle AnalyticsのCookieを使用します。データは常にブラウザ内でローカルに処理されます。詳細は<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒否</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">同意</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comparar JSON – Compara dos documentos JSON de forma estructural</title>
+    <meta name="description" content="Compara dos documentos JSON en tu navegador. La comparación es estructural, así que se ignoran el orden de las claves y los espacios, y solo se listan las diferencias reales por ruta. Sin subir nada." />
+    <link rel="canonical" href="https://json-tool.com/es/json-diff.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Comparar JSON – Compara dos documentos JSON de forma estructural" />
+    <meta property="og:description" content="Compara dos documentos JSON en tu navegador. Se ignoran el orden de las claves y los espacios, y solo se listan las diferencias reales por ruta. Se ejecuta en local, sin subir nada." />
+    <meta property="og:url" content="https://json-tool.com/es/json-diff.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool: formatea, minifica y valida JSON en tu navegador" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Comparar JSON – Compara dos documentos JSON de forma estructural" />
+    <meta name="twitter:description" content="Compara dos documentos JSON en tu navegador. Se ignoran el orden de las claves y los espacios, y solo se listan las diferencias reales por ruta. Se ejecuta en local, sin subir nada." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool: formatea, minifica y valida JSON en tu navegador" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Comparar JSON",
+            "url": "https://json-tool.com/es/json-diff.html",
+            "description": "Compara dos documentos JSON de forma estructural en el navegador. El orden de las claves y los espacios no cuentan como diferencias; solo se listan los valores añadidos, eliminados y modificados, cada uno con su ruta. Los datos no salen de la máquina.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requiere JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "¿Importa el orden de las claves?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Los dos documentos se analizan antes de compararse, y las claves de los objetos se emparejan por nombre, no por posición. Por eso, reformatear un documento o emitir sus claves en otro orden produce una diferencia vacía, como debe ser, porque los datos son los mismos." }
+            }, {
+                "@type": "Question",
+                "name": "¿Por qué al insertar un elemento en un array aparecen tantos cambios?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Los arrays se emparejan por posición, como en casi cualquier comparación estructural. Insertar un elemento al principio de un array largo desplaza cada elemento posterior un índice, así que todos se reportan como modificados aunque los valores solo se hayan movido. Sin una clave con la que emparejar, nada puede saber qué se insertó y qué se alteró. Si tus elementos llevan un id estable, ordena ambos lados por él antes de comparar." }
+            }, {
+                "@type": "Question",
+                "name": "¿Qué pasa si uno de los lados no es JSON válido?",
+                "acceptedAnswer": { "@type": "Answer", "text": "La comparación se detiene y se muestra el mensaje del propio analizador para el documento que falló, indicando si es el izquierdo o el derecho. No se compara nada, porque dos documentos no se pueden recorrer juntos hasta que ambos se analicen." }
+            }, {
+                "@type": "Question",
+                "name": "¿Se sube mi JSON a algún sitio?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Los dos documentos se analizan con JSON.parse en tu navegador y se comparan en memoria. Ninguna petición los transporta, y no hay cuenta ni almacenamiento en servidor. Puedes cargar la página y luego desconectarte de la red: la comparación sigue funcionando." }
+            }, {
+                "@type": "Question",
+                "name": "¿Puede saber si un valor se movió en vez de cambiar?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Esta herramienta reporta diferencias, no produce un parche. No emite un documento JSON Patch ni detecta valores que se movieron de un sitio a otro; verás una eliminación en la ruta antigua y una adición en la nueva." }
+            }, {
+                "@type": "Question",
+                "name": "¿Puedo comparar JSON con comentarios o comas finales?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. La comparación usa el mismo analizador estricto que el resto del sitio, así que JSON5, los comentarios y las comas finales se rechazan. Si un documento no se analiza, pásalo primero por el formateador o el validador para ver dónde falla." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-diff-mode="json-diff">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/json-diff.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-diff.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-diff.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-diff.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-diff.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-diff.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-diff.html" class="active" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-diff.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-diff.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Oscuro</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Volver a la herramienta JSON</a></p>
+            <h1>Comparar JSON</h1>
+            <p class="updated">Última actualización: 2 de octubre de 2026</p>
+
+            <p class="lead">Compara dos documentos JSON y ve solo lo que realmente difiere. Como la comparación es estructural, reordenar claves o cambiar el formato no cuenta; el informe lista cada cambio real con su ruta, dentro de tu navegador.</p>
+
+            <div class="tools-nav">
+                <span>Otras herramientas gratuitas:</span>
+                <a href="json-to-csv.html">JSON a CSV</a> &middot;
+                <a href="csv-to-json.html">CSV a JSON</a> &middot;
+                <a href="index.html">Formatear y embellecer JSON</a> &middot;
+                <a href="/json-validator.html">Validador JSON</a> &middot;
+                <a href="/json-minifier.html">Minificar JSON</a> &middot;
+                <a href="/pretty-print-json.html">Imprimir JSON con formato</a> &middot;
+                <a href="/json-syntax.html">Chuleta de sintaxis JSON</a> &middot;
+                <a href="/sort-json-keys.html">Ordenar claves JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Estructural, no textual</span>
+                    <span class="badge">Se ignora el orden de claves</span>
+                    <span class="badge">Se ejecuta en tu navegador</span>
+                    <span class="badge">Sin subir nada</span>
+                </div>
+
+                <label class="field-label" for="leftInput">JSON izquierdo <span aria-hidden="true" class="count" id="leftCount">0 caracteres</span></label>
+                <textarea id="leftInput" class="json-field" spellcheck="false" placeholder='{"name": "before", "items": [1, 2]}'></textarea>
+
+                <label class="field-label" for="rightInput" style="margin-top:0.9rem;">JSON derecho <span aria-hidden="true" class="count" id="rightCount">0 caracteres</span></label>
+                <textarea id="rightInput" class="json-field" spellcheck="false" placeholder='{"name": "after", "items": [1, 2, 3]}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="compareBtn" type="button">Comparar</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='{"left": {"name": "JSON Tool", "version": "1.0.0", "features": ["format", "minify"], "settings": {"indent": 3, "sort": true}, "deprecated": true}, "right": {"name": "JSON Tool", "version": "1.1.0", "features": ["format", "minify", "diff"], "settings": {"indent": 2, "sort": true}}}'>✨ Probar un ejemplo</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Limpiar</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copiar informe</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Descargar informe</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="diffOutput"></div>
+            </div>
+
+            <h2>Qué ve una comparación estructural</h2>
+            <p>Los dos documentos se analizan primero y luego se recorren juntos. Solo se reportan las diferencias en los datos: una clave presente en un lado y no en el otro, un valor que cambió, o un valor cuyo tipo cambió —un número que pasó a ser cadena, un objeto que pasó a ser array—. Los espacios y el orden de las claves no forman parte de la comparación, porque después de analizar ya no existen.</p>
+            <p>Un cambio de tipo se reporta una vez, en la ruta donde ocurre, en lugar de desglosarse en una eliminación y una adición por cada hoja que hay debajo. Eso mantiene legible el informe cuando cambia de forma un subárbol entero.</p>
+
+            <h2>Por qué esto no es un diff de líneas</h2>
+            <p>Un diff de texto —lo que muestra <code>git diff</code>— compara líneas. Para JSON eso suele engañar. Reindentar un archivo, o emitir las mismas claves en otro orden, es normal cuando el JSON lo generan herramientas distintas o versiones distintas de una biblioteca, y un diff de líneas lo convierte en un muro de cambios aunque los datos sean idénticos.</p>
+            <p>Los dos documentos de abajo son el mismo. Un diff de líneas reporta cuatro líneas cambiadas; esta herramienta no reporta nada:</p>
+            <pre><code>{"a": 1, "b": 2}
+
+{
+  "b": 2,
+  "a": 1
+}</code></pre>
+            <p>Lo contrario también se cumple, y es la parte útil: un solo carácter cambiado dentro del nombre de una clave, o un número que pasó de <code>3</code> a <code>4</code>, aparece como exactamente un cambio en vez de quedar enterrado en el ruido del reformateo.</p>
+
+            <h2>Cómo leer la notación de rutas</h2>
+            <p>Cada cambio se reporta con una ruta. <code>$</code> es la raíz del documento; un punto entra en una clave de objeto y un corchete indexa un array. Así, <code>$.settings.indent</code> es la clave <code>indent</code> dentro de <code>settings</code>, <code>$.features[2]</code> es el tercer elemento del array <code>features</code>, y <code>$["weird key"]</code> nombra una clave que no es un identificador simple. La notación sigue el estilo de JSON Pointer, así que una ruta del informe se puede pegar en otras herramientas JSON.</p>
+
+            <h2>Lo que la comparación no puede decirte</h2>
+            <ul>
+                <li><strong>Los arrays se emparejan por posición.</strong> Insertar un elemento al principio de un array largo desplaza cada elemento posterior, así que todos se reportan como modificados aunque los valores solo se movieran. Es una limitación real de cualquier comparación sin una clave con la que emparejar. Si tus elementos llevan un <code>id</code> estable, ordena ambos lados por él primero, o compara una versión indexada por él.</li>
+                <li><strong>No es un parche.</strong> Esto reporta diferencias; no emite un documento JSON Patch (RFC 6902) ni detecta bloques movidos. Un valor movido aparece como una eliminación en la ruta antigua y una adición en la nueva.</li>
+                <li><strong>Los valores se comparan exactamente.</strong> <code>1</code> y <code>1.0</code> son el mismo número para el analizador, pero <code>1</code> y <code>"1"</code> son distintos, y una clave ausente es distinta de una clave puesta a <code>null</code> explícitamente.</li>
+            </ul>
+
+            <h2>Preguntas frecuentes</h2>
+            <div class="faq-item">
+                <h3>¿Importa el orden de las claves?</h3>
+                <p>No. Los dos documentos se analizan antes de compararse, y las claves de los objetos se emparejan por nombre, no por posición. Por eso, reformatear un documento o emitir sus claves en otro orden produce una diferencia vacía, como debe ser, porque los datos son los mismos.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Por qué al insertar un elemento en un array aparecen tantos cambios?</h3>
+                <p>Los arrays se emparejan por posición, como en casi cualquier comparación estructural. Insertar un elemento al principio de un array largo desplaza cada elemento posterior un índice, así que todos se reportan como modificados aunque los valores solo se hayan movido. Sin una clave con la que emparejar, nada puede saber qué se insertó y qué se alteró. Si tus elementos llevan un id estable, ordena ambos lados por él antes de comparar.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Qué pasa si uno de los lados no es JSON válido?</h3>
+                <p>La comparación se detiene y se muestra el mensaje del propio analizador para el documento que falló, indicando si es el izquierdo o el derecho. No se compara nada, porque dos documentos no se pueden recorrer juntos hasta que ambos se analicen.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Se sube mi JSON a algún sitio?</h3>
+                <p>No. Los dos documentos se analizan con <code>JSON.parse</code> en tu navegador y se comparan en memoria. Ninguna petición los transporta, y no hay cuenta ni almacenamiento en servidor. Puedes cargar la página y luego desconectarte de la red: la comparación sigue funcionando.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Puede saber si un valor se movió en vez de cambiar?</h3>
+                <p>No. Esta herramienta reporta diferencias, no produce un parche. No emite un documento JSON Patch ni detecta valores que se movieron de un sitio a otro; verás una eliminación en la ruta antigua y una adición en la nueva.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Puedo comparar JSON con comentarios o comas finales?</h3>
+                <p>No. La comparación usa el mismo analizador estricto que el resto del sitio, así que JSON5, los comentarios y las comas finales se rechazan. Si un documento no se analiza, pásalo primero por <a href="index.html">el formateador</a> o <a href="/json-validator.html">el validador</a> para ver dónde falla.</p>
+            </div>
+
+            <div class="notice">
+                <p>¿Necesitas convertir JSON en una tabla? <a href="json-to-csv.html">JSON a CSV</a> lo hace. ¿Has encontrado un fallo? <a href="contact.html">Escríbenos</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Todos los derechos reservados.</span>
+            <span>
+                <a href="index.html">Inicio</a> &middot;
+                <a href="json-diff.html">Comparar JSON</a> &middot;
+                <a href="about.html">Acerca de</a> &middot;
+                <a href="privacy.html">Privacidad</a> &middot;
+                <a href="terms.html">Términos</a> &middot;
+                <a href="#" id="cookieSettings">Configuración de cookies</a> &middot;
+                <a href="contact.html">Contacto</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/diff.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consentimiento de cookies" aria-hidden="true">
+        <p>Usamos cookies de Google Analytics para entender cómo usan el sitio los visitantes. Los datos siempre se procesan localmente en tu navegador. Consulta nuestra <a href="privacy.html">Política de privacidad</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Rechazar</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Aceptar</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

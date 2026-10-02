@@ -914,4 +914,130 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/csv-to-json.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/csv-to-json.html"/>
   </url>
+  <url>
+    <loc>https://json-tool.com/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/ko/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/ja/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/zh/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/zh-hant/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/ru/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/es/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/pt/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/fr/json-diff.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html"/>
+  </url>
 </urlset>

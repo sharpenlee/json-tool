@@ -7,6 +7,9 @@
     --bad-bg: #fee2e2;
     --bad-border: #fecaca;
     --bad-text: #991b1b;
+    --warn-bg: #fffbeb;
+    --warn-border: #fde68a;
+    --warn-text: #92400e;
 }
 
 body.dark {
@@ -16,6 +19,9 @@ body.dark {
     --bad-bg: #3f1212;
     --bad-border: #7f1d1d;
     --bad-text: #fca5a5;
+    --warn-bg: #3b2f0b;
+    --warn-border: #78350f;
+    --warn-text: #fcd34d;
 }
 
 /* Long inline commands (jq, python3 -c …) must not push the page sideways on narrow screens. */
@@ -151,6 +157,11 @@ textarea.json-field[readonly] { background: var(--bg-body); }
     border: 1px solid var(--bad-border);
     color: var(--bad-text);
 }
+.result.diff {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    color: var(--warn-text);
+}
 .result strong { display: block; margin-bottom: 0.25rem; }
 .result pre {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
@@ -193,3 +204,28 @@ body.dark .result pre { background: rgba(0, 0, 0, 0.35); }
 .faq-item { margin-bottom: 1.1rem; }
 .faq-item h3 { margin: 0 0 0.2rem; }
 .faq-item p { margin: 0; }
+
+/* JSON diff change list (json-diff page) */
+.diff-list {
+    margin-top: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+    overflow: hidden;
+}
+.diff-item {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.45rem 0.75rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--border-color);
+    overflow-wrap: anywhere;
+}
+.diff-item:last-child { border-bottom: 0; }
+.diff-item.add { background: var(--ok-bg); color: var(--ok-text); }
+.diff-item.remove { background: var(--bad-bg); color: var(--bad-text); }
+.diff-item.changed { background: var(--warn-bg); color: var(--warn-text); }
+.diff-kind { flex: 0 0 auto; font-weight: 700; }
+.diff-path { flex: 0 0 auto; font-weight: 650; }
+.diff-value { flex: 1 1 auto; overflow-wrap: anywhere; }

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON 差異比對 – 結構化比較兩份 JSON 文件</title>
+    <meta name="description" content="在瀏覽器中比較兩份 JSON 文件。差異是結構化的，鍵的順序與空白會被忽略，只依路徑列出真正的差異。無需上傳。" />
+    <link rel="canonical" href="https://json-tool.com/zh-hant/json-diff.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON 差異比對 – 結構化比較兩份 JSON 文件" />
+    <meta property="og:description" content="在瀏覽器中比較兩份 JSON 文件。鍵的順序與空白會被忽略，只依路徑列出真正的差異。本機執行，無需上傳。" />
+    <meta property="og:url" content="https://json-tool.com/zh-hant/json-diff.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – 在瀏覽器中格式化、壓縮與驗證 JSON" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON 差異比對 – 結構化比較兩份 JSON 文件" />
+    <meta name="twitter:description" content="在瀏覽器中比較兩份 JSON 文件。鍵的順序與空白會被忽略，只依路徑列出真正的差異。本機執行，無需上傳。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – 在瀏覽器中格式化、壓縮與驗證 JSON" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON 差異比對",
+            "url": "https://json-tool.com/zh-hant/json-diff.html",
+            "description": "在瀏覽器中結構化比較兩份 JSON 文件。鍵的順序與空白不會被視為差異，只列出新增、刪除與修改的值，並給出各自的路徑。資料不會離開本機。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "需要 JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "鍵的順序會影響比較結果嗎？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不會。兩份文件在比較前都會先被解析，物件的鍵依名稱比對而非位置。因此，重新格式化文件，或以不同順序輸出鍵，都會得到空的差異結果，這是正確的，因為資料本身沒變。" }
+            }, {
+                "@type": "Question",
+                "name": "為什麼在陣列開頭插入一項會顯示這麼多差異？",
+                "acceptedAnswer": { "@type": "Answer", "text": "陣列是依位置比對的，幾乎所有結構化差異工具皆如此。在長陣列開頭插入一項，會把後面每個元素的索引都往後推一位，於是它們都被回報為修改，儘管值只是位移了。沒有可比對的鍵，就無法知道哪些項目是被插入而非被改動。如果陣列元素帶有穩定的 id，請先依該 id 排序兩側再比較。" }
+            }, {
+                "@type": "Question",
+                "name": "如果有一側不是有效的 JSON 會怎樣？",
+                "acceptedAnswer": { "@type": "Answer", "text": "比較會停止，並顯示解析器本身的錯誤訊息，同時標示是左側還是右側出錯。兩側都能解析之前無法一起走訪，所以不會進行任何比較。" }
+            }, {
+                "@type": "Question",
+                "name": "我的 JSON 會被上傳嗎？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不會。兩份文件都在你的瀏覽器中以 JSON.parse 解析，並在記憶體中比較。沒有任何請求攜帶它們，也沒有帳號或伺服器端儲存。你可以先載入頁面再中斷網路，比較依然可用。" }
+            }, {
+                "@type": "Question",
+                "name": "它能判斷某個值是被搬移了還是被修改了嗎？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不能。這個工具只回報差異，不產生修補檔。它不會輸出 JSON Patch 文件，也不會偵測從一處搬移到另一處的值；你會看到的是舊路徑上的一筆刪除，加上新路徑上的一筆新增。" }
+            }, {
+                "@type": "Question",
+                "name": "可以比較帶註解或尾隨逗號的 JSON 嗎？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不可以。比較使用的是與本站其他工具相同的嚴格解析器，JSON5、註解與尾隨逗號都會被拒絕。如果某份文件解析失敗，請先用格式化工具或驗證器查看出錯位置。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-diff-mode="json-diff">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="語言">
+                    <a href="/json-diff.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-diff.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-diff.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-diff.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-diff.html" class="active" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-diff.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-diff.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-diff.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-diff.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">深色</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; 返回 JSON 工具</a></p>
+            <h1>JSON 差異比對</h1>
+            <p class="updated">最後更新：2026年10月2日</p>
+
+            <p class="lead">比較兩份 JSON 文件，只看到真正不同的地方。因為比較是結構化的，調整鍵的順序或重新格式化不會產生任何差異；報告依路徑列出每一處真實改動，全部在瀏覽器中完成。</p>
+
+            <div class="tools-nav">
+                <span>其他免費工具：</span>
+                <a href="json-to-csv.html">JSON 轉 CSV</a> &middot;
+                <a href="csv-to-json.html">CSV 轉 JSON</a> &middot;
+                <a href="index.html">JSON 格式化與美化</a> &middot;
+                <a href="/json-validator.html">JSON 驗證器</a> &middot;
+                <a href="/json-minifier.html">JSON 壓縮</a> &middot;
+                <a href="/pretty-print-json.html">JSON 美化列印</a> &middot;
+                <a href="/json-syntax.html">JSON 語法速查</a> &middot;
+                <a href="/sort-json-keys.html">JSON 鍵排序</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">結構化而非文字</span>
+                    <span class="badge">忽略鍵的順序</span>
+                    <span class="badge">在瀏覽器中執行</span>
+                    <span class="badge">無需上傳</span>
+                </div>
+
+                <label class="field-label" for="leftInput">左側 JSON <span aria-hidden="true" class="count" id="leftCount">0個字元</span></label>
+                <textarea id="leftInput" class="json-field" spellcheck="false" placeholder='{"name": "before", "items": [1, 2]}'></textarea>
+
+                <label class="field-label" for="rightInput" style="margin-top:0.9rem;">右側 JSON <span aria-hidden="true" class="count" id="rightCount">0個字元</span></label>
+                <textarea id="rightInput" class="json-field" spellcheck="false" placeholder='{"name": "after", "items": [1, 2, 3]}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="compareBtn" type="button">比較</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='{"left": {"name": "JSON Tool", "version": "1.0.0", "features": ["format", "minify"], "settings": {"indent": 3, "sort": true}, "deprecated": true}, "right": {"name": "JSON Tool", "version": "1.1.0", "features": ["format", "minify", "diff"], "settings": {"indent": 2, "sort": true}}}'>✨ 試試範例</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">清除</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>複製報告</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>下載報告</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="diffOutput"></div>
+            </div>
+
+            <h2>結構化比較能看到什麼</h2>
+            <p>兩份文件會先被解析，然後一起走訪。只有資料本身的差異會被回報：某一側存在而另一側沒有的鍵、發生變化的某個值，或型別改變的值——數字變成字串，物件變成陣列。空白與鍵的順序完全不參與比較，因為解析之後它們已經不存在了。</p>
+            <p>型別變化只在發生的那個路徑上回報一次，而不會展開成底下每個葉節點的一筆刪除加一筆新增。當整棵子樹改變了形狀時，這讓報告仍然可讀。</p>
+
+            <h2>為什麼這不是文字行比對</h2>
+            <p>文字差異——也就是 <code>git diff</code> 顯示的那種——比較的是行。對 JSON 來說這常常會誤導。當 JSON 由不同工具或不同版本的函式庫產生時，重新縮排，或把同樣的鍵以不同順序輸出，都是很正常的，而行比對會把它變成滿畫面的改動，儘管資料完全相同。</p>
+            <p>下面兩份文件是同一份文件。行比對會回報四行改動，而本工具不回報任何差異：</p>
+            <pre><code>{"a": 1, "b": 2}
+
+{
+  "b": 2,
+  "a": 1
+}</code></pre>
+            <p>反過來也成立，而這正是有用的地方：鍵名裡改動一個字元，或某個數字從 <code>3</code> 變成 <code>4</code>，都只會顯示為一處改動，而不會被格式化雜訊淹沒。</p>
+
+            <h2>如何閱讀路徑表示法</h2>
+            <p>每一處改動都會以路徑的形式回報。<code>$</code> 是文件根；點號進入物件鍵，方括號用於陣列索引。所以 <code>$.settings.indent</code> 是 <code>settings</code> 裡的 <code>indent</code> 鍵，<code>$.features[2]</code> 是 <code>features</code> 陣列的第三項，而 <code>$["weird key"]</code> 表示一個不是簡單識別字的名稱。這套寫法與 JSON Pointer 風格一致，報告裡的路徑可以直接貼到其他 JSON 工具中使用。</p>
+
+            <h2>差異比對無法告訴你什麼</h2>
+            <ul>
+                <li><strong>陣列依位置比對。</strong>在長陣列開頭插入一項，會把後面每個元素都往後推一位，於是它們都被回報為修改，儘管值只是位移了。這是任何沒有可比對鍵的差異工具的固有侷限。如果陣列元素帶有穩定的 <code>id</code>，請先依它排序兩側，或比較依該 id 索引的版本。</li>
+                <li><strong>它不是修補檔。</strong>本工具回報差異，不輸出 JSON Patch（RFC 6902）文件，也不偵測搬移的區塊。搬移的值會表現為舊路徑上的刪除加上新路徑上的新增。</li>
+                <li><strong>值以精確方式比較。</strong>對解析器來說 <code>1</code> 和 <code>1.0</code> 是同一個數，但 <code>1</code> 和 <code>"1"</code> 不同，而缺失的鍵與明確設為 <code>null</code> 的鍵也不同。</li>
+            </ul>
+
+            <h2>常見問題</h2>
+            <div class="faq-item">
+                <h3>鍵的順序會影響比較結果嗎？</h3>
+                <p>不會。兩份文件在比較前都會先被解析，物件的鍵依名稱比對而非位置。因此，重新格式化文件，或以不同順序輸出鍵，都會得到空的差異結果，這是正確的，因為資料本身沒變。</p>
+            </div>
+            <div class="faq-item">
+                <h3>為什麼在陣列開頭插入一項會顯示這麼多差異？</h3>
+                <p>陣列是依位置比對的，幾乎所有結構化差異工具皆如此。在長陣列開頭插入一項，會把後面每個元素的索引都往後推一位，於是它們都被回報為修改，儘管值只是位移了。沒有可比對的鍵，就無法知道哪些項目是被插入而非被改動。如果陣列元素帶有穩定的 id，請先依該 id 排序兩側再比較。</p>
+            </div>
+            <div class="faq-item">
+                <h3>如果有一側不是有效的 JSON 會怎樣？</h3>
+                <p>比較會停止，並顯示解析器本身的錯誤訊息，同時標示是左側還是右側出錯。兩側都能解析之前無法一起走訪，所以不會進行任何比較。</p>
+            </div>
+            <div class="faq-item">
+                <h3>我的 JSON 會被上傳嗎？</h3>
+                <p>不會。兩份文件都在你的瀏覽器中以 <code>JSON.parse</code> 解析，並在記憶體中比較。沒有任何請求攜帶它們，也沒有帳號或伺服器端儲存。你可以先載入頁面再中斷網路，比較依然可用。</p>
+            </div>
+            <div class="faq-item">
+                <h3>它能判斷某個值是被搬移了還是被修改了嗎？</h3>
+                <p>不能。這個工具只回報差異，不產生修補檔。它不會輸出 JSON Patch 文件，也不會偵測從一處搬移到另一處的值；你會看到的是舊路徑上的一筆刪除，加上新路徑上的一筆新增。</p>
+            </div>
+            <div class="faq-item">
+                <h3>可以比較帶註解或尾隨逗號的 JSON 嗎？</h3>
+                <p>不可以。比較使用的是與本站其他工具相同的嚴格解析器，JSON5、註解與尾隨逗號都會被拒絕。如果某份文件解析失敗，請先用<a href="index.html">格式化工具</a>或<a href="/json-validator.html">驗證器</a>查看出錯位置。</p>
+            </div>
+
+            <div class="notice">
+                <p>需要把 JSON 變成表格？<a href="json-to-csv.html">JSON 轉 CSV</a> 可以做到。發現錯誤？<a href="contact.html">聯絡我們</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 保留所有權利。</span>
+            <span>
+                <a href="index.html">首頁</a> &middot;
+                <a href="json-diff.html">JSON 差異比對</a> &middot;
+                <a href="about.html">關於</a> &middot;
+                <a href="privacy.html">隱私政策</a> &middot;
+                <a href="terms.html">服務條款</a> &middot;
+                <a href="#" id="cookieSettings">Cookie 設定</a> &middot;
+                <a href="contact.html">聯絡我們</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/diff.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie 同意" aria-hidden="true">
+        <p>我們使用 Google Analytics Cookie 來了解訪客如何使用本網站。您的資料始終在瀏覽器中本機處理。請參閱我們的<a href="privacy.html">隱私政策</a>。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒絕</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">接受</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

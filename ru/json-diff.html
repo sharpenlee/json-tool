@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Сравнение JSON – структурное сравнение двух документов JSON</title>
+    <meta name="description" content="Сравните два документа JSON в браузере. Сравнение структурное, поэтому порядок ключей и пробелы игнорируются, а реальные различия выводятся по путям. Без загрузки на сервер." />
+    <link rel="canonical" href="https://json-tool.com/ru/json-diff.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-diff.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-diff.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-diff.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-diff.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-diff.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-diff.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-diff.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-diff.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-diff.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Сравнение JSON – структурное сравнение двух документов JSON" />
+    <meta property="og:description" content="Сравните два документа JSON в браузере. Порядок ключей и пробелы игнорируются, а реальные различия выводятся по путям. Работает локально, без загрузки." />
+    <meta property="og:url" content="https://json-tool.com/ru/json-diff.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Сравнение JSON – структурное сравнение двух документов JSON" />
+    <meta name="twitter:description" content="Сравните два документа JSON в браузере. Порядок ключей и пробелы игнорируются, а реальные различия выводятся по путям. Работает локально, без загрузки." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Сравнение JSON",
+            "url": "https://json-tool.com/ru/json-diff.html",
+            "description": "Структурно сравнивайте два документа JSON в браузере. Порядок ключей и пробелы не считаются различиями; выводятся только добавленные, удалённые и изменённые значения, каждое со своим путём. Данные не покидают машину.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Требуется JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Влияет ли порядок ключей на результат сравнения?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Нет. Оба документа сначала разбираются, и ключи объектов сопоставляются по имени, а не по позиции. Поэтому переформатирование документа или вывод ключей в другом порядке даёт пустой результат — и это правильно, ведь данные те же." }
+            }, {
+                "@type": "Question",
+                "name": "Почему вставка одного элемента в начало массива даёт так много различий?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Массивы сопоставляются по позиции, как почти во всех структурных diff-инструментах. Вставка элемента в начало длинного массива сдвигает каждый следующий элемент на один индекс, поэтому каждый из них отмечается как изменённый, хотя значения лишь сместились. Без ключа для сопоставления невозможно понять, что было вставлено, а что изменено. Если у элементов есть стабильный id, отсортируйте обе стороны по нему перед сравнением." }
+            }, {
+                "@type": "Question",
+                "name": "Что если одна сторона не является допустимым JSON?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Сравнение останавливается, и показывается собственное сообщение парсера для той стороны, где произошла ошибка, с пометкой левая или правая. Пока оба документа не разберутся, их нельзя обойти вместе, поэтому сравнение не выполняется." }
+            }, {
+                "@type": "Question",
+                "name": "Мой JSON куда-нибудь загружается?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Нет. Оба документа разбираются через JSON.parse в браузере и сравниваются в памяти. Ни один запрос их не несёт, учётных записей и серверного хранилища нет. Можно загрузить страницу и затем отключиться от сети — сравнение продолжит работать." }
+            }, {
+                "@type": "Question",
+                "name": "Можно ли определить, что значение переместили, а не изменили?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Нет. Этот инструмент сообщает различия, а не создаёт патч. Он не выводит документ JSON Patch и не обнаруживает значения, перемещённые из одного места в другое; вы увидите удаление по старому пути и добавление по новому." }
+            }, {
+                "@type": "Question",
+                "name": "Можно ли сравнивать JSON с комментариями или висячими запятыми?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Нет. Сравнение использует тот же строгий парсер, что и остальные инструменты сайта, поэтому JSON5, комментарии и висячие запятые отклоняются. Если документ не разбирается, сначала посмотрите место ошибки в форматтере или валидаторе." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-diff-mode="json-diff">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/json-diff.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-diff.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-diff.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-diff.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-diff.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-diff.html" class="active" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-diff.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-diff.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-diff.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тёмную тему">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Назад к инструменту JSON</a></p>
+            <h1>Сравнение JSON</h1>
+            <p class="updated">Последнее обновление: 2 октября 2026 г.</p>
+
+            <p class="lead">Сравните два документа JSON и увидьте только реальные различия. Сравнение структурное, поэтому перестановка ключей или переформатирование ничего не меняет; отчёт перечисляет каждое настоящее изменение с его путём, целиком в браузере.</p>
+
+            <div class="tools-nav">
+                <span>Другие бесплатные инструменты:</span>
+                <a href="json-to-csv.html">JSON в CSV</a> &middot;
+                <a href="csv-to-json.html">CSV в JSON</a> &middot;
+                <a href="index.html">Форматирование JSON</a> &middot;
+                <a href="/json-validator.html">Проверка JSON</a> &middot;
+                <a href="/json-minifier.html">Сжатие JSON</a> &middot;
+                <a href="/pretty-print-json.html">Красивый вывод JSON</a> &middot;
+                <a href="/json-syntax.html">Шпаргалка по синтаксису JSON</a> &middot;
+                <a href="/sort-json-keys.html">Сортировка ключей JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Структурно, не текстово</span>
+                    <span class="badge">Порядок ключей не важен</span>
+                    <span class="badge">Работает в браузере</span>
+                    <span class="badge">Без загрузки</span>
+                </div>
+
+                <label class="field-label" for="leftInput">Левый JSON <span aria-hidden="true" class="count" id="leftCount">0 симв.</span></label>
+                <textarea id="leftInput" class="json-field" spellcheck="false" placeholder='{"name": "before", "items": [1, 2]}'></textarea>
+
+                <label class="field-label" for="rightInput" style="margin-top:0.9rem;">Правый JSON <span aria-hidden="true" class="count" id="rightCount">0 симв.</span></label>
+                <textarea id="rightInput" class="json-field" spellcheck="false" placeholder='{"name": "after", "items": [1, 2, 3]}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="compareBtn" type="button">Сравнить</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='{"left": {"name": "JSON Tool", "version": "1.0.0", "features": ["format", "minify"], "settings": {"indent": 3, "sort": true}, "deprecated": true}, "right": {"name": "JSON Tool", "version": "1.1.0", "features": ["format", "minify", "diff"], "settings": {"indent": 2, "sort": true}}}'>✨ Пример</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Очистить</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Копировать отчёт</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Скачать отчёт</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="diffOutput"></div>
+            </div>
+
+            <h2>Что видит структурное сравнение</h2>
+            <p>Оба документа сначала разбираются, а затем обходятся вместе. Сообщаются только различия в самих данных: ключ, который есть на одной стороне и отсутствует на другой; изменившееся значение; значение, у которого сменился тип — число стало строкой, объект стал массивом. Пробелы и порядок ключей в сравнении вообще не участвуют, потому что после разбора их уже не существует.</p>
+            <p>Смена типа сообщается один раз по тому пути, где она произошла, а не разворачивается в удаление и добавление для каждого листового узла под ним. Это сохраняет отчёт читаемым, когда форму меняет целое поддерево.</p>
+
+            <h2>Почему это не построчный текстовый diff</h2>
+            <p>Текстовый diff — то, что показывает <code>git diff</code>, — сравнивает строки. Для JSON это часто вводит в заблуждение. Переиндентация файла или вывод тех же ключей в другом порядке — обычное дело, когда JSON порождают разные инструменты или версии библиотек, а построчное сравнение превращает это в стену изменений, хотя данные идентичны.</p>
+            <p>Два документа ниже — один и тот же документ. Построчный diff сообщит о четырёх изменённых строках, а этот инструмент — ни о чём:</p>
+            <pre><code>{"a": 1, "b": 2}
+
+{
+  "b": 2,
+  "a": 1
+}</code></pre>
+            <p>Верно и обратное, и это самое полезное: один изменённый символ в имени ключа или число, изменившееся с <code>3</code> на <code>4</code>, показываются ровно одним изменением, а не тонут в шуме переформатирования.</p>
+
+            <h2>Как читать запись пути</h2>
+            <p>Каждое изменение сообщается с путём. <code>$</code> — корень документа, точка ведёт к ключу объекта, а квадратные скобки индексируют массив. Так, <code>$.settings.indent</code> — это ключ <code>indent</code> внутри <code>settings</code>, <code>$.features[2]</code> — третий элемент массива <code>features</code>, а <code>$["weird key"]</code> обозначает ключ, не являющийся простым идентификатором. Запись следует стилю JSON Pointer, поэтому путь из отчёта можно вставить в другие инструменты JSON.</p>
+
+            <h2>Чего сравнение не скажет</h2>
+            <ul>
+                <li><strong>Массивы сопоставляются по позиции.</strong> Вставка элемента в начало длинного массива сдвигает каждый следующий элемент, поэтому каждый отмечается как изменённый, хотя значения лишь сместились. Это честное ограничение любого сравнения без ключа для сопоставления. Если у элементов есть стабильный <code>id</code>, сначала отсортируйте обе стороны по нему или сравните версию, проиндексированную по нему.</li>
+                <li><strong>Это не патч.</strong> Инструмент сообщает различия, но не выводит документ JSON Patch (RFC 6902) и не обнаруживает перемещённые блоки. Перемещённое значение выглядит как удаление по старому пути и добавление по новому.</li>
+                <li><strong>Значения сравниваются точно.</strong> <code>1</code> и <code>1.0</code> для парсера одно и то же число, но <code>1</code> и <code>"1"</code> различны, и отсутствующий ключ отличается от ключа, явно равного <code>null</code>.</li>
+            </ul>
+
+            <h2>Частые вопросы</h2>
+            <div class="faq-item">
+                <h3>Влияет ли порядок ключей на результат сравнения?</h3>
+                <p>Нет. Оба документа сначала разбираются, и ключи объектов сопоставляются по имени, а не по позиции. Поэтому переформатирование документа или вывод ключей в другом порядке даёт пустой результат — и это правильно, ведь данные те же.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Почему вставка одного элемента в начало массива даёт так много различий?</h3>
+                <p>Массивы сопоставляются по позиции, как почти во всех структурных diff-инструментах. Вставка элемента в начало длинного массива сдвигает каждый следующий элемент на один индекс, поэтому каждый из них отмечается как изменённый, хотя значения лишь сместились. Без ключа для сопоставления невозможно понять, что было вставлено, а что изменено. Если у элементов есть стабильный id, отсортируйте обе стороны по нему перед сравнением.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Что если одна сторона не является допустимым JSON?</h3>
+                <p>Сравнение останавливается, и показывается собственное сообщение парсера для той стороны, где произошла ошибка, с пометкой левая или правая. Пока оба документа не разберутся, их нельзя обойти вместе, поэтому сравнение не выполняется.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Мой JSON куда-нибудь загружается?</h3>
+                <p>Нет. Оба документа разбираются через <code>JSON.parse</code> в браузере и сравниваются в памяти. Ни один запрос их не несёт, учётных записей и серверного хранилища нет. Можно загрузить страницу и затем отключиться от сети — сравнение продолжит работать.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Можно ли определить, что значение переместили, а не изменили?</h3>
+                <p>Нет. Этот инструмент сообщает различия, а не создаёт патч. Он не выводит документ JSON Patch и не обнаруживает значения, перемещённые из одного места в другое; вы увидите удаление по старому пути и добавление по новому.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Можно ли сравнивать JSON с комментариями или висячими запятыми?</h3>
+                <p>Нет. Сравнение использует тот же строгий парсер, что и остальные инструменты сайта, поэтому JSON5, комментарии и висячие запятые отклоняются. Если документ не разбирается, сначала посмотрите место ошибки в <a href="index.html">форматтере</a> или <a href="/json-validator.html">валидаторе</a>.</p>
+            </div>
+
+            <div class="notice">
+                <p>Нужно превратить JSON в таблицу? Для этого есть <a href="json-to-csv.html">JSON в CSV</a>. Нашли ошибку? <a href="contact.html">Свяжитесь с нами</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Все права защищены.</span>
+            <span>
+                <a href="index.html">Главная</a> &middot;
+                <a href="json-diff.html">Сравнение JSON</a> &middot;
+                <a href="about.html">О проекте</a> &middot;
+                <a href="privacy.html">Конфиденциальность</a> &middot;
+                <a href="terms.html">Условия</a> &middot;
+                <a href="#" id="cookieSettings">Настройки файлов cookie</a> &middot;
+                <a href="contact.html">Контакты</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/diff.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Согласие на использование файлов cookie" aria-hidden="true">
+        <p>Мы используем файлы cookie Google Analytics, чтобы понимать, как посетители пользуются этим сайтом. Данные всегда обрабатываются локально в вашем браузере. См. нашу <a href="privacy.html">Политику конфиденциальности</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Отклонить</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Принять</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>
