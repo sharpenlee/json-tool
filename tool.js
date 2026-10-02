@@ -20,6 +20,10 @@
             themeLight: "Light",
             themeDark: "Dark",
             initialOutput: "Your formatted JSON will appear here.",
+            whereReported: "Parsing stops at line {line}, column {col}.",
+            whereInferred: "No position was reported; the likely spot is line {line}, column {col}.",
+            excerptLabel: "Line {line}:",
+            caret: "^ here",
             exampleDescription: "A free online JSON formatter with sorting",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool Team",
@@ -39,6 +43,10 @@
             themeLight: "Claro",
             themeDark: "Oscuro",
             initialOutput: "Tu JSON formateado aparecerá aquí.",
+            whereReported: "El análisis se detiene en la línea {line}, columna {col}.",
+            whereInferred: "No se indicó una posición; el punto probable es la línea {line}, columna {col}.",
+            excerptLabel: "Línea {line}:",
+            caret: "^ aquí",
             exampleDescription: "Un formateador de JSON gratuito en línea con ordenación",
             exampleFeatures: ["formato", "minificación", "validación", "ordenación de claves"],
             exampleAuthor: "Equipo de JSON Tool",
@@ -58,6 +66,10 @@
             themeLight: "Clair",
             themeDark: "Sombre",
             initialOutput: "Votre JSON formaté apparaîtra ici.",
+            whereReported: "L'analyse s'arrête à la ligne {line}, colonne {col}.",
+            whereInferred: "Aucune position n'a été indiquée ; l'endroit probable est la ligne {line}, colonne {col}.",
+            excerptLabel: "Ligne {line} :",
+            caret: "^ ici",
             exampleDescription: "Un formatteur de JSON gratuit en ligne avec tri",
             exampleFeatures: ["formatage", "minification", "validation", "tri des clés"],
             exampleAuthor: "L'équipe JSON Tool",
@@ -77,6 +89,10 @@
             themeLight: "ライト",
             themeDark: "ダーク",
             initialOutput: "フォーマットされたJSONがここに表示されます。",
+            whereReported: "解析は {line} 行 {col} 列で止まりました。",
+            whereInferred: "位置が報告されませんでした。おそらく {line} 行 {col} 列です。",
+            excerptLabel: "{line} 行目:",
+            caret: "^ ここ",
             exampleDescription: "並べ替え対応の無料オンラインJSONフォーマッター",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool チーム",
@@ -96,6 +112,10 @@
             themeLight: "라이트",
             themeDark: "다크",
             initialOutput: "포맷된 JSON이 여기에 표시됩니다.",
+            whereReported: "구문 분석이 {line}행 {col}열에서 멈췄습니다.",
+            whereInferred: "위치가 보고되지 않았습니다. 가장 의심되는 곳은 {line}행 {col}열입니다.",
+            excerptLabel: "{line}행:",
+            caret: "^ 여기",
             exampleDescription: "정렬 기능이 있는 무료 온라인 JSON 포맷터",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool 팀",
@@ -115,6 +135,10 @@
             themeLight: "Claro",
             themeDark: "Escuro",
             initialOutput: "Seu JSON formatado aparecerá aqui.",
+            whereReported: "A análise para na linha {line}, coluna {col}.",
+            whereInferred: "Nenhuma posição foi informada; o ponto provável é a linha {line}, coluna {col}.",
+            excerptLabel: "Linha {line}:",
+            caret: "^ aqui",
             exampleDescription: "Um formatador de JSON online e gratuito com ordenação",
             exampleFeatures: ["formatação", "minificação", "validação", "ordenação de chaves"],
             exampleAuthor: "Equipe da JSON Tool",
@@ -134,6 +158,10 @@
             themeLight: "Светлая",
             themeDark: "Тёмная",
             initialOutput: "Здесь появится отформатированный JSON.",
+            whereReported: "Разбор останавливается на строке {line}, столбце {col}.",
+            whereInferred: "Позиция не указана; вероятное место — строка {line}, столбец {col}.",
+            excerptLabel: "Строка {line}:",
+            caret: "^ здесь",
             exampleDescription: "Бесплатный онлайн-форматтер JSON с сортировкой",
             exampleFeatures: ["форматирование", "минификация", "валидация", "сортировка ключей"],
             exampleAuthor: "Команда JSON Tool",
@@ -153,6 +181,10 @@
             themeLight: "浅色",
             themeDark: "深色",
             initialOutput: "格式化后的 JSON 将显示在这里。",
+            whereReported: "解析在第 {line} 行第 {col} 列停止。",
+            whereInferred: "解析器没有给出位置；最可能出问题的是第 {line} 行第 {col} 列。",
+            excerptLabel: "第 {line} 行：",
+            caret: "^ 此处",
             exampleDescription: "支持排序的免费在线 JSON 格式化工具",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool 团队",
@@ -172,6 +204,10 @@
             themeLight: "淺色",
             themeDark: "深色",
             initialOutput: "格式化後的 JSON 會顯示在這裡。",
+            whereReported: "解析在第 {line} 行、第 {col} 欄停止。",
+            whereInferred: "解析器未提供位置；最可能出錯的是第 {line} 行、第 {col} 欄。",
+            excerptLabel: "第 {line} 行：",
+            caret: "^ 此處",
             exampleDescription: "支援排序的免費線上 JSON 格式化工具",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool 團隊",
@@ -268,6 +304,74 @@
         return obj;
     }
 
+    // ---- Parse-error location (same approach as the validator page) ----
+
+    function fill(tpl, values) {
+        return tpl.replace(/\{(\w+)\}/g, function (_, key) { return values[key]; });
+    }
+
+    function lineColFromIndex(text, at) {
+        const before = text.slice(0, at).split('\n');
+        return { line: before.length, col: before[before.length - 1].length + 1 };
+    }
+
+    // Rough terminal width: CJK and full-width characters occupy two columns.
+    function displayWidth(s) {
+        let w = 0;
+        for (let i = 0; i < s.length; i++) {
+            const c = s.charCodeAt(i);
+            w += (c >= 0x1100 && (c <= 0x115f || (c >= 0x2e80 && c <= 0xa4cf) ||
+                (c >= 0xac00 && c <= 0xd7a3) || (c >= 0xf900 && c <= 0xfaff) ||
+                (c >= 0xfe30 && c <= 0xfe6f) || (c >= 0xff00 && c <= 0xff60) ||
+                (c >= 0xffe0 && c <= 0xffe6))) ? 2 : 1;
+        }
+        return w;
+    }
+
+    /* Fallback patterns for engines that report an error without a position,
+       which V8 does for trailing commas. Ordered by how often they happen. */
+    const FAULTS = [
+        /,\s*[}\]]/,
+        /'/,
+        /(^|[^:\\])\/\/|\/\*/,
+        /[{,]\s*[A-Za-z_$][\w$]*\s*:/,
+        /\b(True|False|None)\b/,
+        /\b(NaN|Infinity)\b/,
+        /[\u2018\u2019\u201c\u201d]/
+    ];
+
+    function locateError(text, message) {
+        let m = message.match(/line (\d+) column (\d+)/i);
+        let pos = m ? { line: +m[1], col: +m[2] } : null;
+        if (!pos) {
+            m = message.match(/position (\d+)/i);
+            if (m) pos = lineColFromIndex(text, Math.min(+m[1], text.length));
+        }
+        if (pos) return { line: pos.line, col: pos.col, inferred: false };
+        for (let i = 0; i < FAULTS.length; i++) {
+            const hit = FAULTS[i].exec(text);
+            if (hit) {
+                const p = lineColFromIndex(text, hit.index);
+                return { line: p.line, col: p.col, inferred: true };
+            }
+        }
+        return null;
+    }
+
+    /* The failing line plus a caret under the offending column. Tabs are expanded
+       so the caret lines up, and the caret indent is measured in display columns. */
+    function excerpt(text, line, col) {
+        const lines = text.split('\n');
+        if (!lines.length || line > lines.length) return '';
+        const raw = lines[line - 1] || '';
+        const src = raw.replace(/\t/g, '    ');
+        const clipped = src.length > 88 ? src.slice(0, 88) + '…' : src;
+        const prefix = fill(T.excerptLabel, { line: line }) + '  ';
+        const before = raw.slice(0, col - 1).replace(/\t/g, '    ');
+        const pad = displayWidth(prefix + before);
+        return prefix + clipped + '\n' + ' '.repeat(pad) + T.caret;
+    }
+
     // ---- Core processing ----
     function processJSON(mode) {
         const raw = input.value.trim();
@@ -283,8 +387,15 @@
             showError(null);
         } catch (e) {
             const msg = T.invalidPrefix + e.message;
-            setOutput(msg, true);
-            showError(msg);
+            const where = locateError(raw, e.message);
+            if (where) {
+                const tpl = where.inferred ? T.whereInferred : T.whereReported;
+                showError(msg + ' ' + fill(tpl, { line: where.line, col: where.col }));
+                setOutput(excerpt(raw, where.line, where.col), true);
+            } else {
+                setOutput(msg, true);
+                showError(msg);
+            }
             return false;
         }
 
