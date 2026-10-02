@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSONPath online – Consulta JSON con expresiones JSONPath</title>
+    <meta name="description" content="Ejecuta una consulta JSONPath sobre un documento JSON en tu navegador y ve cada coincidencia con su ruta. Admite hijos, comodines, descenso recursivo, cortes, uniones y filtros." />
+    <link rel="canonical" href="https://json-tool.com/es/jsonpath.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSONPath online – Consulta JSON con expresiones JSONPath" />
+    <meta property="og:description" content="Ejecuta una consulta JSONPath sobre un documento JSON en tu navegador. Cada coincidencia se lista con su ruta. Se ejecuta en local, sin subir nada." />
+    <meta property="og:url" content="https://json-tool.com/es/jsonpath.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool: formatea, minifica y valida JSON en tu navegador" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSONPath online – Consulta JSON con expresiones JSONPath" />
+    <meta name="twitter:description" content="Ejecuta una consulta JSONPath sobre un documento JSON en tu navegador. Cada coincidencia se lista con su ruta. Se ejecuta en local, sin subir nada." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool: formatea, minifica y valida JSON en tu navegador" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Consulta JSONPath",
+            "url": "https://json-tool.com/es/jsonpath.html",
+            "description": "Ejecuta una expresión JSONPath sobre un documento JSON en el navegador y lista cada coincidencia con su ruta. Hijos, comodines, descenso recursivo, índices, cortes, uniones y filtros sencillos. Los datos no salen de la máquina.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requiere JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "¿Qué sintaxis de JSONPath es compatible?",
+                "acceptedAnswer": { "@type": "Answer", "text": "La raíz $, el acceso a hijos con .name o ['name'], los comodines .* y [*], el descenso recursivo ..name y ..*, los índices de array incluidos los negativos, los cortes [start:end:step], las uniones como [0,1] y ['a','b'], y los filtros [?(@.price < 10)] con los operadores == != < <= > >= combinados con && y ||." }
+            }, {
+                "@type": "Question",
+                "name": "¿Qué no es compatible?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Las funciones de filtro como length(), match() y search(), las expresiones regulares, las expresiones de script entre paréntesis y las extensiones que añaden algunas bibliotecas, como las referencias al padre y a los hermanos. Una consulta que las use se rechaza en lugar de devolver en silencio un resultado incorrecto." }
+            }, {
+                "@type": "Question",
+                "name": "¿Por qué ?(@.inStock) coincide con elementos cuyo inStock es false?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Porque una ruta sola dentro de un filtro comprueba existencia, no veracidad: pregunta si la propiedad está, y una propiedad puesta a false sigue estando. Para comprobar el valor, escríbelo: ?(@.inStock == true). Esa es la lectura del filtro en la RFC 9535." }
+            }, {
+                "@type": "Question",
+                "name": "¿Cada coincidencia me dice de dónde viene?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Sí. Cada resultado se lista con la ruta donde se encontró, en la misma notación de puntos y corchetes con la que se escriben las consultas, así que la ruta se puede pegar de vuelta en una consulta o en otra herramienta JSON." }
+            }, {
+                "@type": "Question",
+                "name": "¿Se sube mi documento?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. El documento se analiza con JSON.parse en tu navegador y la consulta se ejecuta en memoria. No se sube nada y la página sigue funcionando sin conexión." }
+            }, {
+                "@type": "Question",
+                "name": "¿Por qué $..price devolvió más de lo que esperaba?",
+                "acceptedAnswer": { "@type": "Answer", "text": "El descenso recursivo visita todos los niveles del documento, así que ..price encuentra una propiedad price dondequiera que esté — dentro de arrays, objetos anidados y ramas no relacionadas. Para acotarlo, ancla la consulta con más ruta, por ejemplo $.store.book[*].price." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-jsonpath-mode="query">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/jsonpath.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/jsonpath.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/jsonpath.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/jsonpath.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/jsonpath.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/jsonpath.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/jsonpath.html" class="active" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/jsonpath.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/jsonpath.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Oscuro</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Volver a la herramienta JSON</a></p>
+            <h1>Consulta JSONPath</h1>
+            <p class="updated">Última actualización: 2 de octubre de 2026</p>
+
+            <p class="lead">Ejecuta una expresión JSONPath sobre un documento JSON y ve cada coincidencia con la ruta donde se encontró. La consulta se ejecuta en tu navegador; el documento no se envía a ningún sitio.</p>
+
+            <div class="tools-nav">
+                <span>Otras herramientas gratuitas:</span>
+                <a href="index.html">Formatear y embellecer JSON</a> &middot;
+                <a href="/json-validator.html">Validador JSON</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">Comparar JSON</a> &middot;
+                <a href="json-to-csv.html">JSON a CSV</a> &middot;
+                <a href="csv-to-json.html">CSV a JSON</a> &middot;
+                <a href="/json-minifier.html">Minificar JSON</a> &middot;
+                <a href="/pretty-print-json.html">Imprimir JSON con formato</a> &middot;
+                <a href="/json-syntax.html">Chuleta de sintaxis JSON</a> &middot;
+                <a href="/sort-json-keys.html">Ordenar claves JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Se ejecuta en tu navegador</span>
+                    <span class="badge">Sin subir nada</span>
+                    <span class="badge">Rutas en los resultados</span>
+                    <span class="badge">Filtros y cortes</span>
+                </div>
+
+                <label class="field-label" for="docInput">Documento JSON <span aria-hidden="true" class="count" id="docCount">0 caracteres</span></label>
+                <textarea id="docInput" class="json-field" spellcheck="false" placeholder='{"store": {"book": [{"title": "Dune", "price": 9.99}]}}'></textarea>
+
+                <label class="field-label" for="queryInput" style="margin-top:0.9rem;">Consulta JSONPath</label>
+                <input id="queryInput" class="json-field jsonpath-input" type="text" spellcheck="false" placeholder='$.store.book[?(@.price < 10)].title' />
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="runBtn" type="button">Ejecutar consulta</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Probar un ejemplo</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Limpiar</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copiar resultados</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Descargar resultados</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="matchList"></div>
+            </div>
+
+            <h2>Qué hace el lenguaje de consulta</h2>
+            <p>JSONPath es al JSON lo que la ruta de una carpeta al sistema de archivos: una forma compacta de decir qué valores quieres. <code>$</code> es la raíz del documento, <code>.name</code> entra en una propiedad y <code>[…]</code> selecciona dentro de un array.</p>
+            <ul>
+                <li><strong>Hijos:</strong> <code>$.store.bicycle.color</code>, o <code>$['store']['bicycle']['color']</code> cuando el nombre necesita comillas.</li>
+                <li><strong>Comodines:</strong> <code>$.store.book[*].title</code> toma el título de cada libro; <code>$.store.*</code> toma cada valor del objeto store.</li>
+                <li><strong>Descenso recursivo:</strong> <code>$..price</code> encuentra un <code>price</code> a cualquier profundidad. Potente y fácil de pasarse — ver abajo.</li>
+                <li><strong>Índices y cortes:</strong> <code>[0]</code>, <code>[-1]</code> para el último, <code>[0:2]</code> para los dos primeros, <code>[0:5:2]</code> con paso.</li>
+                <li><strong>Uniones:</strong> <code>[0,2]</code> y <code>['book','bicycle']</code> seleccionan varios a la vez.</li>
+                <li><strong>Filtros:</strong> <code>[?(@.price &lt; 10)]</code> conserva los elementos de precio inferior a diez, con <code>== != &lt; &lt;= &gt; &gt;=</code> y combinaciones con <code>&amp;&amp;</code> y <code>||</code>.</li>
+            </ul>
+
+            <h2>Los filtros comprueban existencia, no veracidad</h2>
+            <p>Una ruta sola dentro de un filtro pregunta si la propiedad <em>está</em>. Por eso <code>[?(@.inStock)]</code> coincide con un elemento cuyo <code>inStock</code> es <code>false</code>: la propiedad existe — la lectura de la RFC 9535. Cuando te refieres al valor, dilo: <code>[?(@.inStock == true)]</code>. Es la sorpresa más común de JSONPath, y es una propiedad del lenguaje, no de esta herramienta.</p>
+
+            <h2>Lo que deliberadamente no hace</h2>
+            <p>Las funciones de filtro como <code>length()</code>, <code>match()</code> y <code>search()</code> no están implementadas, ni las expresiones regulares, ni las expresiones de script entre paréntesis, ni las extensiones de padre/hermanos que añaden algunas bibliotecas. Una consulta que las use se rechaza con un mensaje en lugar de devolver en silencio un resultado incorrecto: la página declara lo que admite, así que una coincidencia aquí significa lo que dice.</p>
+
+            <h2>Preguntas frecuentes</h2>
+            <div class="faq-item">
+                <h3>¿Qué sintaxis de JSONPath es compatible?</h3>
+                <p>La raíz <code>$</code>, el acceso a hijos con <code>.name</code> o <code>['name']</code>, los comodines <code>.*</code> y <code>[*]</code>, el descenso recursivo <code>..name</code> y <code>..*</code>, los índices de array incluidos los negativos, los cortes <code>[start:end:step]</code>, las uniones como <code>[0,1]</code> y <code>['a','b']</code>, y los filtros <code>[?(@.price &lt; 10)]</code> con los operadores <code>== != &lt; &lt;= &gt; &gt;=</code> combinados con <code>&amp;&amp;</code> y <code>||</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Qué no es compatible?</h3>
+                <p>Las funciones de filtro como <code>length()</code>, <code>match()</code> y <code>search()</code>, las expresiones regulares, las expresiones de script entre paréntesis y las extensiones que añaden algunas bibliotecas (referencias al padre y a los hermanos). Una consulta que las use se rechaza en lugar de devolver en silencio un resultado incorrecto.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Por qué ?(@.inStock) coincide con elementos cuyo inStock es false?</h3>
+                <p>Porque una ruta sola dentro de un filtro comprueba existencia, no veracidad: pregunta si la propiedad está, y una propiedad puesta a <code>false</code> sigue estando. Para comprobar el valor, escríbelo: <code>?(@.inStock == true)</code>. Esa es la lectura del filtro en la RFC 9535.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Cada coincidencia me dice de dónde viene?</h3>
+                <p>Sí. Cada resultado se lista con la ruta donde se encontró, en la misma notación de puntos y corchetes con la que se escriben las consultas, así que la ruta se puede pegar de vuelta en una consulta o en otra herramienta JSON.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Se sube mi documento?</h3>
+                <p>No. El documento se analiza con <code>JSON.parse</code> en tu navegador y la consulta se ejecuta en memoria. No se sube nada y la página sigue funcionando sin conexión.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Por qué $..price devolvió más de lo que esperaba?</h3>
+                <p>El descenso recursivo visita todos los niveles del documento, así que <code>..price</code> encuentra una propiedad <code>price</code> dondequiera que esté — dentro de arrays, objetos anidados y ramas no relacionadas. Para acotarlo, ancla la consulta con más ruta, por ejemplo <code>$.store.book[*].price</code>.</p>
+            </div>
+
+            <div class="notice">
+                <p>¿Prefieres comprobar el documento con un esquema? <a href="json-schema.html">JSON Schema</a> lo hace. ¿Has encontrado un fallo? <a href="contact.html">Escríbenos</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Todos los derechos reservados.</span>
+            <span>
+                <a href="index.html">Inicio</a> &middot;
+                <a href="/json-validator.html">Validador</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="jsonpath.html">JSONPath</a> &middot;
+                <a href="json-diff.html">Comparar JSON</a> &middot;
+                <a href="about.html">Acerca de</a> &middot;
+                <a href="privacy.html">Privacidad</a> &middot;
+                <a href="terms.html">Términos</a> &middot;
+                <a href="#" id="cookieSettings">Configuración de cookies</a> &middot;
+                <a href="contact.html">Contacto</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/jsonpath.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consentimiento de cookies" aria-hidden="true">
+        <p>Usamos cookies de Google Analytics para entender cómo usan el sitio los visitantes. Los datos siempre se procesan localmente en tu navegador. Consulta nuestra <a href="privacy.html">Política de privacidad</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Rechazar</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Aceptar</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

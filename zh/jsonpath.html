@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSONPath 在线 – 用 JSONPath 表达式查询 JSON</title>
+    <meta name="description" content="在浏览器中对 JSON 文档运行 JSONPath 查询，并查看每个匹配及其路径。支持子节点、通配符、递归下降、切片、联合和过滤器。" />
+    <link rel="canonical" href="https://json-tool.com/zh/jsonpath.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSONPath 在线 – 用 JSONPath 表达式查询 JSON" />
+    <meta property="og:description" content="在浏览器中对 JSON 文档运行 JSONPath 查询，每个匹配都会列出其路径。本地运行，无需上传。" />
+    <meta property="og:url" content="https://json-tool.com/zh/jsonpath.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSONPath 在线 – 用 JSONPath 表达式查询 JSON" />
+    <meta name="twitter:description" content="在浏览器中对 JSON 文档运行 JSONPath 查询，每个匹配都会列出其路径。本地运行，无需上传。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSONPath 查询",
+            "url": "https://json-tool.com/zh/jsonpath.html",
+            "description": "在浏览器中对 JSON 文档运行 JSONPath 表达式，并列出每个匹配及其路径。支持子节点、通配符、递归下降、索引、切片、联合和简单过滤器。数据不会离开本机。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "需要 JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "支持哪些 JSONPath 语法？",
+                "acceptedAnswer": { "@type": "Answer", "text": "根 $、用 .name 或 ['name'] 访问子节点、通配符 .* 与 [*]、递归下降 ..name 与 ..*、数组索引（含负数）、切片 [start:end:step]、联合如 [0,1] 与 ['a','b']，以及过滤器 [?(@.price < 10)]，运算符为 == != < <= > >=，可用 && 和 || 组合。" }
+            }, {
+                "@type": "Question",
+                "name": "不支持哪些？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不实现过滤器函数（如 length()、match()、search()），也不支持正则表达式、括号中的脚本表达式，以及某些库添加的父节点/兄弟节点扩展。使用这些的查询会被拒绝，而不是悄悄返回错误结果。" }
+            }, {
+                "@type": "Question",
+                "name": "为什么 ?(@.inStock) 会匹配 inStock 为 false 的项？",
+                "acceptedAnswer": { "@type": "Answer", "text": "因为过滤器里单独的一个路径是存在性判断，而不是真值判断：它问的是这个属性在不在，而设为 false 的属性依然在。要判断真值请显式写 ?(@.inStock == true)。这是 RFC 9535 对过滤器的解读。" }
+            }, {
+                "@type": "Question",
+                "name": "匹配结果会告诉我它来自哪里吗？",
+                "acceptedAnswer": { "@type": "Answer", "text": "会。每个结果都会列出它所在的路径，采用与书写查询相同的点号与方括号写法，因此可以把这个路径直接粘回查询或其他 JSON 工具中使用。" }
+            }, {
+                "@type": "Question",
+                "name": "我的文档会被上传吗？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不会。文档在你的浏览器中用 JSON.parse 解析，查询在内存中运行。不会上传任何内容，断开网络后页面依然可用。" }
+            }, {
+                "@type": "Question",
+                "name": "为什么 $..price 返回的比我预期的多？",
+                "acceptedAnswer": { "@type": "Answer", "text": "递归下降会访问文档的每一层，因此 ..price 会在任何位置找到 price 属性——无论在数组里、嵌套对象里还是不相关的分支里。要收窄范围，请用更多路径来限定，例如 $.store.book[*].price。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-jsonpath-mode="query">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="语言">
+                    <a href="/jsonpath.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/jsonpath.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/jsonpath.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/jsonpath.html" class="active" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/jsonpath.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/jsonpath.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/jsonpath.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/jsonpath.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/jsonpath.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切换深色模式">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">深色</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; 返回 JSON 工具</a></p>
+            <h1>JSONPath 查询</h1>
+            <p class="updated">最后更新：2026年10月2日</p>
+
+            <p class="lead">对 JSON 文档运行 JSONPath 表达式，查看每一个匹配及其所在的路径。查询在你的浏览器中运行，文档不会被发送到任何地方。</p>
+
+            <div class="tools-nav">
+                <span>其他免费工具：</span>
+                <a href="index.html">JSON 格式化与美化</a> &middot;
+                <a href="/json-validator.html">JSON 校验器</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">JSON 差异对比</a> &middot;
+                <a href="json-to-csv.html">JSON 转 CSV</a> &middot;
+                <a href="csv-to-json.html">CSV 转 JSON</a> &middot;
+                <a href="/json-minifier.html">JSON 压缩</a> &middot;
+                <a href="/pretty-print-json.html">JSON 美化打印</a> &middot;
+                <a href="/json-syntax.html">JSON 语法速查</a> &middot;
+                <a href="/sort-json-keys.html">JSON 键排序</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">在浏览器中运行</span>
+                    <span class="badge">无需上传</span>
+                    <span class="badge">结果带路径</span>
+                    <span class="badge">支持过滤器与切片</span>
+                </div>
+
+                <label class="field-label" for="docInput">JSON 文档 <span aria-hidden="true" class="count" id="docCount">0个字符</span></label>
+                <textarea id="docInput" class="json-field" spellcheck="false" placeholder='{"store": {"book": [{"title": "Dune", "price": 9.99}]}}'></textarea>
+
+                <label class="field-label" for="queryInput" style="margin-top:0.9rem;">JSONPath 查询</label>
+                <input id="queryInput" class="json-field jsonpath-input" type="text" spellcheck="false" placeholder='$.store.book[?(@.price < 10)].title' />
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="runBtn" type="button">运行查询</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ 试试示例</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">清空</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>复制结果</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>下载结果</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="matchList"></div>
+            </div>
+
+            <h2>查询语言能做什么</h2>
+            <p>JSONPath 之于 JSON，就像文件夹路径之于文件系统：用简洁的方式说明你要哪些值。<code>$</code> 是文档根，<code>.name</code> 进入某个属性，<code>[…]</code> 在数组中选择。</p>
+            <ul>
+                <li><strong>子节点：</strong><code>$.store.bicycle.color</code>，或者名字需要加引号时用 <code>$['store']['bicycle']['color']</code>。</li>
+                <li><strong>通配符：</strong><code>$.store.book[*].title</code> 取每本书的标题；<code>$.store.*</code> 取 store 对象的每个值。</li>
+                <li><strong>递归下降：</strong><code>$..price</code> 会在任意深度找到 <code>price</code>。很好用，也容易匹配过多——见下文。</li>
+                <li><strong>索引与切片：</strong><code>[0]</code>、<code>[-1]</code> 表示最后一项、<code>[0:2]</code> 取前两项、<code>[0:5:2]</code> 按步长取。</li>
+                <li><strong>联合：</strong><code>[0,2]</code> 和 <code>['book','bicycle']</code> 可一次选择多个。</li>
+                <li><strong>过滤器：</strong><code>[?(@.price &lt; 10)]</code> 保留价格低于十的项，运算符有 <code>== != &lt; &lt;= &gt; &gt;=</code>，可用 <code>&amp;&amp;</code> 和 <code>||</code> 组合。</li>
+            </ul>
+
+            <h2>过滤器判断的是存在性，而不是真值</h2>
+            <p>过滤器里单独的一个路径问的是该属性是否<em>存在</em>。所以 <code>[?(@.inStock)]</code> 会匹配 <code>inStock</code> 为 <code>false</code> 的项，因为该属性存在——这是 RFC 9535 的解读。当你想判断值本身时，就明确写出来：<code>[?(@.inStock == true)]</code>。这是 JSONPath 最常见的意外，属于语言本身的特性，而不是本工具的问题。</p>
+
+            <h2>它有意不做的事</h2>
+            <p>不实现过滤器函数（如 <code>length()</code>、<code>match()</code>、<code>search()</code>），也不支持正则表达式、括号中的脚本表达式，以及某些库添加的父节点/兄弟节点扩展。使用这些的查询会被拒绝并给出提示，而不是悄悄返回错误结果——本页明示了它支持什么，所以这里的「通过」就是字面意思。</p>
+
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <h3>支持哪些 JSONPath 语法？</h3>
+                <p>根 <code>$</code>、用 <code>.name</code> 或 <code>['name']</code> 访问子节点、通配符 <code>.*</code> 与 <code>[*]</code>、递归下降 <code>..name</code> 与 <code>..*</code>、数组索引（含负数）、切片 <code>[start:end:step]</code>、联合如 <code>[0,1]</code> 与 <code>['a','b']</code>，以及过滤器 <code>[?(@.price &lt; 10)]</code>，运算符为 <code>== != &lt; &lt;= &gt; &gt;=</code>，可用 <code>&amp;&amp;</code> 和 <code>||</code> 组合。</p>
+            </div>
+            <div class="faq-item">
+                <h3>不支持哪些？</h3>
+                <p>不实现过滤器函数（如 <code>length()</code>、<code>match()</code>、<code>search()</code>），也不支持正则表达式、括号中的脚本表达式，以及某些库添加的 JSONPath 扩展（如父节点/兄弟节点引用）。使用这些的查询会被拒绝，而不是悄悄返回错误结果。</p>
+            </div>
+            <div class="faq-item">
+                <h3>为什么 ?(@.inStock) 会匹配 inStock 为 false 的项？</h3>
+                <p>因为过滤器里单独的一个路径是存在性判断，而不是真值判断：它问的是这个属性在不在，而设为 <code>false</code> 的属性依然在。要判断真值请显式写 <code>?(@.inStock == true)</code>。这是 RFC 9535 对过滤器的解读。</p>
+            </div>
+            <div class="faq-item">
+                <h3>匹配结果会告诉我它来自哪里吗？</h3>
+                <p>会。每个结果都会列出它所在的路径，采用与书写查询相同的点号与方括号写法，因此可以把这个路径直接粘回查询或其他 JSON 工具中使用。</p>
+            </div>
+            <div class="faq-item">
+                <h3>我的文档会被上传吗？</h3>
+                <p>不会。文档在你的浏览器中用 <code>JSON.parse</code> 解析，查询在内存中运行。不会上传任何内容，断开网络后页面依然可用。</p>
+            </div>
+            <div class="faq-item">
+                <h3>为什么 $..price 返回的比我预期的多？</h3>
+                <p>递归下降会访问文档的每一层，因此 <code>..price</code> 会在任何位置找到 <code>price</code> 属性——无论在数组里、嵌套对象里还是不相关的分支里。要收窄范围，请用更多路径来限定，例如 <code>$.store.book[*].price</code>。</p>
+            </div>
+
+            <div class="notice">
+                <p>想改用 Schema 检查文档？<a href="json-schema.html">JSON Schema</a> 可以做到。发现错误？<a href="contact.html">联系我们</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 保留所有权利。</span>
+            <span>
+                <a href="index.html">首页</a> &middot;
+                <a href="/json-validator.html">校验器</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="jsonpath.html">JSONPath</a> &middot;
+                <a href="json-diff.html">JSON 差异对比</a> &middot;
+                <a href="about.html">关于</a> &middot;
+                <a href="privacy.html">隐私政策</a> &middot;
+                <a href="terms.html">服务条款</a> &middot;
+                <a href="#" id="cookieSettings">Cookie 设置</a> &middot;
+                <a href="contact.html">联系我们</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/jsonpath.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie 同意" aria-hidden="true">
+        <p>我们使用 Google Analytics Cookie 来了解访问者如何使用本网站。您的数据始终在浏览器中本地处理。请参阅我们的<a href="privacy.html">隐私政策</a>。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒绝</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">接受</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

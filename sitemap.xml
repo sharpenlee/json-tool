@@ -1166,4 +1166,130 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-schema.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-schema.html"/>
   </url>
+  <url>
+    <loc>https://json-tool.com/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/ko/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/ja/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/zh/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/zh-hant/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/ru/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/es/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/pt/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
+  <url>
+    <loc>https://json-tool.com/fr/jsonpath.html</loc>
+    <lastmod>2026-10-02</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html"/>
+  </url>
 </urlset>

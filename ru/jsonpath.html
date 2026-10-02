@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSONPath онлайн – запросы к JSON выражениями JSONPath</title>
+    <meta name="description" content="Выполняйте запрос JSONPath по документу JSON в браузере и видьте каждое совпадение с его путём. Поддерживаются дочерние узлы, подстановки, рекурсивный спуск, срезы, объединения и фильтры." />
+    <link rel="canonical" href="https://json-tool.com/ru/jsonpath.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSONPath онлайн – запросы к JSON выражениями JSONPath" />
+    <meta property="og:description" content="Выполняйте запрос JSONPath по документу JSON в браузере. Каждое совпадение выводится со своим путём. Работает локально, без загрузки." />
+    <meta property="og:url" content="https://json-tool.com/ru/jsonpath.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSONPath онлайн – запросы к JSON выражениями JSONPath" />
+    <meta name="twitter:description" content="Выполняйте запрос JSONPath по документу JSON в браузере. Каждое совпадение выводится со своим путём. Работает локально, без загрузки." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Запрос JSONPath",
+            "url": "https://json-tool.com/ru/jsonpath.html",
+            "description": "Выполняйте выражение JSONPath по документу JSON в браузере и выводите каждое совпадение с его путём. Дочерние узлы, подстановки, рекурсивный спуск, индексы, срезы, объединения и простые фильтры. Данные не покидают машину.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Требуется JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Какой синтаксис JSONPath поддерживается?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Корень $, доступ к дочерним узлам через .name или ['name'], подстановки .* и [*], рекурсивный спуск ..name и ..*, индексы массива включая отрицательные, срезы [start:end:step], объединения вида [0,1] и ['a','b'], а также фильтры [?(@.price < 10)] с операторами == != < <= > >= и комбинациями через && и ||." }
+            }, {
+                "@type": "Question",
+                "name": "Что не поддерживается?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Функции фильтров вроде length(), match() и search(), регулярные выражения, скриптовые выражения в скобках и расширения, которые добавляют некоторые библиотеки, например ссылки на родителя и соседей. Запрос с ними отклоняется, а не возвращает молча неверный результат." }
+            }, {
+                "@type": "Question",
+                "name": "Почему ?(@.inStock) совпадает с элементами, где inStock равно false?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Потому что одиночный путь в фильтре проверяет наличие, а не истинность: он спрашивает, есть ли свойство, а свойство, равное false, всё равно есть. Для проверки значения укажите явно: ?(@.inStock == true). Так фильтр трактуется в RFC 9535." }
+            }, {
+                "@type": "Question",
+                "name": "Результат показывает, откуда он взялся?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Да. Каждый результат выводится с путём, по которому найден, в той же записи с точками и скобками, что и в запросе, поэтому путь можно вставить обратно в запрос или в другой инструмент JSON." }
+            }, {
+                "@type": "Question",
+                "name": "Мой документ загружается куда-нибудь?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Нет. Документ разбирается через JSON.parse в вашем браузере, а запрос выполняется в памяти. Ничего не загружается, и страница работает при отключённой сети." }
+            }, {
+                "@type": "Question",
+                "name": "Почему $..price вернул больше, чем я ожидал?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Рекурсивный спуск посещает каждый уровень документа, поэтому ..price находит свойство price где угодно — в массивах, вложенных объектах и посторонних ветвях. Чтобы сузить, привяжите запрос к большему пути, например $.store.book[*].price." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-jsonpath-mode="query">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/jsonpath.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/jsonpath.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/jsonpath.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/jsonpath.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/jsonpath.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/jsonpath.html" class="active" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/jsonpath.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/jsonpath.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/jsonpath.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тёмную тему">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Назад к инструменту JSON</a></p>
+            <h1>Запрос JSONPath</h1>
+            <p class="updated">Последнее обновление: 2 октября 2026 г.</p>
+
+            <p class="lead">Выполните выражение JSONPath по документу JSON и увидьте каждое совпадение с путём, где оно найдено. Запрос выполняется в браузере, документ никуда не отправляется.</p>
+
+            <div class="tools-nav">
+                <span>Другие бесплатные инструменты:</span>
+                <a href="index.html">Форматирование JSON</a> &middot;
+                <a href="/json-validator.html">Проверка JSON</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">Сравнение JSON</a> &middot;
+                <a href="json-to-csv.html">JSON в CSV</a> &middot;
+                <a href="csv-to-json.html">CSV в JSON</a> &middot;
+                <a href="/json-minifier.html">Сжатие JSON</a> &middot;
+                <a href="/pretty-print-json.html">Красивый вывод JSON</a> &middot;
+                <a href="/json-syntax.html">Шпаргалка по синтаксису JSON</a> &middot;
+                <a href="/sort-json-keys.html">Сортировка ключей JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Работает в браузере</span>
+                    <span class="badge">Без загрузки</span>
+                    <span class="badge">Пути в результатах</span>
+                    <span class="badge">Фильтры и срезы</span>
+                </div>
+
+                <label class="field-label" for="docInput">Документ JSON <span aria-hidden="true" class="count" id="docCount">0 симв.</span></label>
+                <textarea id="docInput" class="json-field" spellcheck="false" placeholder='{"store": {"book": [{"title": "Dune", "price": 9.99}]}}'></textarea>
+
+                <label class="field-label" for="queryInput" style="margin-top:0.9rem;">Запрос JSONPath</label>
+                <input id="queryInput" class="json-field jsonpath-input" type="text" spellcheck="false" placeholder='$.store.book[?(@.price < 10)].title' />
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="runBtn" type="button">Выполнить запрос</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Пример</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Очистить</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Копировать результаты</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Скачать результаты</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="matchList"></div>
+            </div>
+
+            <h2>Что умеет язык запросов</h2>
+            <p>JSONPath для JSON — то же, что путь к папке для файловой системы: краткий способ сказать, какие значения нужны. <code>$</code> — корень документа, <code>.name</code> ведёт к свойству, а <code>[…]</code> выбирает внутри массива.</p>
+            <ul>
+                <li><strong>Дочерние узлы:</strong> <code>$.store.bicycle.color</code>, или <code>$['store']['bicycle']['color']</code>, когда имя нужно взять в кавычки.</li>
+                <li><strong>Подстановки:</strong> <code>$.store.book[*].title</code> берёт название каждой книги; <code>$.store.*</code> — все значения объекта store.</li>
+                <li><strong>Рекурсивный спуск:</strong> <code>$..price</code> находит <code>price</code> на любой глубине. Мощно и легко переусердствовать — см. ниже.</li>
+                <li><strong>Индексы и срезы:</strong> <code>[0]</code>, <code>[-1]</code> для последнего, <code>[0:2]</code> для первых двух, <code>[0:5:2]</code> с шагом.</li>
+                <li><strong>Объединения:</strong> <code>[0,2]</code> и <code>['book','bicycle']</code> выбирают несколько сразу.</li>
+                <li><strong>Фильтры:</strong> <code>[?(@.price &lt; 10)]</code> оставляет элементы дешевле десяти; операторы <code>== != &lt; &lt;= &gt; &gt;=</code>, комбинации через <code>&amp;&amp;</code> и <code>||</code>.</li>
+            </ul>
+
+            <h2>Фильтры проверяют наличие, а не истинность</h2>
+            <p>Одиночный путь в фильтре спрашивает, <em>есть ли</em> свойство. Поэтому <code>[?(@.inStock)]</code> совпадает с элементом, у которого <code>inStock</code> равно <code>false</code>, — свойство существует. Так фильтр трактуется в RFC 9535. Когда важно значение, укажите это явно: <code>[?(@.inStock == true)]</code>. Это самый частый сюрприз в JSONPath, и он свойство языка, а не этого инструмента.</p>
+
+            <h2>Что намеренно не делается</h2>
+            <p>Функции фильтров вроде <code>length()</code>, <code>match()</code> и <code>search()</code> не реализованы, как и регулярные выражения, скриптовые выражения в скобках и расширения некоторых библиотек (ссылки на родителя и соседей). Запрос с ними отклоняется с сообщением, а не возвращает молча неверный результат — страница заявляет свои возможности, поэтому «совпадение» здесь означает именно это.</p>
+
+            <h2>Частые вопросы</h2>
+            <div class="faq-item">
+                <h3>Какой синтаксис JSONPath поддерживается?</h3>
+                <p>Корень <code>$</code>, доступ к дочерним узлам через <code>.name</code> или <code>['name']</code>, подстановки <code>.*</code> и <code>[*]</code>, рекурсивный спуск <code>..name</code> и <code>..*</code>, индексы массива включая отрицательные, срезы <code>[start:end:step]</code>, объединения вида <code>[0,1]</code> и <code>['a','b']</code>, а также фильтры <code>[?(@.price &lt; 10)]</code> с операторами <code>== != &lt; &lt;= &gt; &gt;=</code> и комбинациями через <code>&amp;&amp;</code> и <code>||</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Что не поддерживается?</h3>
+                <p>Функции фильтров вроде <code>length()</code>, <code>match()</code> и <code>search()</code>, регулярные выражения, скриптовые выражения в скобках и расширения, которые добавляют некоторые библиотеки, например ссылки на родителя и соседей. Запрос с ними отклоняется, а не возвращает молча неверный результат.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Почему ?(@.inStock) совпадает с элементами, где inStock равно false?</h3>
+                <p>Потому что одиночный путь в фильтре проверяет наличие, а не истинность: он спрашивает, есть ли свойство, а свойство, равное <code>false</code>, всё равно есть. Для проверки значения укажите явно: <code>?(@.inStock == true)</code>. Так фильтр трактуется в RFC 9535.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Результат показывает, откуда он взялся?</h3>
+                <p>Да. Каждый результат выводится с путём, по которому найден, в той же записи с точками и скобками, что и в запросе, поэтому путь можно вставить обратно в запрос или в другой инструмент JSON.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Мой документ загружается куда-нибудь?</h3>
+                <p>Нет. Документ разбирается через <code>JSON.parse</code> в вашем браузере, а запрос выполняется в памяти. Ничего не загружается, и страница работает при отключённой сети.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Почему $..price вернул больше, чем я ожидал?</h3>
+                <p>Рекурсивный спуск посещает каждый уровень документа, поэтому <code>..price</code> находит свойство <code>price</code> где угодно — в массивах, вложенных объектах и посторонних ветвях. Чтобы сузить, привяжите запрос к большему пути, например <code>$.store.book[*].price</code>.</p>
+            </div>
+
+            <div class="notice">
+                <p>Хотите проверить документ по схеме? Для этого есть <a href="json-schema.html">JSON Schema</a>. Нашли ошибку? <a href="contact.html">Свяжитесь с нами</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Все права защищены.</span>
+            <span>
+                <a href="index.html">Главная</a> &middot;
+                <a href="/json-validator.html">Проверка</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="jsonpath.html">JSONPath</a> &middot;
+                <a href="json-diff.html">Сравнение JSON</a> &middot;
+                <a href="about.html">О проекте</a> &middot;
+                <a href="privacy.html">Конфиденциальность</a> &middot;
+                <a href="terms.html">Условия</a> &middot;
+                <a href="#" id="cookieSettings">Настройки файлов cookie</a> &middot;
+                <a href="contact.html">Контакты</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/jsonpath.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Согласие на использование файлов cookie" aria-hidden="true">
+        <p>Мы используем файлы cookie Google Analytics, чтобы понимать, как посетители пользуются этим сайтом. Данные всегда обрабатываются локально в вашем браузере. См. нашу <a href="privacy.html">Политику конфиденциальности</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Отклонить</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Принять</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

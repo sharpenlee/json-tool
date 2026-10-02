@@ -83,6 +83,23 @@ textarea.json-field {
     tab-size: 2;
     transition: border-color 0.2s, box-shadow 0.2s, background 0.25s;
 }
+
+/* Single-line variant for the JSONPath query box */
+input.jsonpath-input {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    background: var(--bg-tool);
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.25s;
+}
+input.jsonpath-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
 textarea.json-field:focus {
     outline: none;
     border-color: var(--primary);
@@ -255,3 +272,34 @@ body.dark .result pre { background: rgba(0, 0, 0, 0.35); }
     font-weight: 650;
 }
 .issue-message { flex: 1 1 auto; overflow-wrap: anywhere; }
+
+/* JSONPath match list (jsonpath page) */
+.match-list {
+    margin-top: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+    overflow: hidden;
+}
+.match-item {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+    background: var(--bg-tool);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    overflow-wrap: anywhere;
+}
+.match-item:last-child { border-bottom: 0; }
+.match-path {
+    flex: 0 0 auto;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-weight: 650;
+    color: var(--primary);
+}
+.match-value {
+    flex: 1 1 auto;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    overflow-wrap: anywhere;
+}

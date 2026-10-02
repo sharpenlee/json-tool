@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSONPath Online – Query JSON with JSONPath Expressions</title>
+    <meta name="description" content="Run a JSONPath query against a JSON document in your browser and see every match with its path. Supports child, wildcard, recursive descent, slices, unions and filters." />
+    <link rel="canonical" href="https://json-tool.com/jsonpath.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/jsonpath.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/jsonpath.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/jsonpath.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/jsonpath.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/jsonpath.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/jsonpath.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/jsonpath.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/jsonpath.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/jsonpath.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSONPath Online – Query JSON with JSONPath Expressions" />
+    <meta property="og:description" content="Run a JSONPath query against a JSON document in your browser. Every match is listed with its path. Runs locally, no upload." />
+    <meta property="og:url" content="https://json-tool.com/jsonpath.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSONPath Online – Query JSON with JSONPath Expressions" />
+    <meta name="twitter:description" content="Run a JSONPath query against a JSON document in your browser. Every match is listed with its path. Runs locally, no upload." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSONPath Query",
+            "url": "https://json-tool.com/jsonpath.html",
+            "description": "Run a JSONPath expression against a JSON document in the browser and list every match with its path. Child, wildcard, recursive descent, index, slice, union and simple filters. No data leaves the machine.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Which JSONPath syntax is supported?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Root $, child access with .name or ['name'], the wildcards .* and [*], recursive descent with ..name and ..*, array indexes including negative ones, slices [start:end:step], unions such as [0,1] and ['a','b'], and filters [?(@.price < 10)] with the operators == != < <= > >= combined using && and ||." }
+            }, {
+                "@type": "Question",
+                "name": "What is not supported?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Filter functions such as length(), match() and search(), regular expressions, script expressions in parentheses, and the JSONPath extensions some libraries add, such as parent and sibling references. A query that uses them is rejected rather than silently returning the wrong thing." }
+            }, {
+                "@type": "Question",
+                "name": "Why does ?(@.inStock) match items where inStock is false?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because a bare path in a filter is an existence test, not a truthiness test: it asks whether the property is there, and a property set to false is still there. For truthiness write ?(@.inStock == true) explicitly. That is the RFC 9535 reading of a filter." }
+            }, {
+                "@type": "Question",
+                "name": "Does a match tell me where it came from?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Each result is listed with the path it was found at, in the same dotted and bracketed notation used to write queries, so the same path can be pasted back into a query or into another JSON tool." }
+            }, {
+                "@type": "Question",
+                "name": "Is my document uploaded?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. The document is parsed with JSON.parse in your browser and the query runs in memory. Nothing is uploaded, and the page keeps working with the network disconnected." }
+            }, {
+                "@type": "Question",
+                "name": "Why did $..price return more than I expected?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Recursive descent visits every level of the document, so ..price finds a price property wherever it appears — inside arrays, nested objects and unrelated branches alike. To narrow it, anchor the query with more of the path, such as $.store.book[*].price." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body data-jsonpath-mode="query">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>JSONPath Query</h1>
+            <p class="updated">Last updated: 2 October 2026</p>
+
+            <p class="lead">Run a JSONPath expression against a JSON document and see every match, each with the path it was found at. The query runs in your browser; the document is never sent anywhere.</p>
+
+            <div class="tools-nav">
+                <span>Other free tools:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">JSON Diff</a> &middot;
+                <a href="json-to-csv.html">JSON to CSV</a> &middot;
+                <a href="csv-to-json.html">CSV to JSON</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
+                <a href="sort-json-keys.html">Sort JSON keys</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Runs in your browser</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">Paths in the results</span>
+                    <span class="badge">Filters and slices</span>
+                </div>
+
+                <label class="field-label" for="docInput">JSON document <span aria-hidden="true" class="count" id="docCount">0 characters</span></label>
+                <textarea id="docInput" class="json-field" spellcheck="false" placeholder='{"store": {"book": [{"title": "Dune", "price": 9.99}]}}'></textarea>
+
+                <label class="field-label" for="queryInput" style="margin-top:0.9rem;">JSONPath query</label>
+                <input id="queryInput" class="json-field jsonpath-input" type="text" spellcheck="false" placeholder='$.store.book[?(@.price < 10)].title' />
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="runBtn" type="button">Run query</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Try an example</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copy results</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Download results</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="matchList"></div>
+            </div>
+
+            <h2>What the query language does</h2>
+            <p>JSONPath is to JSON what a folder path is to a filesystem: a compact way to say which values you want. <code>$</code> is the document root, <code>.name</code> walks into a property, and <code>[…]</code> selects inside an array.</p>
+            <ul>
+                <li><strong>Children:</strong> <code>$.store.bicycle.color</code> or <code>$['store']['bicycle']['color']</code> when a name needs quoting.</li>
+                <li><strong>Wildcards:</strong> <code>$.store.book[*].title</code> takes the title of every book; <code>$.store.*</code> takes every value of the store object.</li>
+                <li><strong>Recursive descent:</strong> <code>$..price</code> finds a <code>price</code> at any depth. Powerful, and easy to over-match — see below.</li>
+                <li><strong>Indexes and slices:</strong> <code>[0]</code>, <code>[-1]</code> for the last item, <code>[0:2]</code> for the first two, <code>[0:5:2]</code> to step.</li>
+                <li><strong>Unions:</strong> <code>[0,2]</code> and <code>['book','bicycle']</code> select several at once.</li>
+                <li><strong>Filters:</strong> <code>[?(@.price &lt; 10)]</code> keeps the items whose price is under ten, with <code>== != &lt; &lt;= &gt; &gt;=</code> and combinations using <code>&amp;&amp;</code> and <code>||</code>.</li>
+            </ul>
+
+            <h2>Filters test existence, not truthiness</h2>
+            <p>A filter with a bare path asks whether the property is <em>there</em>. So <code>[?(@.inStock)]</code> matches an item whose <code>inStock</code> is <code>false</code>, because the property exists — the RFC 9535 reading. When you mean the value, say so: <code>[?(@.inStock == true)]</code>. This is the single most common surprise in JSONPath, and it is a property of the language rather than of this tool.</p>
+
+            <h2>What it deliberately does not do</h2>
+            <p>Filter functions such as <code>length()</code>, <code>match()</code> and <code>search()</code> are not implemented, nor are regular expressions, script expressions in parentheses, or the parent/sibling extensions that some libraries add. A query using them is rejected with a message rather than quietly returning the wrong result — the page states what it supports so a pass here means what it says.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>Which JSONPath syntax is supported?</h3>
+                <p>Root <code>$</code>, child access with <code>.name</code> or <code>['name']</code>, the wildcards <code>.*</code> and <code>[*]</code>, recursive descent with <code>..name</code> and <code>..*</code>, array indexes including negative ones, slices <code>[start:end:step]</code>, unions such as <code>[0,1]</code> and <code>['a','b']</code>, and filters <code>[?(@.price &lt; 10)]</code> with the operators <code>== != &lt; &lt;= &gt; &gt;=</code> combined using <code>&amp;&amp;</code> and <code>||</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What is not supported?</h3>
+                <p>Filter functions such as <code>length()</code>, <code>match()</code> and <code>search()</code>, regular expressions, script expressions in parentheses, and the JSONPath extensions some libraries add, such as parent and sibling references. A query that uses them is rejected rather than silently returning the wrong thing.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why does ?(@.inStock) match items where inStock is false?</h3>
+                <p>Because a bare path in a filter is an existence test, not a truthiness test: it asks whether the property is there, and a property set to <code>false</code> is still there. For truthiness write <code>?(@.inStock == true)</code> explicitly. That is the RFC 9535 reading of a filter.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does a match tell me where it came from?</h3>
+                <p>Yes. Each result is listed with the path it was found at, in the same dotted and bracketed notation used to write queries, so the same path can be pasted back into a query or into another JSON tool.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is my document uploaded?</h3>
+                <p>No. The document is parsed with <code>JSON.parse</code> in your browser and the query runs in memory. Nothing is uploaded, and the page keeps working with the network disconnected.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why did $..price return more than I expected?</h3>
+                <p>Recursive descent visits every level of the document, so <code>..price</code> finds a <code>price</code> property wherever it appears — inside arrays, nested objects and unrelated branches alike. To narrow it, anchor the query with more of the path, such as <code>$.store.book[*].price</code>.</p>
+            </div>
+
+            <div class="notice">
+                <p>Want to check a document against a schema instead? <a href="json-schema.html">JSON Schema</a> does that. Spotted a bug? <a href="contact.html">Get in touch</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="jsonpath.html">JSONPath</a> &middot;
+                <a href="json-diff.html">JSON Diff</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script src="jsonpath.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your data is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>
