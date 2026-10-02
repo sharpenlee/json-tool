@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSV 轉 JSON 轉換器 – 將 CSV 表格轉換為 JSON</title>
+    <meta name="description" content="在瀏覽器中把 CSV 轉換為 JSON 物件陣列。表頭列成為鍵，正確處理帶引號的欄位與內嵌逗號，型別辨識預設關閉。" />
+    <link rel="canonical" href="https://json-tool.com/zh-hant/csv-to-json.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/csv-to-json.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/csv-to-json.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/csv-to-json.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/csv-to-json.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/csv-to-json.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/csv-to-json.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CSV 轉 JSON 轉換器 – 將 CSV 表格轉換為 JSON" />
+    <meta property="og:description" content="在瀏覽器中把 CSV 表格轉換為 JSON 物件陣列。表頭列作為鍵，解析遵循 RFC 4180，型別辨識預設關閉以保留前導零編碼。" />
+    <meta property="og:url" content="https://json-tool.com/zh-hant/csv-to-json.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – 在瀏覽器中格式化、壓縮與驗證 JSON" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CSV 轉 JSON 轉換器 – 將 CSV 表格轉換為 JSON" />
+    <meta name="twitter:description" content="在瀏覽器中把 CSV 表格轉換為 JSON 物件陣列。表頭列作為鍵，解析遵循 RFC 4180，型別辨識預設關閉以保留前導零編碼。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – 在瀏覽器中格式化、壓縮與驗證 JSON" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "CSV 轉 JSON 轉換器",
+            "url": "https://json-tool.com/zh-hant/csv-to-json.html",
+            "description": "在瀏覽器中把 CSV 表格轉換為 JSON 物件陣列。表頭列給出鍵，欄位依 RFC 4180 解析，型別辨識可選，讓前導零編碼保持為字串。資料不會離開本機。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "需要 JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "CSV 是如何對應到 JSON 物件的？",
+                "acceptedAnswer": { "@type": "Answer", "text": "第一列被讀作表頭，它的儲存格成為屬性名；其後的每一列成為陣列裡的一個物件，以這些名字為鍵。表頭為 id,name、只有一列 1,Ada 的 CSV，會產生 [{ \"id\": \"1\", \"name\": \"Ada\" }]。" }
+            }, {
+                "@type": "Question",
+                "name": "為什麼我的數字與布林值都變成了字串？",
+                "acceptedAnswer": { "@type": "Answer", "text": "型別辨識預設關閉，這是刻意為之。CSV 沒有型別，所以轉換器無法知道 007 是數字七還是編碼零零七；猜錯會悄悄損壞郵遞區號、電話號碼、帳號這類識別碼。當你確定某欄是數值時再開啟辨識，而且即使開啟，帶前導零的值仍會保持為字串。" }
+            }, {
+                "@type": "Question",
+                "name": "開啟辨識後，什麼才算數字？",
+                "acceptedAnswer": { "@type": "Answer", "text": "只有能寫成 JSON 數字的文字：可選的負號、不帶前導零的數字（除非值正好是 0）、可選的小數部分，以及可選的指數。true、false、null 也會被辨識。除此之外，包括 007 和 1,234 在內，都保持為字串。" }
+            }, {
+                "@type": "Question",
+                "name": "帶引號的欄位、內嵌逗號與換行如何讀取？",
+                "acceptedAnswer": { "@type": "Answer", "text": "解析遵循 RFC 4180：用雙引號包起來的欄位可以包含分隔符、換行，或成對的雙引號（讀回時變成一個）。所以內容為 Ada, Countess 的儲存格寫作 \"Ada, Countess\"，跨兩列的值仍是一個欄位。CRLF 與 LF 兩種行尾都接受。" }
+            }, {
+                "@type": "Question",
+                "name": "我的檔案帶 UTF-8 BOM，第一個欄名會出問題嗎？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不會。開頭的位元組順序標記——某些工具（包括 Excel）會放在 CSV 開頭的不可見 U+FEFF——會在解析前去除，否則第一個表頭會讀成 \\uFEFFid。這裡會正確地讀成 id。" }
+            }, {
+                "@type": "Question",
+                "name": "與表頭不符的列會怎樣？",
+                "acceptedAnswer": { "@type": "Answer", "text": "欄位比表頭少的列會以空值補齊，欄位比表頭多的列會被截斷，因此每個物件的鍵都相同。手工編輯的檔案裡不規則的列很常見，這裡選擇容忍而不是回報錯誤，但缺失的資料確實不在輸出中。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-csv-mode="to-json">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="語言">
+                    <a href="/csv-to-json.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/csv-to-json.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/csv-to-json.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/csv-to-json.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/csv-to-json.html" class="active" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/csv-to-json.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/csv-to-json.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/csv-to-json.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/csv-to-json.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切換深色模式">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">深色</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; 返回 JSON 工具</a></p>
+            <h1>CSV 轉 JSON</h1>
+            <p class="updated">最後更新：2026年10月1日</p>
+
+            <p class="lead">把一張 CSV 表讀回 JSON 物件陣列。表頭列給出鍵，讀取時能理解 RFC 4180 的引號規則，型別辨識由你決定是否開啟——全部在瀏覽器中完成，表格不會離開本機。</p>
+
+            <div class="tools-nav">
+                <span>其他免費工具：</span>
+                <a href="json-to-csv.html">JSON 轉 CSV</a> &middot;
+                <a href="/index.html">JSON 格式化與美化</a> &middot;
+                <a href="/json-validator.html">JSON 驗證器</a> &middot;
+                <a href="/json-minifier.html">JSON 壓縮</a> &middot;
+                <a href="/pretty-print-json.html">JSON 美化列印</a> &middot;
+                <a href="/json-syntax.html">JSON 語法速查</a> &middot;
+                <a href="/sort-json-keys.html">JSON 鍵排序</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">在瀏覽器中執行</span>
+                    <span class="badge">無需上傳</span>
+                    <span class="badge">遵循 RFC 4180</span>
+                    <span class="badge">前導零安全</span>
+                </div>
+
+                <label class="field-label" for="csvInput">輸入 CSV <span aria-hidden="true" class="count" id="inputCount">0個字元</span></label>
+                <textarea id="csvInput" class="json-field" spellcheck="false" placeholder='id,name&#10;1,Ada&#10;2,Grace'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="delimiterSelect">分隔符
+                        <select id="delimiterSelect">
+                            <option value="," selected>逗號</option>
+                            <option value=";">分號</option>
+                            <option value="tab">定位字元</option>
+                            <option value="|">直線</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="typeToggle">
+                        <input type="checkbox" id="typeToggle" /> 辨識數字與 true/false
+                    </label>
+                    <button class="btn btn-primary" id="convertBtn" type="button">轉換為 JSON</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='id,name,zip,active&#10;1,"Ada, Countess",007,true&#10;2,Grace Hopper,02139,false'>✨ 試試範例</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">清除</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="csvOutput" style="margin-top:1.1rem;">JSON <span aria-hidden="true" class="count" id="outputCount">0個字元</span></label>
+                    <textarea id="csvOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>複製結果</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>下載 data.json</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>這個轉換做了什麼</h2>
+            <p>CSV 把欄名放在第一列，所以轉換是直接的對應：表頭儲存格成為屬性名，其後的每一列成為陣列裡的一個物件。表格</p>
+            <pre><code>id,name
+1,Ada
+2,Grace</code></pre>
+            <p>會變成 <code>[{"id":"1","name":"Ada"},{"id":"2","name":"Grace"}]</code>。注意這些值都是字串——這是預設行為，下一節會說明原因。</p>
+
+            <h2>表頭列就是結構定義</h2>
+            <p>第一列被當作表頭，而不是資料。有兩種邊界情況會被處理，而不是留給你踩坑：</p>
+            <ul>
+                <li><strong>名稱重複</strong>——重複的表頭會被改成唯一，因此 <code>a,a</code> 會變成 <code>a</code> 與 <code>a_2</code>。沒有這一步，第二欄會悄悄覆蓋第一欄。</li>
+                <li><strong>名稱為空</strong>——空的表頭儲存格依位置命名，<code>column 1</code>、<code>column 2</code>，依此類推，這樣就不會有鍵是空字串。</li>
+            </ul>
+
+            <h2>型別辨識預設關閉——這是刻意為之</h2>
+            <p>CSV 沒有型別。每個儲存格都是文字，檔案本身也無法區分一個數字和一個恰好是數字的編碼。所以辨識預設關閉：關閉時，所有值都保持字串，這是對檔案的忠實解讀。</p>
+            <p>開啟後，只轉換沒有歧義的值。當一個值能寫成 JSON 數字時——可選的負號、數字、可選的小數部分與可選的指數——才當作數字；<code>true</code>、<code>false</code>、<code>null</code> 會被辨識為它們本身。關鍵在於，帶前導零的值<em>不會</em>被轉換，因為 <code>007</code> 與 <code>02139</code> 幾乎總是識別碼：郵遞區號、電話號碼、帳號、商品 SKU。籠統地「變成一個數字」會把 <code>007</code> 悄悄變成 <code>7</code> 並損壞資料，而這條規則不會。</p>
+
+            <h2>帶引號的欄位、內嵌逗號與換行</h2>
+            <p>讀取遵循 RFC 4180，也就是 JSON 轉 CSV 頁面寫出時所遵循的同一套規則。用雙引號包起來的欄位可以包含分隔符、換行，或成對的雙引號（讀回時變成一個）。所以 <code>"Ada, Countess"</code> 是一個含逗號的單值，跨兩列的值仍是一個儲存格。CRLF 與 LF 兩種行尾都接受；開頭的 UTF-8 位元組順序標記——Excel 與某些匯出工具加入的不可見 <code>U+FEFF</code>——會被去除，因此第一個欄名不會變成 <code>id</code>。</p>
+
+            <h2>不規則的列</h2>
+            <p>手工編輯的檔案很少是整齊的矩形。欄位比表頭少的列會以空值補齊，欄位比表頭多的列會被截斷，因此每個物件的鍵都相同。另一種做法——拒絕整個檔案——不如回傳那些格式良好的列有用，但這確實意味著缺失的值真的不在其中。</p>
+
+            <h2>常見問題</h2>
+            <div class="faq-item">
+                <h3>CSV 是如何對應到 JSON 物件的？</h3>
+                <p>第一列被讀作表頭，它的儲存格成為屬性名；其後的每一列成為陣列裡的一個物件，以這些名字為鍵。表頭為 <code>id,name</code>、只有一列 <code>1,Ada</code> 的 CSV，會產生 <code>[{ "id": "1", "name": "Ada" }]</code>。</p>
+            </div>
+            <div class="faq-item">
+                <h3>為什麼我的數字與布林值都變成了字串？</h3>
+                <p>型別辨識預設關閉，這是刻意為之。CSV 沒有型別，所以轉換器無法知道 <code>007</code> 是數字七還是編碼零零七；猜錯會悄悄損壞郵遞區號、電話號碼、帳號這類識別碼。當你確定某欄是數值時再開啟辨識，而且即使開啟，帶前導零的值仍會保持為字串。</p>
+            </div>
+            <div class="faq-item">
+                <h3>開啟辨識後，什麼才算數字？</h3>
+                <p>只有能寫成 JSON 數字的文字：可選的負號、不帶前導零的數字（除非值正好是 <code>0</code>）、可選的小數部分，以及可選的指數。<code>true</code>、<code>false</code>、<code>null</code> 也會被辨識。除此之外，包括 <code>007</code> 和 <code>1,234</code> 在內，都保持為字串。</p>
+            </div>
+            <div class="faq-item">
+                <h3>帶引號的欄位、內嵌逗號與換行如何讀取？</h3>
+                <p>解析遵循 RFC 4180：用雙引號包起來的欄位可以包含分隔符、換行，或成對的雙引號（讀回時變成一個）。所以內容為 <code>Ada, Countess</code> 的儲存格寫作 <code>"Ada, Countess"</code>，跨兩列的值仍是一個欄位。CRLF 與 LF 兩種行尾都接受。</p>
+            </div>
+            <div class="faq-item">
+                <h3>我的檔案帶 UTF-8 BOM，第一個欄名會出問題嗎？</h3>
+                <p>不會。開頭的位元組順序標記——某些工具（包括 Excel）會放在 CSV 開頭的不可見 <code>U+FEFF</code>——會在解析前去除，否則第一個表頭會讀成 <code>id</code>。這裡會正確地讀成 <code>id</code>。</p>
+            </div>
+            <div class="faq-item">
+                <h3>與表頭不符的列會怎樣？</h3>
+                <p>欄位比表頭少的列會以空值補齊，欄位比表頭多的列會被截斷，因此每個物件的鍵都相同。手工編輯的檔案裡不規則的列很常見，這裡選擇容忍而不是回報錯誤，但缺失的資料確實不在輸出中。</p>
+            </div>
+
+            <div class="notice">
+                <p>想要相反方向？<a href="json-to-csv.html">JSON 轉 CSV</a> 可以把物件陣列寫成一張表。發現錯誤？<a href="contact.html">聯絡我們</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 保留所有權利。</span>
+            <span>
+                <a href="index.html">首頁</a> &middot;
+                <a href="json-to-csv.html">JSON 轉 CSV</a> &middot;
+                <a href="about.html">關於</a> &middot;
+                <a href="privacy.html">隱私政策</a> &middot;
+                <a href="terms.html">服務條款</a> &middot;
+                <a href="#" id="cookieSettings">Cookie 設定</a> &middot;
+                <a href="contact.html">聯絡我們</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/csv.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie 同意" aria-hidden="true">
+        <p>我們使用 Google Analytics Cookie 來了解訪客如何使用本網站。您的資料始終在瀏覽器中本機處理。請參閱我們的<a href="privacy.html">隱私政策</a>。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒絕</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">接受</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

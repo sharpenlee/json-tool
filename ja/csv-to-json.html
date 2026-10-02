@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSV を JSON に変換 – CSV 表を JSON にするツール</title>
+    <meta name="description" content="ブラウザ内で CSV を JSON のオブジェクト配列に変換します。ヘッダー行がキーになり、引用符付きフィールドや埋め込みカンマを正しく処理し、型の自動判定は既定でオフです。" />
+    <link rel="canonical" href="https://json-tool.com/ja/csv-to-json.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/csv-to-json.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/csv-to-json.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/csv-to-json.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/csv-to-json.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/csv-to-json.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/csv-to-json.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CSV を JSON に変換 – CSV 表を JSON にするツール" />
+    <meta property="og:description" content="ブラウザ内で CSV の表を JSON のオブジェクト配列に変換します。ヘッダー行をキーにし、RFC 4180 に従って解析、先頭のゼロを保つため型の自動判定は既定でオフです。" />
+    <meta property="og:url" content="https://json-tool.com/ja/csv-to-json.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – ブラウザ内で JSON を整形・圧縮・検証" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CSV を JSON に変換 – CSV 表を JSON にするツール" />
+    <meta name="twitter:description" content="ブラウザ内で CSV の表を JSON のオブジェクト配列に変換します。ヘッダー行をキーにし、RFC 4180 に従って解析、先頭のゼロを保つため型の自動判定は既定でオフです。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – ブラウザ内で JSON を整形・圧縮・検証" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "CSV を JSON に変換",
+            "url": "https://json-tool.com/ja/csv-to-json.html",
+            "description": "ブラウザ内で CSV の表を JSON のオブジェクト配列に変換します。ヘッダー行がキーになり、フィールドは RFC 4180 に従って解析され、型の自動判定は任意で、先頭のゼロを持つコードは文字列のまま保たれます。データは端末から出ません。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "JavaScript が必要です",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "CSV はどのように JSON のオブジェクトに対応しますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "先頭の行をヘッダーとして読み、そのセルがプロパティ名になります。以降の各行は、それらの名前をキーとするオブジェクトになり、配列にまとめられます。ヘッダーが id,name で 1 行だけ 1,Ada の CSV は [{ \"id\": \"1\", \"name\": \"Ada\" }] になります。" }
+            }, {
+                "@type": "Question",
+                "name": "数値や真偽値が文字列になってしまうのはなぜですか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "型の自動判定は既定でオフになっており、これは意図的です。CSV に型はないため、007 が数値の 7 なのかコードの 007 なのかを変換ツールは知りようがありません。推測を誤ると、郵便番号・電話番号・アカウント ID のような識別子を黙って壊します。列が数値だと分かっているときだけ判定をオンにしてください。オンにしても、先頭にゼロがある値は文字列のままです。" }
+            }, {
+                "@type": "Question",
+                "name": "判定をオンにしたとき、何が数値とみなされますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "JSON の数値として書けるテキストだけです。任意の負号、先頭にゼロのない数字（値がちょうど 0 の場合を除く）、任意の小数部、任意の指数。true、false、null も認識されます。それ以外は、007 や 1,234 を含め、文字列のままです。" }
+            }, {
+                "@type": "Question",
+                "name": "引用符付きフィールド、埋め込みカンマ、改行はどう読み取られますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "解析は RFC 4180 に従います。二重引用符で囲まれたフィールドは、区切り文字、改行、または二重に書かれた二重引用符（読み戻すと 1 つになる）を含められます。したがって Ada, Countess を含むセルは \"Ada, Countess\" と書かれ、2 行にまたがる値も 1 つのフィールドのままです。CRLF と LF のどちらの行末も受け付けます。" }
+            }, {
+                "@type": "Question",
+                "name": "ファイルに UTF-8 の BOM がありますが、最初の列名は壊れますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "いいえ。先頭のバイト順マーク——Excel など一部のツールが CSV の先頭に付ける不可視の U+FEFF——は解析前に取り除かれます。そうでなければ最初のヘッダーは \\uFEFFid と読まれてしまいます。ここでは id と正しく読まれます。" }
+            }, {
+                "@type": "Question",
+                "name": "ヘッダーと合わない行はどうなりますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "フィールドがヘッダーより少ない行は空の値で埋められ、多い行は切り詰められるので、どのオブジェクトも同じキーを持ちます。手で編集したファイルでは行の長さが揃わないことがよくあります。ここでは拒否せず受け入れますが、欠けているデータが出力に含まれないのは事実です。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-csv-mode="to-json">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/csv-to-json.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/csv-to-json.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/csv-to-json.html" class="active" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/csv-to-json.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/csv-to-json.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/csv-to-json.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/csv-to-json.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/csv-to-json.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/csv-to-json.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="ダークモードの切り替え">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">ダーク</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; JSON ツールに戻る</a></p>
+            <h1>CSV を JSON に変換</h1>
+            <p class="updated">最終更新：2026年10月1日</p>
+
+            <p class="lead">CSV の表を JSON のオブジェクト配列に読み戻します。ヘッダー行がキーになり、読み取り時に RFC 4180 の引用符規則を理解し、型の自動判定はオンにするかどうかを選べます。すべてブラウザ内で完結し、表は端末から出ません。</p>
+
+            <div class="tools-nav">
+                <span>その他の無料ツール：</span>
+                <a href="json-to-csv.html">JSON を CSV に変換</a> &middot;
+                <a href="/index.html">JSON の整形と美化</a> &middot;
+                <a href="/json-validator.html">JSON 検証</a> &middot;
+                <a href="/json-minifier.html">JSON の圧縮</a> &middot;
+                <a href="/pretty-print-json.html">JSON の整形表示</a> &middot;
+                <a href="/json-syntax.html">JSON 構文チートシート</a> &middot;
+                <a href="/sort-json-keys.html">JSON キーの並べ替え</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">ブラウザ内で動作</span>
+                    <span class="badge">アップロード不要</span>
+                    <span class="badge">RFC 4180 準拠</span>
+                    <span class="badge">先頭のゼロを保持</span>
+                </div>
+
+                <label class="field-label" for="csvInput">入力 CSV <span aria-hidden="true" class="count" id="inputCount">0文字</span></label>
+                <textarea id="csvInput" class="json-field" spellcheck="false" placeholder='id,name&#10;1,Ada&#10;2,Grace'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="delimiterSelect">区切り文字
+                        <select id="delimiterSelect">
+                            <option value="," selected>カンマ</option>
+                            <option value=";">セミコロン</option>
+                            <option value="tab">タブ</option>
+                            <option value="|">パイプ</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="typeToggle">
+                        <input type="checkbox" id="typeToggle" /> 数値と true/false を判定
+                    </label>
+                    <button class="btn btn-primary" id="convertBtn" type="button">JSON に変換</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='id,name,zip,active&#10;1,"Ada, Countess",007,true&#10;2,Grace Hopper,02139,false'>✨ 例を試す</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">クリア</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="csvOutput" style="margin-top:1.1rem;">JSON <span aria-hidden="true" class="count" id="outputCount">0文字</span></label>
+                    <textarea id="csvOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>結果をコピー</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>data.json をダウンロード</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>この変換が行うこと</h2>
+            <p>CSV は列名を先頭の行に持つので、変換は直接的な対応になります。ヘッダーのセルがプロパティ名になり、以降の各行が配列の 1 オブジェクトになります。次の表は</p>
+            <pre><code>id,name
+1,Ada
+2,Grace</code></pre>
+            <p><code>[{"id":"1","name":"Ada"},{"id":"2","name":"Grace"}]</code> になります。値がすべて文字列である点に注意してください。これが既定の動作で、理由は次の節で説明します。</p>
+
+            <h2>ヘッダー行がスキーマになる</h2>
+            <p>先頭の行はデータではなくヘッダーとして扱われます。次の 2 つの境界的なケースは、驚きとして残さず処理します。</p>
+            <ul>
+                <li><strong>名前の重複</strong>——繰り返されたヘッダーは一意にされます。<code>a,a</code> は <code>a</code> と <code>a_2</code> になります。これがなければ、2 列目が 1 列目を黙って上書きしてしまいます。</li>
+                <li><strong>名前が空</strong>——空のヘッダーセルは位置で命名されます。<code>column 1</code>、<code>column 2</code> という具合で、キーが空文字列になることはありません。</li>
+            </ul>
+
+            <h2>型の自動判定は既定でオフ——意図的に</h2>
+            <p>CSV に型はありません。どのセルもテキストで、ファイル自体は数値と、たまたま数字であるコードを区別できません。だから判定は既定でオフです。オフのままなら、すべての値が文字列として保たれ、これはファイルへの忠実な読み方です。</p>
+            <p>オンにすると、曖昧でないものだけを変換します。JSON の数値として書ける値——任意の負号、数字、任意の小数部と任意の指数——だけを数値とし、<code>true</code>、<code>false</code>、<code>null</code> はそれ自身として認識します。重要なのは、先頭にゼロがある値は変換<em>しない</em>ことです。<code>007</code> や <code>02139</code> はほとんど常に識別子——郵便番号、電話番号、アカウント番号、商品 SKU——だからです。一律に「数値にする」と <code>007</code> が黙って <code>7</code> になりデータが壊れますが、この規則はそうなりません。</p>
+
+            <h2>引用符付きフィールド、埋め込みカンマと改行</h2>
+            <p>読み取りは RFC 4180 に従います。これは JSON を CSV に変換するページが書き出すときに使うのと同じ規則です。二重引用符で囲まれたフィールドは、区切り文字、改行、または二重に書かれた二重引用符（読み戻すと 1 つになる）を含められます。したがって <code>"Ada, Countess"</code> はカンマを含む 1 つの値で、2 行にまたがる値も 1 つのセルのままです。CRLF と LF のどちらの行末も受け付け、先頭の UTF-8 バイト順マーク——Excel や一部の書き出しツールが付ける不可視の <code>U+FEFF</code>——は取り除かれるので、最初の列名が <code>id</code> になることはありません。</p>
+
+            <h2>行の長さが揃わない場合</h2>
+            <p>手で編集したファイルが整った長方形になっていることはまれです。フィールドがヘッダーより少ない行は空の値で埋め、多い行は切り詰めるので、どのオブジェクトも同じキーになります。別の選択肢——ファイル全体を拒否する——よりも、正しい行を返すほうが役に立ちますが、欠けている値が出力に含まれないのは事実です。</p>
+
+            <h2>よくある質問</h2>
+            <div class="faq-item">
+                <h3>CSV はどのように JSON のオブジェクトに対応しますか？</h3>
+                <p>先頭の行をヘッダーとして読み、そのセルがプロパティ名になります。以降の各行は、それらの名前をキーとするオブジェクトになり、配列にまとめられます。ヘッダーが <code>id,name</code> で 1 行だけ <code>1,Ada</code> の CSV は <code>[{ "id": "1", "name": "Ada" }]</code> になります。</p>
+            </div>
+            <div class="faq-item">
+                <h3>数値や真偽値が文字列になってしまうのはなぜですか？</h3>
+                <p>型の自動判定は既定でオフになっており、これは意図的です。CSV に型はないため、<code>007</code> が数値の 7 なのかコードの 007 なのかを変換ツールは知りようがありません。推測を誤ると、郵便番号・電話番号・アカウント ID のような識別子を黙って壊します。列が数値だと分かっているときだけ判定をオンにしてください。オンにしても、先頭にゼロがある値は文字列のままです。</p>
+            </div>
+            <div class="faq-item">
+                <h3>判定をオンにしたとき、何が数値とみなされますか？</h3>
+                <p>JSON の数値として書けるテキストだけです。任意の負号、先頭にゼロのない数字（値がちょうど <code>0</code> の場合を除く）、任意の小数部、任意の指数。<code>true</code>、<code>false</code>、<code>null</code> も認識されます。それ以外は、<code>007</code> や <code>1,234</code> を含め、文字列のままです。</p>
+            </div>
+            <div class="faq-item">
+                <h3>引用符付きフィールド、埋め込みカンマ、改行はどう読み取られますか？</h3>
+                <p>解析は RFC 4180 に従います。二重引用符で囲まれたフィールドは、区切り文字、改行、または二重に書かれた二重引用符（読み戻すと 1 つになる）を含められます。したがって <code>Ada, Countess</code> を含むセルは <code>"Ada, Countess"</code> と書かれ、2 行にまたがる値も 1 つのフィールドのままです。CRLF と LF のどちらの行末も受け付けます。</p>
+            </div>
+            <div class="faq-item">
+                <h3>ファイルに UTF-8 の BOM がありますが、最初の列名は壊れますか？</h3>
+                <p>いいえ。先頭のバイト順マーク——Excel など一部のツールが CSV の先頭に付ける不可視の <code>U+FEFF</code>——は解析前に取り除かれます。そうでなければ最初のヘッダーは <code>id</code> と読まれてしまいます。ここでは <code>id</code> と正しく読まれます。</p>
+            </div>
+            <div class="faq-item">
+                <h3>ヘッダーと合わない行はどうなりますか？</h3>
+                <p>フィールドがヘッダーより少ない行は空の値で埋められ、多い行は切り詰められるので、どのオブジェクトも同じキーを持ちます。手で編集したファイルでは行の長さが揃わないことがよくあります。ここでは拒否せず受け入れますが、欠けているデータが出力に含まれないのは事実です。</p>
+            </div>
+
+            <div class="notice">
+                <p>逆の方向が必要ですか？<a href="json-to-csv.html">JSON を CSV に変換</a> ではオブジェクト配列を表として書き出せます。不具合を見つけましたか？<a href="contact.html">お問い合わせ</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 無断転載を禁じます。</span>
+            <span>
+                <a href="index.html">ホーム</a> &middot;
+                <a href="json-to-csv.html">JSON を CSV に変換</a> &middot;
+                <a href="about.html">概要</a> &middot;
+                <a href="privacy.html">プライバシー</a> &middot;
+                <a href="terms.html">利用規約</a> &middot;
+                <a href="#" id="cookieSettings">Cookie設定</a> &middot;
+                <a href="contact.html">お問い合わせ</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/csv.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookieの同意" aria-hidden="true">
+        <p>当サイトでは、訪問者の利用状況を把握するためにGoogle AnalyticsのCookieを使用します。データは常にブラウザ内でローカルに処理されます。詳細は<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒否</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">同意</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Конвертер CSV в JSON – преобразование таблицы CSV в JSON</title>
+    <meta name="description" content="Преобразуйте CSV в массив объектов JSON в браузере. Строка заголовков становится ключами, поля в кавычках и запятые внутри корректно обрабатываются, определение типов по умолчанию выключено." />
+    <link rel="canonical" href="https://json-tool.com/ru/csv-to-json.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/csv-to-json.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/csv-to-json.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/csv-to-json.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/csv-to-json.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/csv-to-json.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/csv-to-json.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Конвертер CSV в JSON – преобразование таблицы CSV в JSON" />
+    <meta property="og:description" content="Преобразуйте таблицу CSV в массив объектов JSON в браузере. Строка заголовков как ключи, разбор по RFC 4180, определение типов выключено по умолчанию, чтобы сохранить ведущие нули." />
+    <meta property="og:url" content="https://json-tool.com/ru/csv-to-json.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Конвертер CSV в JSON – преобразование таблицы CSV в JSON" />
+    <meta name="twitter:description" content="Преобразуйте таблицу CSV в массив объектов JSON в браузере. Строка заголовков как ключи, разбор по RFC 4180, определение типов выключено по умолчанию, чтобы сохранить ведущие нули." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Конвертер CSV в JSON",
+            "url": "https://json-tool.com/ru/csv-to-json.html",
+            "description": "Преобразуйте таблицу CSV в массив объектов JSON в браузере. Строка заголовков даёт ключи, поля разбираются по RFC 4180, определение типов необязательно и сохраняет коды с ведущими нулями строками. Данные не покидают машину.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Требуется JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Как CSV сопоставляется с объектами JSON?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Первая строка читается как заголовок, и её ячейки становятся именами свойств; каждая следующая строка становится объектом в массиве с этими ключами. CSV с заголовком id,name и одной строкой 1,Ada даёт [{ \"id\": \"1\", \"name\": \"Ada\" }]." }
+            }, {
+                "@type": "Question",
+                "name": "Почему числа и логические значения становятся строками?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Определение типов по умолчанию выключено, и это намеренно. В CSV нет типов, поэтому инструмент не может знать, 007 — это число семь или код ноль-ноль-семь; неверная догадка молча испортит идентификаторы вроде почтовых индексов, телефонов и номеров счетов. Включайте определение, когда уверены, что столбец числовой, и даже тогда значение с ведущим нулём останется строкой." }
+            }, {
+                "@type": "Question",
+                "name": "Что именно считается числом при включённом определении?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Только текст, который можно записать как число JSON: необязательный минус, цифры без ведущего нуля (кроме значения ровно 0), необязательная дробная часть и необязательный порядок. true, false и null тоже распознаются. Всё остальное, включая 007 и 1,234, остаётся строкой." }
+            }, {
+                "@type": "Question",
+                "name": "Как читаются поля в кавычках, запятые внутри и переводы строк?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Разбор следует RFC 4180: поле в двойных кавычках может содержать разделитель, перевод строки или удвоенную двойную кавычку, которая читается обратно как одна. Так ячейка со значением Ada, Countess записывается как \"Ada, Countess\", а значение в две строки остаётся одним полем. Принимаются концы строк CRLF и LF." }
+            }, {
+                "@type": "Question",
+                "name": "В файле есть BOM UTF-8 — не сломается ли первое имя столбца?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Нет. Ведущая метка порядка байтов——невидимый U+FEFF, который некоторые инструменты, включая Excel, ставят в начало CSV,——удаляется перед разбором, иначе первый заголовок читался бы как \\uFEFFid. Здесь он читается как id." }
+            }, {
+                "@type": "Question",
+                "name": "Что происходит со строками, не совпадающими с заголовком?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Строка с меньшим числом полей дополняется пустыми значениями, а с большим — обрезается, поэтому у каждого объекта одинаковый набор ключей. Неровные строки часто встречаются в файлах, отредактированных вручную, и здесь они принимаются, а не отклоняются, но отсутствующие данные действительно не попадают в вывод." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-csv-mode="to-json">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/csv-to-json.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/csv-to-json.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/csv-to-json.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/csv-to-json.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/csv-to-json.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/csv-to-json.html" class="active" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/csv-to-json.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/csv-to-json.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/csv-to-json.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тёмную тему">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Назад к инструменту JSON</a></p>
+            <h1>CSV в JSON</h1>
+            <p class="updated">Последнее обновление: 1 октября 2026 г.</p>
+
+            <p class="lead">Прочитайте таблицу CSV обратно в массив объектов JSON. Строка заголовков даёт ключи, при чтении соблюдаются правила кавычек RFC 4180, а определение типов можно включить или оставить выключенным. Всё выполняется в браузере, таблица не покидает машину.</p>
+
+            <div class="tools-nav">
+                <span>Другие бесплатные инструменты:</span>
+                <a href="json-to-csv.html">JSON в CSV</a> &middot;
+                <a href="/index.html">Форматирование JSON</a> &middot;
+                <a href="/json-validator.html">Проверка JSON</a> &middot;
+                <a href="/json-minifier.html">Сжатие JSON</a> &middot;
+                <a href="/pretty-print-json.html">Красивый вывод JSON</a> &middot;
+                <a href="/json-syntax.html">Шпаргалка по синтаксису JSON</a> &middot;
+                <a href="/sort-json-keys.html">Сортировка ключей JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Работает в браузере</span>
+                    <span class="badge">Без загрузки</span>
+                    <span class="badge">По RFC 4180</span>
+                    <span class="badge">Ведущие нули целы</span>
+                </div>
+
+                <label class="field-label" for="csvInput">Входной CSV <span aria-hidden="true" class="count" id="inputCount">0 симв.</span></label>
+                <textarea id="csvInput" class="json-field" spellcheck="false" placeholder='id,name&#10;1,Ada&#10;2,Grace'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="delimiterSelect">Разделитель
+                        <select id="delimiterSelect">
+                            <option value="," selected>Запятая</option>
+                            <option value=";">Точка с запятой</option>
+                            <option value="tab">Табуляция</option>
+                            <option value="|">Вертикальная черта</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="typeToggle">
+                        <input type="checkbox" id="typeToggle" /> Определять числа и true/false
+                    </label>
+                    <button class="btn btn-primary" id="convertBtn" type="button">Преобразовать в JSON</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='id,name,zip,active&#10;1,"Ada, Countess",007,true&#10;2,Grace Hopper,02139,false'>✨ Пример</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Очистить</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="csvOutput" style="margin-top:1.1rem;">JSON <span aria-hidden="true" class="count" id="outputCount">0 симв.</span></label>
+                    <textarea id="csvOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Копировать результат</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Скачать data.json</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Что делает это преобразование</h2>
+            <p>CSV хранит имена столбцов в первой строке, поэтому преобразование — прямое сопоставление: ячейки заголовка становятся именами свойств, а каждая следующая строка — одним объектом массива. Таблица</p>
+            <pre><code>id,name
+1,Ada
+2,Grace</code></pre>
+            <p>превращается в <code>[{"id":"1","name":"Ada"},{"id":"2","name":"Grace"}]</code>. Обратите внимание, что значения — строки: это поведение по умолчанию, и причина объясняется в следующем разделе.</p>
+
+            <h2>Строка заголовков задаёт схему</h2>
+            <p>Первая строка считается заголовком, а не данными. Два крайних случая обрабатываются, а не оставляются на удивление:</p>
+            <ul>
+                <li><strong>Повторяющиеся имена</strong>——повторённый заголовок делается уникальным: <code>a,a</code> становится <code>a</code> и <code>a_2</code>. Без этого второй столбец молча перезаписал бы первый.</li>
+                <li><strong>Пустые имена</strong>——пустая ячейка заголовка именуется по позиции: <code>column 1</code>, <code>column 2</code> и так далее, чтобы ключ не оказывался пустой строкой.</li>
+            </ul>
+
+            <h2>Определение типов по умолчанию выключено——намеренно</h2>
+            <p>В CSV нет типов. Каждая ячейка — текст, и файл сам не может отличить число от кода, который случайно состоит из цифр. Поэтому определение выключено по умолчанию: пока оно выключено, все значения остаются строками, и это точное прочтение файла.</p>
+            <p>Если включить, преобразуется только однозначное. Значение считается числом, когда его можно записать как число JSON — необязательный минус, цифры, необязательная дробная часть и необязательный порядок; <code>true</code>, <code>false</code> и <code>null</code> распознаются как сами себя. Ключевой момент: значение с ведущим нулём <em>не</em> преобразуется, потому что <code>007</code> и <code>02139</code> почти всегда идентификаторы — почтовые индексы, телефоны, номера счетов, артикулы. Огульное «сделать числом» тихо превратило бы <code>007</code> в <code>7</code> и испортило данные, а это правило — нет.</p>
+
+            <h2>Поля в кавычках, запятые внутри и переводы строк</h2>
+            <p>Чтение следует RFC 4180 — тому же правилу, по которому пишет страница «JSON в CSV». Поле в двойных кавычках может содержать разделитель, перевод строки или удвоенную двойную кавычку, которая читается обратно как одна. Так <code>"Ada, Countess"</code> — это одно значение с запятой, а значение в две строки остаётся одной ячейкой. Принимаются концы строк CRLF и LF, а ведущая метка порядка байтов UTF-8——невидимый <code>U+FEFF</code>, который добавляют Excel и некоторые экспортёры,——удаляется, поэтому первое имя столбца не становится <code>id</code>.</p>
+
+            <h2>Строки не той длины</h2>
+            <p>Файлы, отредактированные вручную, редко бывают ровным прямоугольником. Строка с меньшим числом полей дополняется пустыми значениями, с большим — обрезается, поэтому у каждого объекта одинаковый набор ключей. Альтернатива — отклонить весь файл — менее полезна, чем вернуть корректные строки, но отсутствующих значений в выводе действительно нет.</p>
+
+            <h2>Частые вопросы</h2>
+            <div class="faq-item">
+                <h3>Как CSV сопоставляется с объектами JSON?</h3>
+                <p>Первая строка читается как заголовок, и её ячейки становятся именами свойств; каждая следующая строка становится объектом в массиве с этими ключами. CSV с заголовком <code>id,name</code> и одной строкой <code>1,Ada</code> даёт <code>[{ "id": "1", "name": "Ada" }]</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Почему числа и логические значения становятся строками?</h3>
+                <p>Определение типов по умолчанию выключено, и это намеренно. В CSV нет типов, поэтому инструмент не может знать, <code>007</code> — это число семь или код ноль-ноль-семь; неверная догадка молча испортит идентификаторы вроде почтовых индексов, телефонов и номеров счетов. Включайте определение, когда уверены, что столбец числовой, и даже тогда значение с ведущим нулём останется строкой.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Что именно считается числом при включённом определении?</h3>
+                <p>Только текст, который можно записать как число JSON: необязательный минус, цифры без ведущего нуля (кроме значения ровно <code>0</code>), необязательная дробная часть и необязательный порядок. <code>true</code>, <code>false</code> и <code>null</code> тоже распознаются. Всё остальное, включая <code>007</code> и <code>1,234</code>, остаётся строкой.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Как читаются поля в кавычках, запятые внутри и переводы строк?</h3>
+                <p>Разбор следует RFC 4180: поле в двойных кавычках может содержать разделитель, перевод строки или удвоенную двойную кавычку, которая читается обратно как одна. Так ячейка со значением <code>Ada, Countess</code> записывается как <code>"Ada, Countess"</code>, а значение в две строки остаётся одним полем. Принимаются концы строк CRLF и LF.</p>
+            </div>
+            <div class="faq-item">
+                <h3>В файле есть BOM UTF-8 — не сломается ли первое имя столбца?</h3>
+                <p>Нет. Ведущая метка порядка байтов——невидимый <code>U+FEFF</code>, который некоторые инструменты, включая Excel, ставят в начало CSV,——удаляется перед разбором, иначе первый заголовок читался бы как <code>id</code>. Здесь он читается как <code>id</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Что происходит со строками, не совпадающими с заголовком?</h3>
+                <p>Строка с меньшим числом полей дополняется пустыми значениями, а с большим — обрезается, поэтому у каждого объекта одинаковый набор ключей. Неровные строки часто встречаются в файлах, отредактированных вручную, и здесь они принимаются, а не отклоняются, но отсутствующие данные действительно не попадают в вывод.</p>
+            </div>
+
+            <div class="notice">
+                <p>Нужно обратное направление? <a href="json-to-csv.html">JSON в CSV</a> записывает массив объектов как таблицу. Нашли ошибку? <a href="contact.html">Свяжитесь с нами</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Все права защищены.</span>
+            <span>
+                <a href="index.html">Главная</a> &middot;
+                <a href="json-to-csv.html">JSON в CSV</a> &middot;
+                <a href="about.html">О проекте</a> &middot;
+                <a href="privacy.html">Конфиденциальность</a> &middot;
+                <a href="terms.html">Условия</a> &middot;
+                <a href="#" id="cookieSettings">Настройки файлов cookie</a> &middot;
+                <a href="contact.html">Контакты</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/csv.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Согласие на использование файлов cookie" aria-hidden="true">
+        <p>Мы используем файлы cookie Google Analytics, чтобы понимать, как посетители пользуются этим сайтом. Данные всегда обрабатываются локально в вашем браузере. См. нашу <a href="privacy.html">Политику конфиденциальности</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Отклонить</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Принять</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

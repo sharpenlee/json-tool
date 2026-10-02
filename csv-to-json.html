@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSV to JSON Converter – Turn a CSV Table into JSON</title>
+    <meta name="description" content="Convert CSV to a JSON array of objects in your browser. The header row becomes the keys, quoted fields and embedded commas are handled, and type detection is opt-in." />
+    <link rel="canonical" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/csv-to-json.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/csv-to-json.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/csv-to-json.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/csv-to-json.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/csv-to-json.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/csv-to-json.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/csv-to-json.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/csv-to-json.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CSV to JSON Converter – Turn a CSV Table into JSON" />
+    <meta property="og:description" content="Turn a CSV table into a JSON array of objects in your browser. Header row as keys, RFC 4180 parsing, opt-in type detection that keeps leading-zero codes as strings." />
+    <meta property="og:url" content="https://json-tool.com/csv-to-json.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CSV to JSON Converter – Turn a CSV Table into JSON" />
+    <meta name="twitter:description" content="Turn a CSV table into a JSON array of objects in your browser. Header row as keys, RFC 4180 parsing, opt-in type detection that keeps leading-zero codes as strings." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "CSV to JSON Converter",
+            "url": "https://json-tool.com/csv-to-json.html",
+            "description": "Convert a CSV table into a JSON array of objects in the browser. The header row supplies the keys, fields are parsed per RFC 4180, and type detection is opt-in so leading-zero codes stay strings. No data leaves the machine.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "How does CSV map onto JSON objects?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The first row is read as the header and its cells become the property names; every row after it becomes one object in an array, keyed by those names. A CSV with the header id,name and one row 1,Ada produces [{ \"id\": \"1\", \"name\": \"Ada\" }]." }
+            }, {
+                "@type": "Question",
+                "name": "Why are my numbers and booleans coming out as strings?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Type detection is off by default, which is deliberate. CSV has no types, so the converter cannot know whether 007 is the number seven or the code zero-zero-seven; guessing wrong silently corrupts identifiers such as ZIP codes, phone numbers and account ids. Turn on detection when you know the columns are numeric, and even then a value with a leading zero stays a string." }
+            }, {
+                "@type": "Question",
+                "name": "What exactly counts as a number when detection is on?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Only text that a JSON number could be written as: an optional minus sign, digits with no leading zero unless the value is exactly 0, an optional fractional part, and an optional exponent. true, false and null are also recognised. Everything else, including 007 and 1,234, stays a string." }
+            }, {
+                "@type": "Question",
+                "name": "How are quoted fields, embedded commas and line breaks read?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Parsing follows RFC 4180: a field wrapped in double quotes may contain the delimiter, a newline or a doubled double quote, which reads back as a single quote. So a cell holding Ada, Countess is written as \"Ada, Countess\" and a value spanning two lines stays one field. Both CRLF and LF line endings are accepted." }
+            }, {
+                "@type": "Question",
+                "name": "My file has a UTF-8 BOM; will the first column name break?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. A leading byte-order mark — the invisible U+FEFF that some tools, Excel among them, put at the start of a CSV — is stripped before parsing, so the first header would otherwise read as \\uFEFFid. Here it reads as id." }
+            }, {
+                "@type": "Question",
+                "name": "What happens to rows that do not match the header?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A row with fewer fields than the header is padded with empty values and a row with more is truncated, so every object has the same keys. Ragged rows are common in hand-edited files and are tolerated rather than rejected, but the missing data is genuinely absent from the output." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body data-csv-mode="to-json">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>CSV to JSON</h1>
+            <p class="updated">Last updated: 1 October 2026</p>
+
+            <p class="lead">Read a CSV table back into an array of JSON objects. The header row supplies the keys, the RFC 4180 quoting is understood on the way in, and type detection is yours to switch on — all inside your browser, so the table never leaves the machine.</p>
+
+            <div class="tools-nav">
+                <span>Other free tools:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="json-to-csv.html">JSON to CSV</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
+                <a href="sort-json-keys.html">Sort JSON keys</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Runs in your browser</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">RFC 4180 parsing</span>
+                    <span class="badge">Leading zeros safe</span>
+                </div>
+
+                <label class="field-label" for="csvInput">Input CSV <span aria-hidden="true" class="count" id="inputCount">0 characters</span></label>
+                <textarea id="csvInput" class="json-field" spellcheck="false" placeholder='id,name&#10;1,Ada&#10;2,Grace'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="delimiterSelect">Delimiter
+                        <select id="delimiterSelect">
+                            <option value="," selected>Comma</option>
+                            <option value=";">Semicolon</option>
+                            <option value="tab">Tab</option>
+                            <option value="|">Pipe</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="typeToggle">
+                        <input type="checkbox" id="typeToggle" /> Detect numbers and true/false
+                    </label>
+                    <button class="btn btn-primary" id="convertBtn" type="button">Convert to JSON</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='id,name,zip,active&#10;1,"Ada, Countess",007,true&#10;2,Grace Hopper,02139,false'>✨ Try an example</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="csvOutput" style="margin-top:1.1rem;">JSON <span aria-hidden="true" class="count" id="outputCount">0 characters</span></label>
+                    <textarea id="csvOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copy result</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Download data.json</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>What the conversion does</h2>
+            <p>CSV carries its column names in the first line, so the conversion is a direct mapping: the header cells become property names and each following line becomes one object in an array. The table</p>
+            <pre><code>id,name
+1,Ada
+2,Grace</code></pre>
+            <p>becomes <code>[{"id":"1","name":"Ada"},{"id":"2","name":"Grace"}]</code>. Note that the values are strings — that is the default, and the next section explains why.</p>
+
+            <h2>The header row is the schema</h2>
+            <p>The first line is taken as the header, not as data. Two edge cases are handled rather than left to surprise you:</p>
+            <ul>
+                <li><strong>Duplicate names</strong> — a repeated header is made unique, so <code>a,a</code> becomes <code>a</code> and <code>a_2</code>. Without this, the second column would silently overwrite the first.</li>
+                <li><strong>Empty names</strong> — a blank header cell is named by position, <code>column 1</code>, <code>column 2</code>, and so on, so no key is an empty string.</li>
+            </ul>
+
+            <h2>Type detection is off by default — on purpose</h2>
+            <p>CSV has no types. Every cell is text, and the file gives no way to tell a number from a code that happens to be digits. That is why detection is opt-in: left off, every value stays a string, which is the faithful reading of the file.</p>
+            <p>Switching it on converts only what is unambiguous. A value is treated as a number when it could be written as a JSON number — an optional minus sign, digits, an optional fraction and an optional exponent — and <code>true</code>, <code>false</code> and <code>null</code> are recognised as themselves. Crucially, a value with a leading zero is <em>not</em> converted, because <code>007</code> and <code>02139</code> are almost always identifiers: ZIP codes, phone numbers, account numbers, product SKUs. A blanket "make it a number" would quietly turn <code>007</code> into <code>7</code> and corrupt the data; this rule does not.</p>
+
+            <h2>Quoted fields, embedded commas and line breaks</h2>
+            <p>Reading follows RFC 4180, the same rule the JSON to CSV page writes by. A field wrapped in double quotes may contain the delimiter, a newline, or a pair of double quotes that reads back as one. So <code>"Ada, Countess"</code> is a single value containing a comma, and a value that spans two physical lines stays one cell. Both CRLF and LF line endings are accepted, and a leading UTF-8 byte-order mark — the invisible <code>U+FEFF</code> that Excel and some exporters add — is stripped, so the first column name does not come out as <code>﻿id</code>.</p>
+
+            <h2>Ragged rows</h2>
+            <p>Hand-edited files rarely have a clean rectangle of cells. A row with fewer fields than the header is padded with empty values and one with extras is truncated, so every object ends up with the same keys. The alternative — rejecting the whole file — is less useful than returning the rows that are well-formed, but it does mean the missing values are genuinely absent.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>How does CSV map onto JSON objects?</h3>
+                <p>The first row is read as the header and its cells become the property names; every row after it becomes one object in an array, keyed by those names. A CSV with the header <code>id,name</code> and one row <code>1,Ada</code> produces <code>[{ "id": "1", "name": "Ada" }]</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why are my numbers and booleans coming out as strings?</h3>
+                <p>Type detection is off by default, which is deliberate. CSV has no types, so the converter cannot know whether <code>007</code> is the number seven or the code zero-zero-seven; guessing wrong silently corrupts identifiers such as ZIP codes, phone numbers and account ids. Turn on detection when you know the columns are numeric, and even then a value with a leading zero stays a string.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What exactly counts as a number when detection is on?</h3>
+                <p>Only text that a JSON number could be written as: an optional minus sign, digits with no leading zero unless the value is exactly <code>0</code>, an optional fractional part, and an optional exponent. <code>true</code>, <code>false</code> and <code>null</code> are also recognised. Everything else, including <code>007</code> and <code>1,234</code>, stays a string.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How are quoted fields, embedded commas and line breaks read?</h3>
+                <p>Parsing follows RFC 4180: a field wrapped in double quotes may contain the delimiter, a newline or a doubled double quote, which reads back as a single quote. So a cell holding <code>Ada, Countess</code> is written as <code>"Ada, Countess"</code> and a value spanning two lines stays one field. Both CRLF and LF line endings are accepted.</p>
+            </div>
+            <div class="faq-item">
+                <h3>My file has a UTF-8 BOM; will the first column name break?</h3>
+                <p>No. A leading byte-order mark — the invisible <code>U+FEFF</code> that some tools, Excel among them, put at the start of a CSV — is stripped before parsing, so the first header would otherwise read as <code>﻿id</code>. Here it reads as <code>id</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What happens to rows that do not match the header?</h3>
+                <p>A row with fewer fields than the header is padded with empty values and a row with more is truncated, so every object has the same keys. Ragged rows are common in hand-edited files and are tolerated rather than rejected, but the missing data is genuinely absent from the output.</p>
+            </div>
+
+            <div class="notice">
+                <p>Want the other direction? <a href="json-to-csv.html">JSON to CSV</a> writes an array of objects out as a table. Spotted a bug? <a href="contact.html">Get in touch</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="csv-to-json.html">CSV to JSON</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script src="csv.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your data is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>

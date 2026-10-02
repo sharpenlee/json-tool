@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON to CSV Converter – Turn a JSON Array into CSV</title>
+    <meta name="description" content="Convert a JSON array of objects to CSV in your browser. Column names come from the keys, nested values become JSON text, and quoting follows RFC 4180. No upload." />
+    <link rel="canonical" href="https://json-tool.com/json-to-csv.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-to-csv.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-to-csv.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-to-csv.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-to-csv.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-to-csv.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-to-csv.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-to-csv.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-to-csv.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-to-csv.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-to-csv.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON to CSV Converter – Turn a JSON Array into CSV" />
+    <meta property="og:description" content="Turn a JSON array of objects into a CSV table in your browser. Union of keys as the header, nested values as JSON, RFC 4180 quoting, optional Excel BOM." />
+    <meta property="og:url" content="https://json-tool.com/json-to-csv.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON to CSV Converter – Turn a JSON Array into CSV" />
+    <meta name="twitter:description" content="Turn a JSON array of objects into a CSV table in your browser. Union of keys as the header, nested values as JSON, RFC 4180 quoting, optional Excel BOM." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON to CSV Converter",
+            "url": "https://json-tool.com/json-to-csv.html",
+            "description": "Convert a JSON array of objects to CSV in the browser. Column headers are the union of keys, nested values are written as JSON, fields are quoted per RFC 4180. No data leaves the machine.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "What shape of JSON can be converted to CSV?",
+                "acceptedAnswer": { "@type": "Answer", "text": "CSV is a table, so the natural input is an array of objects: each object becomes a row and its keys become the columns. An array of arrays is used as rows verbatim, a single object becomes one row, and an array of plain values becomes a single column. Anything else — a bare number or string, or null — is not a table and is rejected." }
+            }, {
+                "@type": "Question",
+                "name": "What happens when objects have different keys?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The header is the union of every key seen anywhere in the array, in first-seen order. A row that lacks one of those keys simply leaves its cell empty. That is why a CSV built from loosely-shaped JSON can have columns that are blank for most rows." }
+            }, {
+                "@type": "Question",
+                "name": "How are nested objects and arrays handled?",
+                "acceptedAnswer": { "@type": "Answer", "text": "CSV has no nesting, so a value that is itself an object or array is written out as compact JSON text inside its cell. The value is preserved, but it is no longer structured — a JSON to CSV conversion flattens by stringifying, it does not explode nested keys into dotted columns." }
+            }, {
+                "@type": "Question",
+                "name": "When does a field get wrapped in quotes?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A field is quoted when it contains the delimiter, a double quote, a newline, or leading or trailing whitespace. Inside a quoted field a literal double quote is doubled, so the text is reproduced exactly. That is the RFC 4180 rule, and it is what lets a single cell hold a comma or a line break." }
+            }, {
+                "@type": "Question",
+                "name": "Why does my CSV show mojibake in Excel?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Excel guesses the encoding of a .csv file and, without a byte-order mark, often guesses a legacy code page, which mangles non-ASCII text such as accented letters or CJK characters. Ticking the BOM option prepends U+FEFF to the downloaded file so Excel decodes it as UTF-8. The BOM is added only to the download, not to the text shown here." }
+            }, {
+                "@type": "Question",
+                "name": "Is a JSON to CSV conversion lossless?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. CSV stores text, so it forgets which values were numbers, booleans or null, and it cannot represent nesting except as text. Round-tripping CSV back to JSON returns strings unless you ask for type detection. Keep the original JSON if you need the types back exactly." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body data-csv-mode="to-csv">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>JSON to CSV</h1>
+            <p class="updated">Last updated: 1 October 2026</p>
+
+            <p class="lead">Turn an array of JSON objects into a CSV table. Each object becomes a row, the keys become the columns, and the result is quoted the way a spreadsheet expects — all inside your browser, so the data never leaves the machine.</p>
+
+            <div class="tools-nav">
+                <span>Other free tools:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="csv-to-json.html">CSV to JSON</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
+                <a href="sort-json-keys.html">Sort JSON keys</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Runs in your browser</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">RFC 4180 quoting</span>
+                    <span class="badge">Excel-ready BOM</span>
+                </div>
+
+                <label class="field-label" for="csvInput">Input JSON <span aria-hidden="true" class="count" id="inputCount">0 characters</span></label>
+                <textarea id="csvInput" class="json-field" spellcheck="false" placeholder='[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Grace"}]'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="delimiterSelect">Delimiter
+                        <select id="delimiterSelect">
+                            <option value="," selected>Comma</option>
+                            <option value=";">Semicolon</option>
+                            <option value="tab">Tab</option>
+                            <option value="|">Pipe</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="headerToggle">
+                        <input type="checkbox" id="headerToggle" checked /> Header row
+                    </label>
+                    <label class="control-label" for="bomToggle">
+                        <input type="checkbox" id="bomToggle" /> BOM for Excel
+                    </label>
+                    <button class="btn btn-primary" id="convertBtn" type="button">Convert to CSV</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='[{"id": 1, "name": "Ada, Countess", "address": {"city": "London"}, "active": true}, {"id": 2, "name": "Grace Hopper", "address": {"city": "New York"}, "active": false}]'>✨ Try an example</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="csvOutput" style="margin-top:1.1rem;">CSV <span aria-hidden="true" class="count" id="outputCount">0 characters</span></label>
+                    <textarea id="csvOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copy result</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Download data.csv</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>What the conversion does</h2>
+            <p>A CSV file is a table written as plain text: one line per row, one delimiter between cells, and a header line naming the columns. JSON has no such shape. The natural crossing point is an <strong>array of objects</strong>, where each object is a record and its keys are the field names — that is exactly the layout an API returns for a list, so it is what this converter expects first.</p>
+            <p>Given <code>[{"id":1,"name":"Ada"},{"id":2,"name":"Grace"}]</code> the output is a header line <code>id,name</code> followed by the two rows <code>1,Ada</code> and <code>2,Grace</code>. Nothing is reordered and no value is reformatted beyond the rules below.</p>
+
+            <h2>Which JSON shapes become a table</h2>
+            <ul>
+                <li><strong>Array of objects</strong> — each object is a row; the header is the union of all keys.</li>
+                <li><strong>Array of arrays</strong> — used as rows verbatim, with no header inferred, for data you have already shaped.</li>
+                <li><strong>A single object</strong> — treated as one row, with its keys as the header.</li>
+                <li><strong>Array of values</strong> — a single unnamed column.</li>
+                <li><strong>Anything else</strong> — a bare number, string or <code>null</code> is not a table and is reported as an error rather than silently reshaped.</li>
+            </ul>
+            <p>The union detail matters. If some records have a <code>phone</code> key and others do not, the header includes <code>phone</code> and the rows without it leave that cell empty — the column is not dropped. The clear consequence is that loosely-shaped JSON produces a table with sparse columns.</p>
+
+            <h2>Nested values become text</h2>
+            <p>A cell can only hold text, so an object or array nested inside a value is written as compact JSON inside its cell. <code>{"address":{"city":"London"}}</code> becomes the cell <code>{"city":"London"}</code>. The information survives, but it is no longer structured: this converter does not flatten <code>address.city</code> into a dotted column. If you want dotted columns, flatten the JSON first — that is a modelling decision, not a formatting one.</p>
+
+            <h2>Quoting, delimiters and line endings</h2>
+            <p>The output follows RFC 4180, the rule every spreadsheet and CSV library agrees on:</p>
+            <ul>
+                <li>A field is wrapped in double quotes only when it has to be — when it contains the delimiter, a double quote, a newline, or leading or trailing spaces.</li>
+                <li>Inside a quoted field, a double quote is written twice, so the text is reproduced exactly.</li>
+                <li>Rows end with CRLF, the carriage-return/line-feed pair the spec names.</li>
+            </ul>
+            <p>The delimiter is yours to choose. A comma is the default, but a semicolon is the safer pick on systems whose decimal separator is a comma, because a comma-delimited file is otherwise ambiguous there. Tab and pipe are available for data that already contains commas.</p>
+
+            <h2>Opening the file cleanly in Excel</h2>
+            <p>Excel does not read UTF-8 blindly: given a <code>.csv</code> with no byte-order mark it guesses the encoding and frequently guesses a legacy code page, which turns accented letters and CJK text into garbage. The <strong>BOM for Excel</strong> option prepends the three-byte UTF-8 mark to the downloaded file so Excel decodes it correctly. It is applied to the download only, so the text shown here stays clean.</p>
+
+            <h2>What CSV cannot carry back</h2>
+            <p>CSV is a text format and it is lossy. It forgets which values were numbers, booleans or <code>null</code>, and it flattens nesting into text. A <code>null</code> and an empty string both arrive as an empty cell, and a number arrives as its digits. Converting back to JSON returns strings unless you opt into type detection on the other page — and even then, a code such as <code>007</code> must stay a string to keep its leading zeros. Keep the original JSON when the types matter; treat CSV as the export, not the master copy.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What shape of JSON can be converted to CSV?</h3>
+                <p>CSV is a table, so the natural input is an array of objects: each object becomes a row and its keys become the columns. An array of arrays is used as rows verbatim, a single object becomes one row, and an array of plain values becomes a single column. Anything else — a bare number or string, or <code>null</code> — is not a table and is rejected.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What happens when objects have different keys?</h3>
+                <p>The header is the union of every key seen anywhere in the array, in first-seen order. A row that lacks one of those keys simply leaves its cell empty. That is why a CSV built from loosely-shaped JSON can have columns that are blank for most rows.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How are nested objects and arrays handled?</h3>
+                <p>CSV has no nesting, so a value that is itself an object or array is written out as compact JSON text inside its cell. The value is preserved, but it is no longer structured — a JSON to CSV conversion flattens by stringifying, it does not explode nested keys into dotted columns.</p>
+            </div>
+            <div class="faq-item">
+                <h3>When does a field get wrapped in quotes?</h3>
+                <p>A field is quoted when it contains the delimiter, a double quote, a newline, or leading or trailing whitespace. Inside a quoted field a literal double quote is doubled, so the text is reproduced exactly. That is the RFC 4180 rule, and it is what lets a single cell hold a comma or a line break.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why does my CSV show mojibake in Excel?</h3>
+                <p>Excel guesses the encoding of a <code>.csv</code> file and, without a byte-order mark, often guesses a legacy code page, which mangles non-ASCII text such as accented letters or CJK characters. Ticking the BOM option prepends U+FEFF to the downloaded file so Excel decodes it as UTF-8. The BOM is added only to the download, not to the text shown here.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is a JSON to CSV conversion lossless?</h3>
+                <p>No. CSV stores text, so it forgets which values were numbers, booleans or <code>null</code>, and it cannot represent nesting except as text. Round-tripping CSV back to JSON returns strings unless you ask for type detection. Keep the original JSON if you need the types back exactly.</p>
+            </div>
+
+            <div class="notice">
+                <p>Want the other direction? <a href="csv-to-json.html">CSV to JSON</a> reads a table back into an array of objects. Spotted a bug? <a href="contact.html">Get in touch</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="json-to-csv.html">JSON to CSV</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script src="csv.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your data is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>

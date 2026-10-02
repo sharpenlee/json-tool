@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Convertidor de JSON a CSV – Convierte un array JSON en CSV</title>
+    <meta name="description" content="Convierte un array de objetos JSON a CSV en tu navegador. Los nombres de columna salen de las claves, los valores anidados se escriben como JSON y las comillas siguen RFC 4180. Sin subir nada." />
+    <link rel="canonical" href="https://json-tool.com/es/json-to-csv.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-to-csv.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-to-csv.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-to-csv.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-to-csv.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-to-csv.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-to-csv.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-to-csv.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-to-csv.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-to-csv.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-to-csv.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Convertidor de JSON a CSV – Convierte un array JSON en CSV" />
+    <meta property="og:description" content="Convierte un array de objetos JSON en una tabla CSV en tu navegador. Cabecera con la unión de todas las claves, valores anidados como JSON, comillas según RFC 4180 y BOM opcional para Excel." />
+    <meta property="og:url" content="https://json-tool.com/es/json-to-csv.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool: formatea, minifica y valida JSON en tu navegador" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Convertidor de JSON a CSV – Convierte un array JSON en CSV" />
+    <meta name="twitter:description" content="Convierte un array de objetos JSON en una tabla CSV en tu navegador. Cabecera con la unión de todas las claves, valores anidados como JSON, comillas según RFC 4180 y BOM opcional para Excel." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool: formatea, minifica y valida JSON en tu navegador" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Convertidor de JSON a CSV",
+            "url": "https://json-tool.com/es/json-to-csv.html",
+            "description": "Convierte un array de objetos JSON a CSV en el navegador. La cabecera es la unión de las claves, los valores anidados se escriben como JSON y los campos se citan según RFC 4180. Los datos no salen de la máquina.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requiere JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "¿Qué forma de JSON se puede convertir a CSV?",
+                "acceptedAnswer": { "@type": "Answer", "text": "CSV es una tabla, así que la entrada natural es un array de objetos: cada objeto es una fila y sus claves son las columnas. Un array de arrays se usa como filas tal cual, un objeto suelto es una fila y un array de valores simples es una sola columna. Cualquier otra cosa——un número o una cadena sueltos, o null——no es una tabla y se rechaza." }
+            }, {
+                "@type": "Question",
+                "name": "¿Qué pasa cuando los objetos tienen claves distintas?",
+                "acceptedAnswer": { "@type": "Answer", "text": "La cabecera es la unión de todas las claves que aparecen en el array, en orden de primera aparición. Una fila a la que le falta una de esas claves deja su celda vacía. Por eso un CSV hecho a partir de JSON de forma irregular puede tener columnas vacías en casi todas las filas." }
+            }, {
+                "@type": "Question",
+                "name": "¿Cómo se tratan los objetos y arrays anidados?",
+                "acceptedAnswer": { "@type": "Answer", "text": "CSV no tiene anidamiento, así que un valor que es a su vez un objeto o un array se escribe como JSON compacto dentro de su celda. La información se conserva, pero deja de estar estructurada: esta conversión aplana convirtiendo a texto, no descompone las claves anidadas en columnas con puntos." }
+            }, {
+                "@type": "Question",
+                "name": "¿Cuándo se pone un campo entre comillas?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Un campo se pone entre comillas cuando contiene el delimitador, una comilla doble, un salto de línea, o espacios al principio o al final. Dentro de un campo entrecomillado, una comilla doble literal se escribe dos veces, de modo que el texto se reproduce exactamente. Esa es la regla de RFC 4180 y es lo que permite que una celda contenga una coma o un salto de línea." }
+            }, {
+                "@type": "Question",
+                "name": "¿Por qué mi CSV se ve como caracteres extraños en Excel?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Excel adivina la codificación de un archivo .csv y, sin marca de orden de bytes, a menudo elige una página de códigos antigua, lo que estropea el texto no ASCII, como letras acentuadas o caracteres CJK. Marcar la opción BOM antepone U+FEFF al archivo descargado para que Excel lo lea como UTF-8. El BOM se añade solo a la descarga, no al texto que se muestra aquí." }
+            }, {
+                "@type": "Question",
+                "name": "¿La conversión de JSON a CSV es sin pérdidas?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. CSV guarda texto, así que olvida qué valores eran números, booleanos o null, y no puede representar el anidamiento salvo como texto. Al volver de CSV a JSON obtienes cadenas, salvo que actives la detección de tipos. Conserva el JSON original si necesitas recuperar los tipos con exactitud." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-csv-mode="to-csv">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/json-to-csv.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-to-csv.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-to-csv.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-to-csv.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-to-csv.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-to-csv.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-to-csv.html" class="active" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-to-csv.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-to-csv.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Oscuro</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Volver a la herramienta JSON</a></p>
+            <h1>JSON a CSV</h1>
+            <p class="updated">Última actualización: 1 de octubre de 2026</p>
+
+            <p class="lead">Convierte un array de objetos JSON en una tabla CSV. Cada objeto es una fila, las claves son las columnas y los campos se citan como espera una hoja de cálculo. Todo ocurre en tu navegador: los datos no salen de la máquina.</p>
+
+            <div class="tools-nav">
+                <span>Otras herramientas gratuitas:</span>
+                <a href="csv-to-json.html">CSV a JSON</a> &middot;
+                <a href="/index.html">Formatear y embellecer JSON</a> &middot;
+                <a href="/json-validator.html">Validador JSON</a> &middot;
+                <a href="/json-minifier.html">Minificar JSON</a> &middot;
+                <a href="/pretty-print-json.html">Imprimir JSON con formato</a> &middot;
+                <a href="/json-syntax.html">Chuleta de sintaxis JSON</a> &middot;
+                <a href="/sort-json-keys.html">Ordenar claves JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Se ejecuta en tu navegador</span>
+                    <span class="badge">Sin subir nada</span>
+                    <span class="badge">Según RFC 4180</span>
+                    <span class="badge">BOM para Excel</span>
+                </div>
+
+                <label class="field-label" for="csvInput">JSON de entrada <span aria-hidden="true" class="count" id="inputCount">0 caracteres</span></label>
+                <textarea id="csvInput" class="json-field" spellcheck="false" placeholder='[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Grace"}]'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="delimiterSelect">Delimitador
+                        <select id="delimiterSelect">
+                            <option value="," selected>Coma</option>
+                            <option value=";">Punto y coma</option>
+                            <option value="tab">Tabulador</option>
+                            <option value="|">Barra vertical</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="headerToggle">
+                        <input type="checkbox" id="headerToggle" checked /> Fila de encabezado
+                    </label>
+                    <label class="control-label" for="bomToggle">
+                        <input type="checkbox" id="bomToggle" /> BOM para Excel
+                    </label>
+                    <button class="btn btn-primary" id="convertBtn" type="button">Convertir a CSV</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='[{"id": 1, "name": "Ada, Countess", "address": {"city": "London"}, "active": true}, {"id": 2, "name": "Grace Hopper", "address": {"city": "New York"}, "active": false}]'>✨ Probar un ejemplo</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Limpiar</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="csvOutput" style="margin-top:1.1rem;">CSV <span aria-hidden="true" class="count" id="outputCount">0 caracteres</span></label>
+                    <textarea id="csvOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copiar resultado</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Descargar data.csv</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Qué hace la conversión</h2>
+            <p>Un archivo CSV es una tabla escrita en texto plano: una línea por fila, un delimitador entre celdas y una primera línea con los nombres de las columnas. JSON no tiene esa forma. El punto de encuentro natural es un <strong>array de objetos</strong>: cada objeto es un registro y sus claves son los nombres de los campos. Es exactamente la forma que devuelve una API para una lista, así que es lo primero que acepta este conversor.</p>
+            <p>Dado <code>[{"id":1,"name":"Ada"},{"id":2,"name":"Grace"}]</code>, la salida es una línea de cabecera <code>id,name</code> y dos filas, <code>1,Ada</code> y <code>2,Grace</code>. Aparte de las reglas de abajo, no se reordena ni se reescribe ningún valor.</p>
+
+            <h2>Qué formas de JSON se convierten en tabla</h2>
+            <ul>
+                <li><strong>Array de objetos</strong>: cada objeto es una fila; la cabecera es la unión de todas las claves.</li>
+                <li><strong>Array de arrays</strong>: se usa como filas tal cual, sin inferir cabecera, para datos que ya tienen forma.</li>
+                <li><strong>Un objeto suelto</strong>: se trata como una fila, con sus claves como cabecera.</li>
+                <li><strong>Array de valores</strong>: una sola columna sin nombre.</li>
+                <li><strong>Cualquier otra cosa</strong>: un número, una cadena o <code>null</code> sueltos no son una tabla y se informan como error en lugar de transformarse en silencio.</li>
+            </ul>
+            <p>El detalle de la unión importa. Si algunos registros tienen la clave <code>phone</code> y otros no, la cabecera incluye <code>phone</code> y las filas que no la tienen dejan esa celda vacía: la columna no se descarta. La consecuencia clara es que un JSON de forma irregular produce una tabla con columnas dispersas.</p>
+
+            <h2>Los valores anidados se vuelven texto</h2>
+            <p>Una celda solo puede contener texto, así que un objeto o array anidado dentro de un valor se escribe como JSON compacto dentro de su celda. <code>{"address":{"city":"London"}}</code> se convierte en la celda <code>{"city":"London"}</code>. La información sobrevive, pero deja de estar estructurada: este conversor no aplana <code>address.city</code> en una columna con punto. Si quieres columnas con puntos, aplana el JSON antes; eso es una decisión de modelado, no de formato.</p>
+
+            <h2>Comillas, delimitadores y fin de línea</h2>
+            <p>La salida sigue RFC 4180, la regla en la que coinciden todas las hojas de cálculo y bibliotecas de CSV:</p>
+            <ul>
+                <li>Un campo se envuelve en comillas dobles solo cuando hace falta: si contiene el delimitador, una comilla doble, un salto de línea, o espacios al principio o al final.</li>
+                <li>Dentro de un campo entrecomillado, una comilla doble se escribe dos veces, de modo que el texto se reproduce exactamente.</li>
+                <li>Las filas terminan en CRLF, el par retorno de carro y salto de línea que indica la norma.</li>
+            </ul>
+            <p>El delimitador lo eliges tú. La coma es lo predeterminado, pero el punto y coma es más seguro en sistemas cuyo separador decimal es la coma, porque un archivo delimitado por comas resulta ambiguo allí. El tabulador y la barra vertical sirven para datos que ya contienen comas.</p>
+
+            <h2>Que Excel abra el archivo sin estropearlo</h2>
+            <p>Excel no lee UTF-8 a ciegas: ante un <code>.csv</code> sin marca de orden de bytes, adivina la codificación y a menudo elige una página de códigos antigua, lo que convierte letras acentuadas y texto CJK en basura. La opción <strong>BOM para Excel</strong> antepone la marca UTF-8 de tres bytes al archivo descargado para que Excel lo decodifique bien. Se aplica solo a la descarga, así que el texto mostrado aquí queda limpio.</p>
+
+            <h2>Lo que CSV no puede devolver</h2>
+            <p>CSV es un formato de texto y tiene pérdidas. Olvida qué valores eran números, booleanos o <code>null</code>, y aplana el anidamiento a texto. Un <code>null</code> y una cadena vacía llegan ambos como una celda vacía, y un número llega como sus dígitos. Al volver a JSON obtienes cadenas salvo que actives la detección de tipos en la otra página, y aun así un código como <code>007</code> debe seguir siendo cadena para conservar sus ceros iniciales. Conserva el JSON original cuando los tipos importen; trata el CSV como la exportación, no como la copia maestra.</p>
+
+            <h2>Preguntas frecuentes</h2>
+            <div class="faq-item">
+                <h3>¿Qué forma de JSON se puede convertir a CSV?</h3>
+                <p>CSV es una tabla, así que la entrada natural es un array de objetos: cada objeto es una fila y sus claves son las columnas. Un array de arrays se usa como filas tal cual, un objeto suelto es una fila y un array de valores simples es una sola columna. Cualquier otra cosa——un número o una cadena sueltos, o <code>null</code>——no es una tabla y se rechaza.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Qué pasa cuando los objetos tienen claves distintas?</h3>
+                <p>La cabecera es la unión de todas las claves que aparecen en el array, en orden de primera aparición. Una fila a la que le falta una de esas claves deja su celda vacía. Por eso un CSV hecho a partir de JSON de forma irregular puede tener columnas vacías en casi todas las filas.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Cómo se tratan los objetos y arrays anidados?</h3>
+                <p>CSV no tiene anidamiento, así que un valor que es a su vez un objeto o un array se escribe como JSON compacto dentro de su celda. La información se conserva, pero deja de estar estructurada: esta conversión aplana convirtiendo a texto, no descompone las claves anidadas en columnas con puntos.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Cuándo se pone un campo entre comillas?</h3>
+                <p>Un campo se pone entre comillas cuando contiene el delimitador, una comilla doble, un salto de línea, o espacios al principio o al final. Dentro de un campo entrecomillado, una comilla doble literal se escribe dos veces, de modo que el texto se reproduce exactamente. Esa es la regla de RFC 4180 y es lo que permite que una celda contenga una coma o un salto de línea.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿Por qué mi CSV se ve como caracteres extraños en Excel?</h3>
+                <p>Excel adivina la codificación de un archivo <code>.csv</code> y, sin marca de orden de bytes, a menudo elige una página de códigos antigua, lo que estropea el texto no ASCII, como letras acentuadas o caracteres CJK. Marcar la opción BOM antepone U+FEFF al archivo descargado para que Excel lo lea como UTF-8. El BOM se añade solo a la descarga, no al texto que se muestra aquí.</p>
+            </div>
+            <div class="faq-item">
+                <h3>¿La conversión de JSON a CSV es sin pérdidas?</h3>
+                <p>No. CSV guarda texto, así que olvida qué valores eran números, booleanos o <code>null</code>, y no puede representar el anidamiento salvo como texto. Al volver de CSV a JSON obtienes cadenas, salvo que actives la detección de tipos. Conserva el JSON original si necesitas recuperar los tipos con exactitud.</p>
+            </div>
+
+            <div class="notice">
+                <p>¿Quieres la dirección contraria? <a href="csv-to-json.html">CSV a JSON</a> lee una tabla y la devuelve como array de objetos. ¿Has encontrado un fallo? <a href="contact.html">Escríbenos</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Todos los derechos reservados.</span>
+            <span>
+                <a href="index.html">Inicio</a> &middot;
+                <a href="csv-to-json.html">CSV a JSON</a> &middot;
+                <a href="about.html">Acerca de</a> &middot;
+                <a href="privacy.html">Privacidad</a> &middot;
+                <a href="terms.html">Términos</a> &middot;
+                <a href="#" id="cookieSettings">Configuración de cookies</a> &middot;
+                <a href="contact.html">Contacto</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/csv.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consentimiento de cookies" aria-hidden="true">
+        <p>Usamos cookies de Google Analytics para entender cómo usan el sitio los visitantes. Los datos siempre se procesan localmente en tu navegador. Consulta nuestra <a href="privacy.html">Política de privacidad</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Rechazar</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Aceptar</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

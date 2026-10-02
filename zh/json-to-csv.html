@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON 转 CSV 转换器 – 将 JSON 数组转换为 CSV</title>
+    <meta name="description" content="在浏览器中把 JSON 对象数组转换为 CSV。列名取自对象的键，嵌套值写成 JSON 文本，引号规则遵循 RFC 4180，无需上传。" />
+    <link rel="canonical" href="https://json-tool.com/zh/json-to-csv.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-to-csv.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-to-csv.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-to-csv.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-to-csv.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-to-csv.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-to-csv.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-to-csv.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-to-csv.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-to-csv.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-to-csv.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON 转 CSV 转换器 – 将 JSON 数组转换为 CSV" />
+    <meta property="og:description" content="在浏览器中把 JSON 对象数组转换为 CSV 表格。表头取所有键的并集，嵌套值写成 JSON，引号遵循 RFC 4180，可选为 Excel 添加 BOM。" />
+    <meta property="og:url" content="https://json-tool.com/zh/json-to-csv.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON 转 CSV 转换器 – 将 JSON 数组转换为 CSV" />
+    <meta name="twitter:description" content="在浏览器中把 JSON 对象数组转换为 CSV 表格。表头取所有键的并集，嵌套值写成 JSON，引号遵循 RFC 4180，可选为 Excel 添加 BOM。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON 转 CSV 转换器",
+            "url": "https://json-tool.com/zh/json-to-csv.html",
+            "description": "在浏览器中把 JSON 对象数组转换为 CSV。表头是所有键的并集，嵌套值写成 JSON，字段按 RFC 4180 加引号。数据不会离开本机。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "需要 JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "什么样的 JSON 可以转换成 CSV？",
+                "acceptedAnswer": { "@type": "Answer", "text": "CSV 是一张表，所以最自然的输入是对象数组：每个对象成为一行，它的键成为列。行数组会原样作为行使用，单个对象成为一行，普通值的数组成为单列。除此之外——单独的数字、字符串或 null——都不是表格，会被拒绝。" }
+            }, {
+                "@type": "Question",
+                "name": "当对象的键不一致时会怎样？",
+                "acceptedAnswer": { "@type": "Answer", "text": "表头是数组中所有出现过的键的并集，按首次出现的顺序排列。缺少某个键的行，对应单元格留空。这就是为什么从结构不统一的 JSON 生成的 CSV 里，很多行的某些列会是空白。" }
+            }, {
+                "@type": "Question",
+                "name": "嵌套的对象和数组如何处理？",
+                "acceptedAnswer": { "@type": "Answer", "text": "CSV 没有嵌套，所以本身是对象或数组的值，会以紧凑 JSON 文本的形式写进单元格。信息保留了，但不再是结构化的——这个转换是“通过字符串化来展平”，而不是把嵌套键拆成带点的列名。" }
+            }, {
+                "@type": "Question",
+                "name": "字段什么时候会加引号？",
+                "acceptedAnswer": { "@type": "Answer", "text": "当字段包含分隔符、双引号、换行，或首尾有空白时，就会加引号。引号内的字面双引号会写成两个，从而精确还原原文。这是 RFC 4180 的规则，也是单个单元格能容纳逗号或换行的原因。" }
+            }, {
+                "@type": "Question",
+                "name": "为什么我的 CSV 在 Excel 里显示为乱码？",
+                "acceptedAnswer": { "@type": "Answer", "text": "Excel 会猜测 .csv 文件的编码，如果没有字节顺序标记，它常常猜成旧代码页，从而把非 ASCII 文本（如重音字母或中日韩文字）弄乱。勾选 BOM 选项会在下载的文件开头加上 U+FEFF，让 Excel 按 UTF-8 解码。BOM 只加到下载文件里，不影响页面上显示的文本。" }
+            }, {
+                "@type": "Question",
+                "name": "JSON 转 CSV 是无损的吗？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不是。CSV 存储的是文本，所以它会忘记哪些值原本是数字、布尔值或 null，也无法表示嵌套（只能写成文本）。把 CSV 再转回 JSON 时，除非开启类型识别，否则得到的是字符串。如果需要精确还原类型，请保留原始 JSON。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-csv-mode="to-csv">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="语言">
+                    <a href="/json-to-csv.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-to-csv.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-to-csv.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-to-csv.html" class="active" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-to-csv.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-to-csv.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-to-csv.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-to-csv.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-to-csv.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切换深色模式">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">深色</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; 返回 JSON 工具</a></p>
+            <h1>JSON 转 CSV</h1>
+            <p class="updated">最后更新：2026年10月1日</p>
+
+            <p class="lead">把 JSON 对象数组转换为 CSV 表格。每个对象成为一行，键成为列，输出按电子表格期望的规则加引号——全部在浏览器中完成，数据不会离开本机。</p>
+
+            <div class="tools-nav">
+                <span>其他免费工具：</span>
+                <a href="csv-to-json.html">CSV 转 JSON</a> &middot;
+                <a href="/index.html">JSON 格式化与美化</a> &middot;
+                <a href="/json-validator.html">JSON 校验器</a> &middot;
+                <a href="/json-minifier.html">JSON 压缩</a> &middot;
+                <a href="/pretty-print-json.html">JSON 美化打印</a> &middot;
+                <a href="/json-syntax.html">JSON 语法速查</a> &middot;
+                <a href="/sort-json-keys.html">JSON 键排序</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">在浏览器中运行</span>
+                    <span class="badge">无需上传</span>
+                    <span class="badge">遵循 RFC 4180</span>
+                    <span class="badge">适配 Excel 的 BOM</span>
+                </div>
+
+                <label class="field-label" for="csvInput">输入 JSON <span aria-hidden="true" class="count" id="inputCount">0个字符</span></label>
+                <textarea id="csvInput" class="json-field" spellcheck="false" placeholder='[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Grace"}]'></textarea>
+
+                <div class="btn-row">
+                    <label class="control-label" for="delimiterSelect">分隔符
+                        <select id="delimiterSelect">
+                            <option value="," selected>逗号</option>
+                            <option value=";">分号</option>
+                            <option value="tab">制表符</option>
+                            <option value="|">竖线</option>
+                        </select>
+                    </label>
+                    <label class="control-label" for="headerToggle">
+                        <input type="checkbox" id="headerToggle" checked /> 表头行
+                    </label>
+                    <label class="control-label" for="bomToggle">
+                        <input type="checkbox" id="bomToggle" /> 为 Excel 添加 BOM
+                    </label>
+                    <button class="btn btn-primary" id="convertBtn" type="button">转换为 CSV</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button" data-example='[{"id": 1, "name": "Ada, Countess", "address": {"city": "London"}, "active": true}, {"id": 2, "name": "Grace Hopper", "address": {"city": "New York"}, "active": false}]'>✨ 试试示例</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">清空</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="csvOutput" style="margin-top:1.1rem;">CSV <span aria-hidden="true" class="count" id="outputCount">0个字符</span></label>
+                    <textarea id="csvOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>复制结果</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>下载 data.csv</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>这个转换做了什么</h2>
+            <p>CSV 文件是一张用纯文本写成的表：每行一条记录，单元格之间用分隔符隔开，最上面一行给出列名。JSON 没有这种形状。两者最自然的交点是<strong>对象数组</strong>——每个对象是一条记录，它的键就是字段名。API 返回列表时正是这个布局，所以本转换器优先接受它。</p>
+            <p>给定 <code>[{"id":1,"name":"Ada"},{"id":2,"name":"Grace"}]</code>，输出是表头行 <code>id,name</code>，随后是两行 <code>1,Ada</code> 和 <code>2,Grace</code>。除了下面的规则外，不会重排，也不会改写任何值。</p>
+
+            <h2>哪些 JSON 形状能变成表</h2>
+            <ul>
+                <li><strong>对象数组</strong>——每个对象是一行；表头是所有键的并集。</li>
+                <li><strong>行数组</strong>——原样作为行使用，不推断表头，适合你已经排好形状的数据。</li>
+                <li><strong>单个对象</strong>——当作一行，键作为表头。</li>
+                <li><strong>值的数组</strong>——单列，没有列名。</li>
+                <li><strong>其他任何形式</strong>——单独的数字、字符串或 <code>null</code> 不是表格，会报错，而不是被悄悄改写。</li>
+            </ul>
+            <p>“并集”这个细节很重要。如果部分记录有 <code>phone</code> 键而另一些没有，表头仍会包含 <code>phone</code>，那些没有该键的行对应单元格留空——这一列不会被丢弃。直接的后果是：结构不统一的 JSON 会生成列很多、但大量单元格为空的表。</p>
+
+            <h2>嵌套值会变成文本</h2>
+            <p>一个单元格只能放文本，所以值里嵌套的对象或数组会以紧凑 JSON 写进单元格。<code>{"address":{"city":"London"}}</code> 会变成单元格 <code>{"city":"London"}</code>。信息还在，但不再是结构化的：本转换器不会把 <code>address.city</code> 拆成带点的列。如果你想要带点的列，请先展平 JSON——那是数据建模的取舍，不是格式化的问题。</p>
+
+            <h2>引号、分隔符与行尾</h2>
+            <p>输出遵循 RFC 4180，也就是所有电子表格和 CSV 库共同遵守的规则：</p>
+            <ul>
+                <li>只有当字段必须加引号时才加——即它包含分隔符、双引号、换行，或首尾有空白时。</li>
+                <li>引号内的双引号写成两个，从而精确还原原文。</li>
+                <li>行以 CRLF（回车加换行）结尾，即规范指定的那一对字符。</li>
+            </ul>
+            <p>分隔符由你选择。默认是逗号，但在以逗号作小数点的系统上，选分号更稳妥，否则以逗号分隔的文件在那里会有歧义。制表符和竖线适合本身已经含有逗号的数据。</p>
+
+            <h2>让 Excel 干净地打开文件</h2>
+            <p>Excel 不会无条件按 UTF-8 读取：对一个没有字节顺序标记的 <code>.csv</code>，它会猜测编码，而且经常猜成旧代码页，把重音字母和中文变成乱码。<strong>为 Excel 添加 BOM</strong> 选项会在下载文件的开头加上三字节的 UTF-8 标记，让 Excel 正确解码。它只作用于下载文件，页面上显示的文本保持干净。</p>
+
+            <h2>CSV 无法带回的东西</h2>
+            <p>CSV 是文本格式，是有损的。它会忘记哪些值原本是数字、布尔值或 <code>null</code>，也会把嵌套压平为文本。<code>null</code> 和空字符串都会变成空单元格，数字会变成它的字面。转回 JSON 时，除非在另一页开启类型识别，否则得到的是字符串——即便开启了，像 <code>007</code> 这样的编码也必须保持字符串以保留前导零。类型重要时请保留原始 JSON；把 CSV 当作导出，而不是主副本。</p>
+
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <h3>什么样的 JSON 可以转换成 CSV？</h3>
+                <p>CSV 是一张表，所以最自然的输入是对象数组：每个对象成为一行，它的键成为列。行数组会原样作为行使用，单个对象成为一行，普通值的数组成为单列。除此之外——单独的数字、字符串或 <code>null</code>——都不是表格，会被拒绝。</p>
+            </div>
+            <div class="faq-item">
+                <h3>当对象的键不一致时会怎样？</h3>
+                <p>表头是数组中所有出现过的键的并集，按首次出现的顺序排列。缺少某个键的行，对应单元格留空。这就是为什么从结构不统一的 JSON 生成的 CSV 里，很多行的某些列会是空白。</p>
+            </div>
+            <div class="faq-item">
+                <h3>嵌套的对象和数组如何处理？</h3>
+                <p>CSV 没有嵌套，所以本身是对象或数组的值，会以紧凑 JSON 文本的形式写进单元格。信息保留了，但不再是结构化的——这个转换是通过字符串化来展平，而不是把嵌套键拆成带点的列名。</p>
+            </div>
+            <div class="faq-item">
+                <h3>字段什么时候会加引号？</h3>
+                <p>当字段包含分隔符、双引号、换行，或首尾有空白时，就会加引号。引号内的字面双引号会写成两个，从而精确还原原文。这是 RFC 4180 的规则，也是单个单元格能容纳逗号或换行的原因。</p>
+            </div>
+            <div class="faq-item">
+                <h3>为什么我的 CSV 在 Excel 里显示为乱码？</h3>
+                <p>Excel 会猜测 <code>.csv</code> 文件的编码，如果没有字节顺序标记，它常常猜成旧代码页，从而把非 ASCII 文本（如重音字母或中日韩文字）弄乱。勾选 BOM 选项会在下载的文件开头加上 U+FEFF，让 Excel 按 UTF-8 解码。BOM 只加到下载文件里，不影响页面上显示的文本。</p>
+            </div>
+            <div class="faq-item">
+                <h3>JSON 转 CSV 是无损的吗？</h3>
+                <p>不是。CSV 存储的是文本，所以它会忘记哪些值原本是数字、布尔值或 <code>null</code>，也无法表示嵌套（只能写成文本）。把 CSV 再转回 JSON 时，除非开启类型识别，否则得到的是字符串。如果需要精确还原类型，请保留原始 JSON。</p>
+            </div>
+
+            <div class="notice">
+                <p>想要相反方向？<a href="csv-to-json.html">CSV 转 JSON</a> 可以把一张表读回对象数组。发现错误？<a href="contact.html">联系我们</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 保留所有权利。</span>
+            <span>
+                <a href="index.html">首页</a> &middot;
+                <a href="csv-to-json.html">CSV 转 JSON</a> &middot;
+                <a href="about.html">关于</a> &middot;
+                <a href="privacy.html">隐私政策</a> &middot;
+                <a href="terms.html">服务条款</a> &middot;
+                <a href="#" id="cookieSettings">Cookie 设置</a> &middot;
+                <a href="contact.html">联系我们</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/csv.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie 同意" aria-hidden="true">
+        <p>我们使用 Google Analytics Cookie 来了解访问者如何使用本网站。您的数据始终在浏览器中本地处理。请参阅我们的<a href="privacy.html">隐私政策</a>。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒绝</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">接受</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>
