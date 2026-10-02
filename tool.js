@@ -326,7 +326,7 @@
             updateCounts();
             return;
         }
-        output.textContent = lastResult;
+        output.textContent = text || ''; // display whatever we were handed, error text included
         output.classList.toggle('error', isError);
         if (!isError && lastResult && !lastResult.startsWith('Error:')) {
             updateLineNumbers(lastResult);
