@@ -5,6 +5,10 @@
 (function () {
     'use strict';
 
+    // Resolved while the script is executing, so the worker can be found from both
+    // the root page and the localized copies.
+    var TOOL_SRC = document.currentScript ? document.currentScript.src : '';
+
     var I18N = {
         "en": {
             charUnit: " characters",
@@ -24,6 +28,9 @@
             whereInferred: "No position was reported; the likely spot is line {line}, column {col}.",
             excerptLabel: "Line {line}:",
             caret: "^ here",
+            processing: "Processing…",
+            tooLarge: "This document is larger than {mb} MB — too big to format in the browser.",
+            renderTooLarge: "Too large to display here — use Copy or Download to get the full result.",
             exampleDescription: "A free online JSON formatter with sorting",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool Team",
@@ -47,6 +54,9 @@
             whereInferred: "No se indicó una posición; el punto probable es la línea {line}, columna {col}.",
             excerptLabel: "Línea {line}:",
             caret: "^ aquí",
+            processing: "Procesando…",
+            tooLarge: "El documento supera los {mb} MB, demasiado grande para formatearlo en el navegador.",
+            renderTooLarge: "Demasiado grande para mostrarlo aquí; usa Copiar o Descargar para obtener el resultado completo.",
             exampleDescription: "Un formateador de JSON gratuito en línea con ordenación",
             exampleFeatures: ["formato", "minificación", "validación", "ordenación de claves"],
             exampleAuthor: "Equipo de JSON Tool",
@@ -70,6 +80,9 @@
             whereInferred: "Aucune position n'a été indiquée ; l'endroit probable est la ligne {line}, colonne {col}.",
             excerptLabel: "Ligne {line} :",
             caret: "^ ici",
+            processing: "Traitement…",
+            tooLarge: "Le document dépasse {mb} Mo — trop volumineux pour être formaté dans le navigateur.",
+            renderTooLarge: "Trop volumineux pour être affiché ici — utilisez Copier ou Télécharger pour obtenir le résultat complet.",
             exampleDescription: "Un formatteur de JSON gratuit en ligne avec tri",
             exampleFeatures: ["formatage", "minification", "validation", "tri des clés"],
             exampleAuthor: "L'équipe JSON Tool",
@@ -93,6 +106,9 @@
             whereInferred: "位置が報告されませんでした。おそらく {line} 行 {col} 列です。",
             excerptLabel: "{line} 行目:",
             caret: "^ ここ",
+            processing: "処理中…",
+            tooLarge: "このドキュメントは {mb} MB を超えており、ブラウザで整形するには大きすぎます。",
+            renderTooLarge: "大きすぎてここに表示できません。完全な結果は「コピー」または「ダウンロード」で取得してください。",
             exampleDescription: "並べ替え対応の無料オンラインJSONフォーマッター",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool チーム",
@@ -116,6 +132,9 @@
             whereInferred: "위치가 보고되지 않았습니다. 가장 의심되는 곳은 {line}행 {col}열입니다.",
             excerptLabel: "{line}행:",
             caret: "^ 여기",
+            processing: "처리 중…",
+            tooLarge: "이 문서는 {mb} MB를 넘어 브라우저에서 처리하기에 너무 큽니다.",
+            renderTooLarge: "너무 커서 여기에 표시할 수 없습니다. 전체 결과는 복사 또는 다운로드를 사용하세요.",
             exampleDescription: "정렬 기능이 있는 무료 온라인 JSON 포맷터",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool 팀",
@@ -139,6 +158,9 @@
             whereInferred: "Nenhuma posição foi informada; o ponto provável é a linha {line}, coluna {col}.",
             excerptLabel: "Linha {line}:",
             caret: "^ aqui",
+            processing: "Processando…",
+            tooLarge: "O documento passa de {mb} MB — grande demais para formatar no navegador.",
+            renderTooLarge: "Grande demais para exibir aqui — use Copiar ou Baixar para obter o resultado completo.",
             exampleDescription: "Um formatador de JSON online e gratuito com ordenação",
             exampleFeatures: ["formatação", "minificação", "validação", "ordenação de chaves"],
             exampleAuthor: "Equipe da JSON Tool",
@@ -162,6 +184,9 @@
             whereInferred: "Позиция не указана; вероятное место — строка {line}, столбец {col}.",
             excerptLabel: "Строка {line}:",
             caret: "^ здесь",
+            processing: "Обработка…",
+            tooLarge: "Документ больше {mb} МБ — слишком велик для форматирования в браузере.",
+            renderTooLarge: "Слишком большой объём для отображения — используйте «Копировать» или «Скачать», чтобы получить результат полностью.",
             exampleDescription: "Бесплатный онлайн-форматтер JSON с сортировкой",
             exampleFeatures: ["форматирование", "минификация", "валидация", "сортировка ключей"],
             exampleAuthor: "Команда JSON Tool",
@@ -185,6 +210,9 @@
             whereInferred: "解析器没有给出位置；最可能出问题的是第 {line} 行第 {col} 列。",
             excerptLabel: "第 {line} 行：",
             caret: "^ 此处",
+            processing: "正在处理…",
+            tooLarge: "该文档超过 {mb} MB，太大，无法在浏览器中格式化。",
+            renderTooLarge: "太大，无法在此显示——请使用复制或下载获取完整结果。",
             exampleDescription: "支持排序的免费在线 JSON 格式化工具",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool 团队",
@@ -208,6 +236,9 @@
             whereInferred: "解析器未提供位置；最可能出錯的是第 {line} 行、第 {col} 欄。",
             excerptLabel: "第 {line} 行：",
             caret: "^ 此處",
+            processing: "正在處理…",
+            tooLarge: "該文件超過 {mb} MB，太大，無法在瀏覽器中格式化。",
+            renderTooLarge: "太大，無法在此顯示——請使用複製或下載取得完整結果。",
             exampleDescription: "支援排序的免費線上 JSON 格式化工具",
             exampleFeatures: ["format", "minify", "validate", "sort keys"],
             exampleAuthor: "JSON Tool 團隊",
@@ -248,15 +279,19 @@
 
     let toastTimer = null;
     let lastMode = 'format'; // 记录最后一次成功的模式
+    let lastResult = '';     // the exact output, kept for copy/download even when too big to render
+
+    // A huge result is not written into the DOM: laying out megabytes of text — plus
+    // one span per line number — would freeze the page for seconds even though the
+    // parsing happened in the worker.
+    const RENDER_LIMIT = 1000000;
+    const MAX_LINE_NUMBERS = 5000;
 
     // ---- Helpers ----
 
     function updateCounts() {
-        const inText = input.value;
-        inputCount.textContent = inText.length + T.charUnit;
-        const outText = output.textContent;
-        const cleanOut = (outText && !outText.startsWith('Error:')) ? outText : '';
-        outputCount.textContent = cleanOut.length + T.charUnit;
+        inputCount.textContent = input.value.length + T.charUnit;
+        outputCount.textContent = lastResult.length + T.charUnit;
     }
 
     function showError(msg) {
@@ -270,6 +305,10 @@
 
     function updateLineNumbers(text) {
         const lines = text ? text.split('\n') : [];
+        if (lines.length > MAX_LINE_NUMBERS) {
+            lineNumbers.innerHTML = ''; // one node per line would freeze the page
+            return;
+        }
         let html = '';
         for (let i = 1; i <= lines.length; i++) {
             html += `<span>${i}</span>`;
@@ -278,10 +317,19 @@
     }
 
     function setOutput(text, isError = false) {
-        output.textContent = text || '';
+        lastResult = isError ? '' : (text || '');
+        if (!isError && lastResult.length > RENDER_LIMIT) {
+            output.textContent = T.renderTooLarge;
+            output.classList.remove('error');
+            updateLineNumbers('');
+            outputCopyBtn.classList.add('visible');
+            updateCounts();
+            return;
+        }
+        output.textContent = lastResult;
         output.classList.toggle('error', isError);
-        if (!isError && text && !text.startsWith('Error:')) {
-            updateLineNumbers(text);
+        if (!isError && lastResult && !lastResult.startsWith('Error:')) {
+            updateLineNumbers(lastResult);
             outputCopyBtn.classList.add('visible');
         } else {
             updateLineNumbers('');
@@ -372,7 +420,69 @@
         return prefix + clipped + '\n' + ' '.repeat(pad) + T.caret;
     }
 
+    // ---- Large input: parse off the main thread ----
+    const WORKER_THRESHOLD = 200000;        // chars; below this, parse synchronously
+    const MAX_CHARS = 50 * 1024 * 1024;     // about 50 MB of text: refuse beyond this
+
+    let worker = null;
+    let workerBroken = false;
+    let requestId = 0;
+
+    function ensureWorker() {
+        if (worker || workerBroken) return worker;
+        try {
+            const url = TOOL_SRC ? new URL('format-worker.js', TOOL_SRC).href : '/format-worker.js';
+            worker = new Worker(url);
+            worker.onmessage = onWorkerMessage;
+            worker.onerror = function () {
+                // The worker could not run (blocked URL, very old browser). Fall back
+                // to parsing on the main thread, at the cost of a brief freeze.
+                workerBroken = true;
+                worker = null;
+                setBusy(false);
+                processJSON(lastMode);
+            };
+        } catch (err) {
+            workerBroken = true;
+            worker = null;
+        }
+        return worker;
+    }
+
+    function onWorkerMessage(e) {
+        const msg = e.data;
+        if (msg.id !== requestId) return; // superseded by a newer request
+        setBusy(false);
+        if (msg.ok) {
+            setOutput(msg.result, false);
+            showError(null);
+            lastMode = msg.mode;
+        } else {
+            showParseError(input.value.trim(), msg.error);
+        }
+    }
+
+    function setBusy(on) {
+        formatBtn.disabled = on;
+        minifyBtn.disabled = on;
+        if (on) showToast(T.processing);
+    }
+
     // ---- Core processing ----
+
+    function showParseError(raw, message) {
+        const msg = T.invalidPrefix + message;
+        const where = locateError(raw, message);
+        if (where) {
+            const tpl = where.inferred ? T.whereInferred : T.whereReported;
+            showError(msg + ' ' + fill(tpl, { line: where.line, col: where.col }));
+            setOutput(excerpt(raw, where.line, where.col), true);
+        } else {
+            setOutput(msg, true);
+            showError(msg);
+        }
+    }
+
     function processJSON(mode) {
         const raw = input.value.trim();
         if (!raw) {
@@ -381,42 +491,41 @@
             return false;
         }
 
+        if (raw.length > MAX_CHARS) {
+            const tooLarge = T.tooLarge.replace('{mb}', Math.round(MAX_CHARS / (1024 * 1024)));
+            setOutput(tooLarge, true);
+            showError(tooLarge);
+            return false;
+        }
+
+        const shouldSort = sortToggle.checked;
+        const indent = parseInt(indentInput.value, 10);
+        const safeIndent = (isNaN(indent) || indent < 1) ? 3 : indent;
+
+        // Large documents are parsed, sorted and stringified in a worker so the
+        // main thread — and therefore the page — stays responsive.
+        if (raw.length >= WORKER_THRESHOLD && ensureWorker()) {
+            requestId += 1;
+            setBusy(true);
+            worker.postMessage({ id: requestId, text: raw, mode: mode, indent: safeIndent, sort: shouldSort });
+            return true;
+        }
+
         let parsed;
         try {
             parsed = JSON.parse(raw);
             showError(null);
         } catch (e) {
-            const msg = T.invalidPrefix + e.message;
-            const where = locateError(raw, e.message);
-            if (where) {
-                const tpl = where.inferred ? T.whereInferred : T.whereReported;
-                showError(msg + ' ' + fill(tpl, { line: where.line, col: where.col }));
-                setOutput(excerpt(raw, where.line, where.col), true);
-            } else {
-                setOutput(msg, true);
-                showError(msg);
-            }
+            showParseError(raw, e.message);
             return false;
         }
 
-        // Apply key sorting if enabled
-        const shouldSort = sortToggle.checked;
-        let data = parsed;
-        if (shouldSort) {
-            data = sortKeysRecursive(parsed);
-        }
-
-        let result;
-        if (mode === 'format') {
-            const indent = parseInt(indentInput.value, 10);
-            const safeIndent = (isNaN(indent) || indent < 1) ? 3 : indent;
-            result = JSON.stringify(data, null, safeIndent);
-        } else { // minify
-            result = JSON.stringify(data);
-        }
+        const data = shouldSort ? sortKeysRecursive(parsed) : parsed;
+        const result = mode === 'format'
+            ? JSON.stringify(data, null, safeIndent)
+            : JSON.stringify(data);
 
         setOutput(result, false);
-        updateCounts();
         lastMode = mode; // 记录成功使用的模式
         return true;
     }
@@ -490,7 +599,7 @@
 
     // Output floating copy
     outputCopyBtn.addEventListener('click', function() {
-        const text = output.textContent;
+        const text = lastResult;
         if (text && !text.startsWith('Error:')) {
             gtag('event', 'copy_result_floating', { 'event_category': 'engagement' });
             copyText(text);
@@ -501,7 +610,7 @@
 
     // Bottom Copy button
     copyBtn.addEventListener('click', function() {
-        const text = output.textContent;
+        const text = lastResult;
         if (text && !text.startsWith('Error:')) {
             gtag('event', 'copy_result', { 'event_category': 'engagement' });
             copyText(text);
@@ -512,7 +621,7 @@
 
     // Download
     downloadBtn.addEventListener('click', function() {
-        const text = output.textContent;
+        const text = lastResult;
         if (!text || text.startsWith('Error:')) {
             showError(T.nothingToDownload);
             return;
