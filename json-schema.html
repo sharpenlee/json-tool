@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Schema Validator – Validate JSON Against a Schema</title>
+    <meta name="description" content="Validate a JSON document against a JSON Schema in your browser, with every failure listed by path. No upload, no account — the check runs in JavaScript." />
+    <link rel="canonical" href="https://json-tool.com/json-schema.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-schema.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-schema.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-schema.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-schema.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-schema.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-schema.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-schema.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-schema.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Schema Validator – Validate JSON Against a Schema" />
+    <meta property="og:description" content="Validate a JSON document against a JSON Schema in your browser. Every failure is listed by path. Runs locally, no upload." />
+    <meta property="og:url" content="https://json-tool.com/json-schema.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Schema Validator – Validate JSON Against a Schema" />
+    <meta name="twitter:description" content="Validate a JSON document against a JSON Schema in your browser. Every failure is listed by path. Runs locally, no upload." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON Schema Validator",
+            "url": "https://json-tool.com/json-schema.html",
+            "description": "Validate a JSON document against a JSON Schema in the browser. Each failed constraint is reported with its path, using the keywords most schemas actually rely on. No data leaves the machine.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Which JSON Schema keywords are supported?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Type, const, enum, required, properties, additionalProperties, minProperties, maxProperties, items (a single schema or a tuple of schemas), minItems, maxItems, uniqueItems, minLength, maxLength, pattern, minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, allOf, anyOf, oneOf, not and local $ref." }
+            }, {
+                "@type": "Question",
+                "name": "What is deliberately not supported?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Remote $ref (only pointers inside the same schema are resolved), the format keyword as an assertion, patternProperties, unevaluatedProperties, if/then/else and dependentSchemas. A schema that uses them still validates the keywords above; the unsupported ones are simply not enforced, so do not treat a pass here as a full conformance result for a schema built on them." }
+            }, {
+                "@type": "Question",
+                "name": "Is the validation done on a server?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Both the document and the schema are parsed with JSON.parse in your browser and checked in memory. Nothing is uploaded, and the page works with the network disconnected." }
+            }, {
+                "@type": "Question",
+                "name": "Why is a required-property error reported at the parent path?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because that is where the constraint lives. JSON Schema applies required to the object, not to the missing property, so the error is reported at the object's path — for example $ rather than $.name — with the property named in the message." }
+            }, {
+                "@type": "Question",
+                "name": "How are anyOf and oneOf reported?",
+                "acceptedAnswer": { "@type": "Answer", "text": "As one error at the instance that failed, rather than one error per branch. anyOf fails when no branch matches; oneOf fails when the number of matching branches is not exactly one, and the message says how many matched. Reporting every branch's internal errors would bury the real one." }
+            }, {
+                "@type": "Question",
+                "name": "Does it tell me the schema is wrong, or only the document?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It checks the document against the schema. If the schema itself is not valid JSON you are told that separately. It does not validate the schema against the JSON Schema meta-schema, so a schema that is syntactically fine but logically wrong may simply match nothing." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body data-schema-mode="validate">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>JSON Schema Validator</h1>
+            <p class="updated">Last updated: 2 October 2026</p>
+
+            <p class="lead">Check a JSON document against a JSON Schema and see every failed constraint with the path it failed at. The document and the schema are both parsed and checked in your browser.</p>
+
+            <div class="tools-nav">
+                <span>Other free tools:</span>
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="json-diff.html">JSON Diff</a> &middot;
+                <a href="json-to-csv.html">JSON to CSV</a> &middot;
+                <a href="csv-to-json.html">CSV to JSON</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
+                <a href="sort-json-keys.html">Sort JSON keys</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Runs in your browser</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">Path-level errors</span>
+                    <span class="badge">Draft 2020-12 keywords</span>
+                </div>
+
+                <label class="field-label" for="instanceInput">JSON document <span aria-hidden="true" class="count" id="instanceCount">0 characters</span></label>
+                <textarea id="instanceInput" class="json-field" spellcheck="false" placeholder='{"name": "Ada", "age": 36}'></textarea>
+
+                <label class="field-label" for="schemaInput" style="margin-top:0.9rem;">JSON Schema <span aria-hidden="true" class="count" id="schemaCount">0 characters</span></label>
+                <textarea id="schemaInput" class="json-field" spellcheck="false" placeholder='{"type": "object", "required": ["name"], "properties": {"age": {"type": "integer"}}}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="validateBtn" type="button">Validate</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Try an example</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copy report</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Download report</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="issueList"></div>
+            </div>
+
+            <h2>What it checks</h2>
+            <p>A JSON Schema describes the shape a document is allowed to have: which properties exist, what types they hold, and what ranges and patterns are acceptable. This page checks a document against a schema and lists every place it fails, each with a path so you can find it.</p>
+            <p>The supported keywords are: <code>type</code>, <code>const</code>, <code>enum</code>, <code>required</code>, <code>properties</code>, <code>additionalProperties</code>, <code>minProperties</code>, <code>maxProperties</code>, <code>items</code> (one schema, or a tuple of schemas), <code>minItems</code>, <code>maxItems</code>, <code>uniqueItems</code>, <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, <code>minimum</code>, <code>maximum</code>, <code>exclusiveMinimum</code>, <code>exclusiveMaximum</code>, <code>multipleOf</code>, <code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code>, and local <code>$ref</code> pointers into the same schema.</p>
+
+            <h2>What it deliberately does not do</h2>
+            <ul>
+                <li><strong>No remote <code>$ref</code>.</strong> Only pointers inside the same schema (<code>#/$defs/…</code>, <code>#/definitions/…</code>) are resolved. Fetching another file would mean a network request, which is exactly what this tool exists to avoid.</li>
+                <li><strong><code>format</code> is not an assertion.</strong> In recent drafts <code>format</code> is annotated, not enforced, and that is how it is treated here — a <code>format</code> of <code>email</code> does not reject a malformed address.</li>
+                <li><strong>Some keywords are not implemented</strong>: <code>patternProperties</code>, <code>unevaluatedProperties</code>, <code>if</code>/<code>then</code>/<code>else</code>, <code>dependentSchemas</code>, <code>contains</code>. A schema that uses them still has its other keywords checked, but the unimplemented ones are not enforced — so do not read a pass here as full conformance for a schema built on them.</li>
+                <li><strong>The schema is not meta-validated.</strong> A schema that is syntactically valid JSON but logically wrong may simply match nothing; this page checks the document, not the schema's own correctness.</li>
+            </ul>
+
+            <h2>Reading the errors</h2>
+            <p>Each failure is reported at a path: <code>$</code> is the document root, a dot walks into a property, and a bracket indexes an array. <code>required</code> is reported at the object that was supposed to contain the property — the constraint lives on the object, not on the missing property — with the property named in the message. <code>anyOf</code> and <code>oneOf</code> are reported once, at the instance that failed, rather than once per branch; a wall of branch errors hides the real one.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>Which JSON Schema keywords are supported?</h3>
+                <p><code>type</code>, <code>const</code>, <code>enum</code>, <code>required</code>, <code>properties</code>, <code>additionalProperties</code>, <code>minProperties</code>, <code>maxProperties</code>, <code>items</code> (a single schema or a tuple of schemas), <code>minItems</code>, <code>maxItems</code>, <code>uniqueItems</code>, <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, <code>minimum</code>, <code>maximum</code>, <code>exclusiveMinimum</code>, <code>exclusiveMaximum</code>, <code>multipleOf</code>, <code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code> and local <code>$ref</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What is deliberately not supported?</h3>
+                <p>Remote <code>$ref</code> (only pointers inside the same schema are resolved), the <code>format</code> keyword as an assertion, <code>patternProperties</code>, <code>unevaluatedProperties</code>, <code>if</code>/<code>then</code>/<code>else</code> and <code>dependentSchemas</code>. A schema that uses them still validates the keywords above; the unsupported ones are simply not enforced, so do not treat a pass here as a full conformance result for a schema built on them.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is the validation done on a server?</h3>
+                <p>No. Both the document and the schema are parsed with <code>JSON.parse</code> in your browser and checked in memory. Nothing is uploaded, and the page works with the network disconnected.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why is a required-property error reported at the parent path?</h3>
+                <p>Because that is where the constraint lives. JSON Schema applies <code>required</code> to the object, not to the missing property, so the error is reported at the object's path — for example <code>$</code> rather than <code>$.name</code> — with the property named in the message.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How are anyOf and oneOf reported?</h3>
+                <p>As one error at the instance that failed, rather than one error per branch. <code>anyOf</code> fails when no branch matches; <code>oneOf</code> fails when the number of matching branches is not exactly one, and the message says how many matched. Reporting every branch's internal errors would bury the real one.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does it tell me the schema is wrong, or only the document?</h3>
+                <p>It checks the document against the schema. If the schema itself is not valid JSON you are told that separately. It does not validate the schema against the JSON Schema meta-schema, so a schema that is syntactically fine but logically wrong may simply match nothing.</p>
+            </div>
+
+            <div class="notice">
+                <p>Need to compare two documents instead? <a href="json-diff.html">JSON Diff</a> does that. Spotted a bug? <a href="contact.html">Get in touch</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">JSON Diff</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script src="schema.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your data is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>

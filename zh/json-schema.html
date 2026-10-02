@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Schema 校验器 – 用 Schema 校验 JSON</title>
+    <meta name="description" content="在浏览器中按 JSON Schema 校验 JSON 文档，每个未通过的约束都会按路径列出。无需上传，无需账号——校验在 JavaScript 中完成。" />
+    <link rel="canonical" href="https://json-tool.com/zh/json-schema.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-schema.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-schema.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-schema.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-schema.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-schema.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-schema.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-schema.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-schema.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Schema 校验器 – 用 Schema 校验 JSON" />
+    <meta property="og:description" content="在浏览器中按 JSON Schema 校验 JSON 文档，每一处未通过的约束都会按路径列出。本地运行，无需上传。" />
+    <meta property="og:url" content="https://json-tool.com/zh/json-schema.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Schema 校验器 – 用 Schema 校验 JSON" />
+    <meta name="twitter:description" content="在浏览器中按 JSON Schema 校验 JSON 文档，每一处未通过的约束都会按路径列出。本地运行，无需上传。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – 在浏览器中格式化、压缩和校验 JSON" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON Schema 校验器",
+            "url": "https://json-tool.com/zh/json-schema.html",
+            "description": "在浏览器中按 JSON Schema 校验 JSON 文档。每个未满足的约束都会连同其路径一起报告，覆盖大多数 Schema 实际使用的关键字。数据不会离开本机。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "需要 JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "支持哪些 JSON Schema 关键字？",
+                "acceptedAnswer": { "@type": "Answer", "text": "type、const、enum、required、properties、additionalProperties、minProperties、maxProperties、items（单个 Schema 或 Schema 元组）、minItems、maxItems、uniqueItems、minLength、maxLength、pattern、minimum、maximum、exclusiveMinimum、exclusiveMaximum、multipleOf、allOf、anyOf、oneOf、not，以及指向同一 Schema 内部的本地 $ref。" }
+            }, {
+                "@type": "Question",
+                "name": "有意不支持的有什么？",
+                "acceptedAnswer": { "@type": "Answer", "text": "远程 $ref（只解析同一 Schema 内部的指针）、作为断言的 format 关键字、patternProperties、unevaluatedProperties、if/then/else 和 dependentSchemas。使用这些关键字的 Schema 仍会校验上面列出的关键字；未实现的关键字不会被强制执行，因此不要把这里的「通过」当作基于它们构建的 Schema 的完整一致性结果。" }
+            }, {
+                "@type": "Question",
+                "name": "校验是在服务器上进行的吗？",
+                "acceptedAnswer": { "@type": "Answer", "text": "不是。文档和 Schema 都在你的浏览器中用 JSON.parse 解析，并在内存中检查。不会上传任何内容，断开网络后页面依然可用。" }
+            }, {
+                "@type": "Question",
+                "name": "为什么「缺少必需属性」的错误报告在父路径上？",
+                "acceptedAnswer": { "@type": "Answer", "text": "因为约束就在那里。JSON Schema 把 required 应用于对象，而不是缺失的那个属性，所以错误报告在对象的路径上——例如 $ 而不是 $.name——并在消息里指明属性名。" }
+            }, {
+                "@type": "Question",
+                "name": "anyOf 和 oneOf 是如何报告的？",
+                "acceptedAnswer": { "@type": "Answer", "text": "在失败的那个实例上报告一条错误，而不是每个分支一条。anyOf 在没有任何分支匹配时失败；oneOf 在匹配的分支数不等于一时失败，消息会说明匹配了几个。把每个分支内部的错误都列出来反而会淹没真正的问题。" }
+            }, {
+                "@type": "Question",
+                "name": "它会告诉我 Schema 本身有错，还是只检查文档？",
+                "acceptedAnswer": { "@type": "Answer", "text": "它用 Schema 检查文档。如果 Schema 本身不是有效的 JSON，会单独告知。它不会用 JSON Schema 元 Schema 校验你的 Schema，因此语法正确但逻辑有误的 Schema 可能只是匹配不到任何内容。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-schema-mode="validate">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="语言">
+                    <a href="/json-schema.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-schema.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-schema.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-schema.html" class="active" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-schema.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-schema.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-schema.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-schema.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-schema.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切换深色模式">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">深色</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; 返回 JSON 工具</a></p>
+            <h1>JSON Schema 校验器</h1>
+            <p class="updated">最后更新：2026年10月2日</p>
+
+            <p class="lead">用 JSON Schema 校验 JSON 文档，并列出每一处未通过的约束及其路径。文档和 Schema 都在你的浏览器中解析与检查。</p>
+
+            <div class="tools-nav">
+                <span>其他免费工具：</span>
+                <a href="index.html">JSON 格式化与美化</a> &middot;
+                <a href="/json-validator.html">JSON 校验器</a> &middot;
+                <a href="json-diff.html">JSON 差异对比</a> &middot;
+                <a href="json-to-csv.html">JSON 转 CSV</a> &middot;
+                <a href="csv-to-json.html">CSV 转 JSON</a> &middot;
+                <a href="/json-minifier.html">JSON 压缩</a> &middot;
+                <a href="/pretty-print-json.html">JSON 美化打印</a> &middot;
+                <a href="/json-syntax.html">JSON 语法速查</a> &middot;
+                <a href="/sort-json-keys.html">JSON 键排序</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">在浏览器中运行</span>
+                    <span class="badge">无需上传</span>
+                    <span class="badge">按路径报错</span>
+                    <span class="badge">支持 Draft 2020-12 关键字</span>
+                </div>
+
+                <label class="field-label" for="instanceInput">JSON 文档 <span aria-hidden="true" class="count" id="instanceCount">0个字符</span></label>
+                <textarea id="instanceInput" class="json-field" spellcheck="false" placeholder='{"name": "Ada", "age": 36}'></textarea>
+
+                <label class="field-label" for="schemaInput" style="margin-top:0.9rem;">JSON Schema <span aria-hidden="true" class="count" id="schemaCount">0个字符</span></label>
+                <textarea id="schemaInput" class="json-field" spellcheck="false" placeholder='{"type": "object", "required": ["name"], "properties": {"age": {"type": "integer"}}}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="validateBtn" type="button">校验</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ 试试示例</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">清空</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>复制报告</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>下载报告</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="issueList"></div>
+            </div>
+
+            <h2>它检查什么</h2>
+            <p>JSON Schema 描述一份文档允许具有的形状：有哪些属性、各自是什么类型、取值范围和模式如何。本页用一个 Schema 检查一份文档，并列出每一处不满足的位置，每条都带路径，方便你定位。</p>
+            <p>支持的关键字包括：<code>type</code>、<code>const</code>、<code>enum</code>、<code>required</code>、<code>properties</code>、<code>additionalProperties</code>、<code>minProperties</code>、<code>maxProperties</code>、<code>items</code>（单个 Schema，或 Schema 元组）、<code>minItems</code>、<code>maxItems</code>、<code>uniqueItems</code>、<code>minLength</code>、<code>maxLength</code>、<code>pattern</code>、<code>minimum</code>、<code>maximum</code>、<code>exclusiveMinimum</code>、<code>exclusiveMaximum</code>、<code>multipleOf</code>、<code>allOf</code>、<code>anyOf</code>、<code>oneOf</code>、<code>not</code>，以及指向同一 Schema 内部的本地 <code>$ref</code> 指针。</p>
+
+            <h2>它有意不做的事</h2>
+            <ul>
+                <li><strong>不解析远程 <code>$ref</code>。</strong>只解析同一 Schema 内部的指针（<code>#/$defs/…</code>、<code>#/definitions/…</code>）。去取另一个文件意味着发出网络请求，而这正是本工具要避免的。</li>
+                <li><strong><code>format</code> 不作为断言。</strong>在较新的草案中 <code>format</code> 只是注解，不被强制，这里也如此处理——<code>email</code> 格式不会拒绝格式错误的地址。</li>
+                <li><strong>部分关键字未实现</strong>：<code>patternProperties</code>、<code>unevaluatedProperties</code>、<code>if</code>/<code>then</code>/<code>else</code>、<code>dependentSchemas</code>、<code>contains</code>。使用它们的 Schema 仍会检查其他关键字，但未实现的关键字不会被强制执行——所以不要把这里的「通过」当作基于它们构建的 Schema 的完整一致性结果。</li>
+                <li><strong>不对 Schema 做元校验。</strong>语法上是有效 JSON、但逻辑有误的 Schema 可能只是匹配不到任何内容；本页检查的是文档，而不是 Schema 自身的正确性。</li>
+            </ul>
+
+            <h2>如何阅读错误</h2>
+            <p>每处失败都报告在一个路径上：<code>$</code> 是文档根，点号进入属性，方括号索引数组。<code>required</code> 报告在「本应包含该属性的对象」上——约束在对象上，而不在缺失的属性上——消息里会指明属性名。<code>anyOf</code> 和 <code>oneOf</code> 只在失败的那个实例上报告一次，而不是每个分支一次；满屏的分支错误反而会淹没真正的问题。</p>
+
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <h3>支持哪些 JSON Schema 关键字？</h3>
+                <p><code>type</code>、<code>const</code>、<code>enum</code>、<code>required</code>、<code>properties</code>、<code>additionalProperties</code>、<code>minProperties</code>、<code>maxProperties</code>、<code>items</code>（单个 Schema 或 Schema 元组）、<code>minItems</code>、<code>maxItems</code>、<code>uniqueItems</code>、<code>minLength</code>、<code>maxLength</code>、<code>pattern</code>、<code>minimum</code>、<code>maximum</code>、<code>exclusiveMinimum</code>、<code>exclusiveMaximum</code>、<code>multipleOf</code>、<code>allOf</code>、<code>anyOf</code>、<code>oneOf</code>、<code>not</code>，以及本地 <code>$ref</code>。</p>
+            </div>
+            <div class="faq-item">
+                <h3>有意不支持的有什么？</h3>
+                <p>远程 <code>$ref</code>（只解析同一 Schema 内部的指针）、作为断言的 <code>format</code> 关键字、<code>patternProperties</code>、<code>unevaluatedProperties</code>、<code>if</code>/<code>then</code>/<code>else</code> 和 <code>dependentSchemas</code>。使用这些关键字的 Schema 仍会校验上面列出的关键字；未实现的关键字不会被强制执行，因此不要把这里的「通过」当作基于它们构建的 Schema 的完整一致性结果。</p>
+            </div>
+            <div class="faq-item">
+                <h3>校验是在服务器上进行的吗？</h3>
+                <p>不是。文档和 Schema 都在你的浏览器中用 <code>JSON.parse</code> 解析，并在内存中检查。不会上传任何内容，断开网络后页面依然可用。</p>
+            </div>
+            <div class="faq-item">
+                <h3>为什么「缺少必需属性」的错误报告在父路径上？</h3>
+                <p>因为约束就在那里。JSON Schema 把 <code>required</code> 应用于对象，而不是缺失的那个属性，所以错误报告在对象的路径上——例如 <code>$</code> 而不是 <code>$.name</code>——并在消息里指明属性名。</p>
+            </div>
+            <div class="faq-item">
+                <h3>anyOf 和 oneOf 是如何报告的？</h3>
+                <p>在失败的那个实例上报告一条错误，而不是每个分支一条。<code>anyOf</code> 在没有任何分支匹配时失败；<code>oneOf</code> 在匹配的分支数不等于一时失败，消息会说明匹配了几个。把每个分支内部的错误都列出来反而会淹没真正的问题。</p>
+            </div>
+            <div class="faq-item">
+                <h3>它会告诉我 Schema 本身有错，还是只检查文档？</h3>
+                <p>它用 Schema 检查文档。如果 Schema 本身不是有效的 JSON，会单独告知。它不会用 JSON Schema 元 Schema 校验你的 Schema，因此语法正确但逻辑有误的 Schema 可能只是匹配不到任何内容。</p>
+            </div>
+
+            <div class="notice">
+                <p>需要比较两个文档？<a href="json-diff.html">JSON 差异对比</a> 可以做到。发现错误？<a href="contact.html">联系我们</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 保留所有权利。</span>
+            <span>
+                <a href="index.html">首页</a> &middot;
+                <a href="/json-validator.html">校验器</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">JSON 差异对比</a> &middot;
+                <a href="about.html">关于</a> &middot;
+                <a href="privacy.html">隐私政策</a> &middot;
+                <a href="terms.html">服务条款</a> &middot;
+                <a href="#" id="cookieSettings">Cookie 设置</a> &middot;
+                <a href="contact.html">联系我们</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/schema.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie 同意" aria-hidden="true">
+        <p>我们使用 Google Analytics Cookie 来了解访问者如何使用本网站。您的数据始终在浏览器中本地处理。请参阅我们的<a href="privacy.html">隐私政策</a>。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒绝</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">接受</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

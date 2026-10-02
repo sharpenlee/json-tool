@@ -229,3 +229,29 @@ body.dark .result pre { background: rgba(0, 0, 0, 0.35); }
 .diff-kind { flex: 0 0 auto; font-weight: 700; }
 .diff-path { flex: 0 0 auto; font-weight: 650; }
 .diff-value { flex: 1 1 auto; overflow-wrap: anywhere; }
+
+/* Validation issue list (json-schema page) */
+.issue-list {
+    margin-top: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.6rem;
+    overflow: hidden;
+}
+.issue-item {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+    background: var(--bad-bg);
+    color: var(--bad-text);
+    border-bottom: 1px solid var(--border-color);
+    overflow-wrap: anywhere;
+}
+.issue-item:last-child { border-bottom: 0; }
+.issue-path {
+    flex: 0 0 auto;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-weight: 650;
+}
+.issue-message { flex: 1 1 auto; overflow-wrap: anywhere; }

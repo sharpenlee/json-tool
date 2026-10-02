@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON Schema バリデータ – Schema で JSON を検証</title>
+    <meta name="description" content="ブラウザ内で JSON ドキュメントを JSON Schema に照らして検証し、満たされなかった制約をパスごとに一覧します。アップロードもアカウントも不要で、検証は JavaScript で行います。" />
+    <link rel="canonical" href="https://json-tool.com/ja/json-schema.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-schema.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-schema.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-schema.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-schema.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-schema.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-schema.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-schema.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-schema.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSON Schema バリデータ – Schema で JSON を検証" />
+    <meta property="og:description" content="ブラウザ内で JSON ドキュメントを JSON Schema に照らして検証し、満たされなかった制約をパスごとに一覧します。ローカルで動作し、アップロードはありません。" />
+    <meta property="og:url" content="https://json-tool.com/ja/json-schema.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – ブラウザ内で JSON を整形・圧縮・検証" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON Schema バリデータ – Schema で JSON を検証" />
+    <meta name="twitter:description" content="ブラウザ内で JSON ドキュメントを JSON Schema に照らして検証し、満たされなかった制約をパスごとに一覧します。ローカルで動作し、アップロードはありません。" />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – ブラウザ内で JSON を整形・圧縮・検証" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON Schema バリデータ",
+            "url": "https://json-tool.com/ja/json-schema.html",
+            "description": "ブラウザ内で JSON ドキュメントを JSON Schema に照らして検証します。満たされなかった制約はそれぞれのパスとともに報告されます。データは端末から出ません。",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "JavaScript が必要です",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "対応している JSON Schema のキーワードは？",
+                "acceptedAnswer": { "@type": "Answer", "text": "type、const、enum、required、properties、additionalProperties、minProperties、maxProperties、items（単一のスキーマまたはスキーマのタプル）、minItems、maxItems、uniqueItems、minLength、maxLength、pattern、minimum、maximum、exclusiveMinimum、exclusiveMaximum、multipleOf、allOf、anyOf、oneOf、not、そして同じスキーマ内を指すローカルの $ref です。" }
+            }, {
+                "@type": "Question",
+                "name": "意図的に対応していないものは？",
+                "acceptedAnswer": { "@type": "Answer", "text": "リモートの $ref（同じスキーマ内のポインタのみ解決します）、検証としての format、patternProperties、unevaluatedProperties、if/then/else、dependentSchemas。これらを使うスキーマでも上記のキーワードは検証されますが、未実装のキーワードは強制されません。そのため、これらに依存したスキーマでここが「有効」でも完全な適合結果とはみなさないでください。" }
+            }, {
+                "@type": "Question",
+                "name": "検証はサーバーで行われますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "いいえ。ドキュメントとスキーマはどちらもブラウザ内で JSON.parse により解析され、メモリ上で検査されます。何もアップロードされず、ネットワークを切断しても動作します。" }
+            }, {
+                "@type": "Question",
+                "name": "必須プロパティのエラーが親のパスで報告されるのはなぜですか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "制約がそこにあるからです。JSON Schema の required はオブジェクトに適用され、欠けているプロパティに適用されるわけではありません。したがってエラーはオブジェクトのパス（$.name ではなく $ など）で報告され、メッセージにプロパティ名が示されます。" }
+            }, {
+                "@type": "Question",
+                "name": "anyOf と oneOf はどう報告されますか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "失敗したインスタンスに対して 1 件だけ報告し、分岐ごとには報告しません。anyOf はどの分岐にも一致しないとき失敗し、oneOf は一致した分岐の数が 1 でないとき失敗します。メッセージには一致した数が示されます。各分岐の内部エラーを並べると本当の問題が埋もれてしまいます。" }
+            }, {
+                "@type": "Question",
+                "name": "スキーマ自体の誤りも教えてくれますか、それとも文書だけですか？",
+                "acceptedAnswer": { "@type": "Answer", "text": "文書をスキーマに照らして検査します。スキーマ自体が有効な JSON でなければ、その旨を別に伝えます。スキーマを JSON Schema のメタスキーマで検証はしないので、構文は正しくても論理が誤ったスキーマは、単に何にも一致しないことがあります。" }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-schema-mode="validate">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/json-schema.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-schema.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-schema.html" class="active" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-schema.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-schema.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-schema.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-schema.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-schema.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-schema.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="ダークモードの切り替え">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">ダーク</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; JSON ツールに戻る</a></p>
+            <h1>JSON Schema バリデータ</h1>
+            <p class="updated">最終更新：2026年10月2日</p>
+
+            <p class="lead">JSON ドキュメントを JSON Schema に照らして検証し、満たされなかった制約をそのパスとともに一覧します。ドキュメントと Schema はどちらもブラウザ内で解析・検査されます。</p>
+
+            <div class="tools-nav">
+                <span>その他の無料ツール：</span>
+                <a href="index.html">JSON の整形と美化</a> &middot;
+                <a href="/json-validator.html">JSON 検証</a> &middot;
+                <a href="json-diff.html">JSON 差分</a> &middot;
+                <a href="json-to-csv.html">JSON を CSV に変換</a> &middot;
+                <a href="csv-to-json.html">CSV を JSON に変換</a> &middot;
+                <a href="/json-minifier.html">JSON の圧縮</a> &middot;
+                <a href="/pretty-print-json.html">JSON の整形表示</a> &middot;
+                <a href="/json-syntax.html">JSON 構文チートシート</a> &middot;
+                <a href="/sort-json-keys.html">JSON キーの並べ替え</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">ブラウザ内で動作</span>
+                    <span class="badge">アップロード不要</span>
+                    <span class="badge">パスごとにエラー</span>
+                    <span class="badge">Draft 2020-12 のキーワード</span>
+                </div>
+
+                <label class="field-label" for="instanceInput">JSON ドキュメント <span aria-hidden="true" class="count" id="instanceCount">0文字</span></label>
+                <textarea id="instanceInput" class="json-field" spellcheck="false" placeholder='{"name": "Ada", "age": 36}'></textarea>
+
+                <label class="field-label" for="schemaInput" style="margin-top:0.9rem;">JSON Schema <span aria-hidden="true" class="count" id="schemaCount">0文字</span></label>
+                <textarea id="schemaInput" class="json-field" spellcheck="false" placeholder='{"type": "object", "required": ["name"], "properties": {"age": {"type": "integer"}}}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="validateBtn" type="button">検証</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ 例を試す</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">クリア</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>レポートをコピー</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>レポートをダウンロード</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="issueList"></div>
+            </div>
+
+            <h2>検査する内容</h2>
+            <p>JSON Schema は、文書が取ってよい形を記述します。どのプロパティがあり、それぞれがどの型で、どの範囲やパターンが許されるか、というものです。このページはスキーマに照らして文書を検査し、満たさない箇所をすべて、位置が分かるようパス付きで一覧します。</p>
+            <p>対応するキーワードは次のとおりです。<code>type</code>、<code>const</code>、<code>enum</code>、<code>required</code>、<code>properties</code>、<code>additionalProperties</code>、<code>minProperties</code>、<code>maxProperties</code>、<code>items</code>（単一スキーマ、またはスキーマのタプル）、<code>minItems</code>、<code>maxItems</code>、<code>uniqueItems</code>、<code>minLength</code>、<code>maxLength</code>、<code>pattern</code>、<code>minimum</code>、<code>maximum</code>、<code>exclusiveMinimum</code>、<code>exclusiveMaximum</code>、<code>multipleOf</code>、<code>allOf</code>、<code>anyOf</code>、<code>oneOf</code>、<code>not</code>、そして同じスキーマ内を指すローカルの <code>$ref</code> です。</p>
+
+            <h2>意図的に行わないこと</h2>
+            <ul>
+                <li><strong>リモートの <code>$ref</code> は解決しません。</strong>同じスキーマ内のポインタ（<code>#/$defs/…</code>、<code>#/definitions/…</code>）だけを解決します。別のファイルを取りに行くことはネットワーク要求を意味し、それはまさにこのツールが避けようとしていることです。</li>
+                <li><strong><code>format</code> は検証ではありません。</strong>近年のドラフトでは <code>format</code> は注記であり強制されません。ここでもその扱いで、<code>email</code> 形式は不正なアドレスを拒否しません。</li>
+                <li><strong>一部のキーワードは未実装です</strong>：<code>patternProperties</code>、<code>unevaluatedProperties</code>、<code>if</code>/<code>then</code>/<code>else</code>、<code>dependentSchemas</code>、<code>contains</code>。これらを使うスキーマでも他のキーワードは検査されますが、未実装のキーワードは強制されません。したがって、これらに依存したスキーマでここが「有効」でも、完全な適合結果とはみなさないでください。</li>
+                <li><strong>スキーマのメタ検証はしません。</strong>構文として有効な JSON でも論理が誤ったスキーマは、単に何にも一致しないことがあります。このページが検査するのは文書であり、スキーマ自体の正しさではありません。</li>
+            </ul>
+
+            <h2>エラーの読み方</h2>
+            <p>失敗はそれぞれパスで報告されます。<code>$</code> は文書のルート、ドットはプロパティへ進み、角括弧は配列の添字です。<code>required</code> は、そのプロパティを含むべきオブジェクトの位置で報告されます——制約はオブジェクトにあり、欠けているプロパティにあるのではないからです——メッセージにプロパティ名が示されます。<code>anyOf</code> と <code>oneOf</code> は失敗したインスタンスに 1 件だけ報告され、分岐ごとではありません。分岐のエラーで埋め尽くされると本当の問題が見えなくなります。</p>
+
+            <h2>よくある質問</h2>
+            <div class="faq-item">
+                <h3>対応している JSON Schema のキーワードは？</h3>
+                <p><code>type</code>、<code>const</code>、<code>enum</code>、<code>required</code>、<code>properties</code>、<code>additionalProperties</code>、<code>minProperties</code>、<code>maxProperties</code>、<code>items</code>（単一のスキーマまたはスキーマのタプル）、<code>minItems</code>、<code>maxItems</code>、<code>uniqueItems</code>、<code>minLength</code>、<code>maxLength</code>、<code>pattern</code>、<code>minimum</code>、<code>maximum</code>、<code>exclusiveMinimum</code>、<code>exclusiveMaximum</code>、<code>multipleOf</code>、<code>allOf</code>、<code>anyOf</code>、<code>oneOf</code>、<code>not</code>、そしてローカルの <code>$ref</code> です。</p>
+            </div>
+            <div class="faq-item">
+                <h3>意図的に対応していないものは？</h3>
+                <p>リモートの <code>$ref</code>（同じスキーマ内のポインタのみ解決します）、検証としての <code>format</code>、<code>patternProperties</code>、<code>unevaluatedProperties</code>、<code>if</code>/<code>then</code>/<code>else</code>、<code>dependentSchemas</code>。これらを使うスキーマでも上記のキーワードは検証されますが、未実装のキーワードは強制されません。そのため、これらに依存したスキーマでここが「有効」でも完全な適合結果とはみなさないでください。</p>
+            </div>
+            <div class="faq-item">
+                <h3>検証はサーバーで行われますか？</h3>
+                <p>いいえ。ドキュメントとスキーマはどちらもブラウザ内で <code>JSON.parse</code> により解析され、メモリ上で検査されます。何もアップロードされず、ネットワークを切断しても動作します。</p>
+            </div>
+            <div class="faq-item">
+                <h3>必須プロパティのエラーが親のパスで報告されるのはなぜですか？</h3>
+                <p>制約がそこにあるからです。JSON Schema の <code>required</code> はオブジェクトに適用され、欠けているプロパティに適用されるわけではありません。したがってエラーはオブジェクトのパス（<code>$.name</code> ではなく <code>$</code> など）で報告され、メッセージにプロパティ名が示されます。</p>
+            </div>
+            <div class="faq-item">
+                <h3>anyOf と oneOf はどう報告されますか？</h3>
+                <p>失敗したインスタンスに対して 1 件だけ報告し、分岐ごとには報告しません。<code>anyOf</code> はどの分岐にも一致しないとき失敗し、<code>oneOf</code> は一致した分岐の数が 1 でないとき失敗します。メッセージには一致した数が示されます。各分岐の内部エラーを並べると本当の問題が埋もれてしまいます。</p>
+            </div>
+            <div class="faq-item">
+                <h3>スキーマ自体の誤りも教えてくれますか、それとも文書だけですか？</h3>
+                <p>文書をスキーマに照らして検査します。スキーマ自体が有効な JSON でなければ、その旨を別に伝えます。スキーマを JSON Schema のメタスキーマで検証はしないので、構文は正しくても論理が誤ったスキーマは、単に何にも一致しないことがあります。</p>
+            </div>
+
+            <div class="notice">
+                <p>2 つの文書を比較したいですか？<a href="json-diff.html">JSON 差分</a> が使えます。不具合を見つけましたか？<a href="contact.html">お問い合わせ</a>。</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. 無断転載を禁じます。</span>
+            <span>
+                <a href="index.html">ホーム</a> &middot;
+                <a href="/json-validator.html">検証</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">JSON 差分</a> &middot;
+                <a href="about.html">概要</a> &middot;
+                <a href="privacy.html">プライバシー</a> &middot;
+                <a href="terms.html">利用規約</a> &middot;
+                <a href="#" id="cookieSettings">Cookie設定</a> &middot;
+                <a href="contact.html">お問い合わせ</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/schema.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookieの同意" aria-hidden="true">
+        <p>当サイトでは、訪問者の利用状況を把握するためにGoogle AnalyticsのCookieを使用します。データは常にブラウザ内でローカルに処理されます。詳細は<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">拒否</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">同意</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Validateur JSON Schema – Validez du JSON avec un schéma</title>
+    <meta name="description" content="Validez un document JSON par rapport à un JSON Schema dans votre navigateur, chaque contrainte non respectée étant listée par chemin. Aucun envoi, aucun compte : la vérification s'exécute en JavaScript." />
+    <link rel="canonical" href="https://json-tool.com/fr/json-schema.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-schema.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-schema.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-schema.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-schema.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-schema.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-schema.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-schema.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-schema.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Validateur JSON Schema – Validez du JSON avec un schéma" />
+    <meta property="og:description" content="Validez un document JSON par rapport à un JSON Schema dans votre navigateur. Chaque échec est listé par chemin. Exécution locale, aucun envoi." />
+    <meta property="og:url" content="https://json-tool.com/fr/json-schema.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool : formater, minifier et valider du JSON dans votre navigateur" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Validateur JSON Schema – Validez du JSON avec un schéma" />
+    <meta name="twitter:description" content="Validez un document JSON par rapport à un JSON Schema dans votre navigateur. Chaque échec est listé par chemin. Exécution locale, aucun envoi." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool : formater, minifier et valider du JSON dans votre navigateur" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Validateur JSON Schema",
+            "url": "https://json-tool.com/fr/json-schema.html",
+            "description": "Validez un document JSON par rapport à un JSON Schema dans le navigateur. Chaque contrainte non respectée est signalée avec son chemin, à l'aide des mots-clés que la plupart des schémas utilisent. Les données ne quittent pas la machine.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "JavaScript requis",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Quels mots-clés JSON Schema sont pris en charge ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "type, const, enum, required, properties, additionalProperties, minProperties, maxProperties, items (un seul schéma ou un tuple de schémas), minItems, maxItems, uniqueItems, minLength, maxLength, pattern, minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, allOf, anyOf, oneOf, not et les $ref locaux à l'intérieur du même schéma." }
+            }, {
+                "@type": "Question",
+                "name": "Qu'est-ce qui n'est délibérément pas pris en charge ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Les $ref distants (seuls les pointeurs internes au même schéma sont résolus), format en tant qu'assertion, patternProperties, unevaluatedProperties, if/then/else et dependentSchemas. Un schéma qui les utilise verra quand même ses autres mots-clés vérifiés, mais ceux qui ne sont pas implémentés ne sont pas appliqués : ne lisez donc pas un « valide » ici comme une conformité complète pour un schéma construit sur eux." }
+            }, {
+                "@type": "Question",
+                "name": "La validation est-elle faite sur un serveur ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Non. Le document et le schéma sont tous deux analysés avec JSON.parse dans votre navigateur et vérifiés en mémoire. Rien n'est envoyé et la page fonctionne sans réseau." }
+            }, {
+                "@type": "Question",
+                "name": "Pourquoi l'erreur de propriété requise est-elle signalée au chemin du parent ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Parce que c'est là qu'est la contrainte. JSON Schema applique required à l'objet, pas à la propriété manquante ; l'erreur est donc signalée au chemin de l'objet — par exemple $ et non $.name — avec le nom de la propriété dans le message." }
+            }, {
+                "@type": "Question",
+                "name": "Comment anyOf et oneOf sont-ils signalés ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Par une seule erreur sur l'instance qui a échoué, plutôt qu'une par branche. anyOf échoue quand aucune branche ne correspond ; oneOf échoue quand le nombre de branches correspondantes n'est pas exactement un, et le message indique combien ont correspondu. Signaler les erreurs internes de chaque branche noierait la vraie." }
+            }, {
+                "@type": "Question",
+                "name": "Me dit-il si le schéma est faux, ou vérifie-t-il seulement le document ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Il vérifie le document par rapport au schéma. Si le schéma n'est pas du JSON valide, cela est indiqué séparément. Il ne valide pas le schéma par rapport au métaschéma JSON Schema : un schéma syntaxiquement correct mais logiquement erroné peut simplement ne rien faire correspondre." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-schema-mode="validate">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/json-schema.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-schema.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-schema.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-schema.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-schema.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-schema.html" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-schema.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-schema.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-schema.html" class="active" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Activer/désactiver le mode sombre">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Sombre</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Retour à l'outil JSON</a></p>
+            <h1>Validateur JSON Schema</h1>
+            <p class="updated">Dernière mise à jour : 2 octobre 2026</p>
+
+            <p class="lead">Vérifiez un document JSON par rapport à un JSON Schema et voyez chaque contrainte non respectée avec le chemin où elle échoue. Le document et le schéma sont tous deux analysés et vérifiés dans votre navigateur.</p>
+
+            <div class="tools-nav">
+                <span>Autres outils gratuits :</span>
+                <a href="index.html">Formater et embellir du JSON</a> &middot;
+                <a href="/json-validator.html">Validateur JSON</a> &middot;
+                <a href="json-diff.html">Comparer du JSON</a> &middot;
+                <a href="json-to-csv.html">JSON vers CSV</a> &middot;
+                <a href="csv-to-json.html">CSV vers JSON</a> &middot;
+                <a href="/json-minifier.html">Minifier du JSON</a> &middot;
+                <a href="/pretty-print-json.html">Afficher le JSON formaté</a> &middot;
+                <a href="/json-syntax.html">Aide-mémoire de la syntaxe JSON</a> &middot;
+                <a href="/sort-json-keys.html">Trier les clés JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Dans votre navigateur</span>
+                    <span class="badge">Aucun envoi</span>
+                    <span class="badge">Erreurs par chemin</span>
+                    <span class="badge">Mots-clés du Draft 2020-12</span>
+                </div>
+
+                <label class="field-label" for="instanceInput">Document JSON <span aria-hidden="true" class="count" id="instanceCount">0 caractères</span></label>
+                <textarea id="instanceInput" class="json-field" spellcheck="false" placeholder='{"name": "Ada", "age": 36}'></textarea>
+
+                <label class="field-label" for="schemaInput" style="margin-top:0.9rem;">JSON Schema <span aria-hidden="true" class="count" id="schemaCount">0 caractères</span></label>
+                <textarea id="schemaInput" class="json-field" spellcheck="false" placeholder='{"type": "object", "required": ["name"], "properties": {"age": {"type": "integer"}}}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="validateBtn" type="button">Valider</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Essayer un exemple</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Effacer</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Copier le rapport</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Télécharger le rapport</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="issueList"></div>
+            </div>
+
+            <h2>Ce qui est vérifié</h2>
+            <p>Un JSON Schema décrit la forme qu'un document est autorisé à prendre : quelles propriétés existent, de quel type elles sont, et quelles plages et quels motifs sont acceptables. Cette page vérifie un document par rapport à un schéma et liste chaque point où il échoue, chacun avec un chemin pour le retrouver.</p>
+            <p>Les mots-clés pris en charge sont : <code>type</code>, <code>const</code>, <code>enum</code>, <code>required</code>, <code>properties</code>, <code>additionalProperties</code>, <code>minProperties</code>, <code>maxProperties</code>, <code>items</code> (un schéma, ou un tuple de schémas), <code>minItems</code>, <code>maxItems</code>, <code>uniqueItems</code>, <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, <code>minimum</code>, <code>maximum</code>, <code>exclusiveMinimum</code>, <code>exclusiveMaximum</code>, <code>multipleOf</code>, <code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code> et les pointeurs <code>$ref</code> locaux à l'intérieur du même schéma.</p>
+
+            <h2>Ce qu'il ne fait délibérément pas</h2>
+            <ul>
+                <li><strong>Pas de <code>$ref</code> distant.</strong> Seuls les pointeurs internes au même schéma (<code>#/$defs/…</code>, <code>#/definitions/…</code>) sont résolus. Aller chercher un autre fichier impliquerait une requête réseau, exactement ce que cet outil évite.</li>
+                <li><strong><code>format</code> n'est pas une assertion.</strong> Dans les brouillons récents, <code>format</code> est une annotation, non une contrainte, et c'est ainsi qu'il est traité ici : un <code>format</code> <code>email</code> ne rejette pas une adresse mal formée.</li>
+                <li><strong>Certains mots-clés ne sont pas implémentés</strong> : <code>patternProperties</code>, <code>unevaluatedProperties</code>, <code>if</code>/<code>then</code>/<code>else</code>, <code>dependentSchemas</code>, <code>contains</code>. Un schéma qui les utilise verra quand même ses autres mots-clés vérifiés, mais ceux qui ne sont pas implémentés ne sont pas appliqués : ne lisez donc pas un « valide » ici comme une conformité complète pour un schéma construit sur eux.</li>
+                <li><strong>Le schéma n'est pas méta-validé.</strong> Un schéma syntaxiquement correct mais logiquement erroné peut simplement ne rien faire correspondre ; cette page vérifie le document, pas la justesse du schéma lui-même.</li>
+            </ul>
+
+            <h2>Comment lire les erreurs</h2>
+            <p>Chaque échec est signalé à un chemin : <code>$</code> est la racine du document, un point entre dans une propriété et un crochet indexe un tableau. <code>required</code> est signalé sur l'objet qui devait contenir la propriété — la contrainte porte sur l'objet, pas sur la propriété manquante — avec le nom de la propriété dans le message. <code>anyOf</code> et <code>oneOf</code> sont signalés une fois, sur l'instance qui a échoué, plutôt qu'une fois par branche ; un mur d'erreurs de branches masquerait la vraie.</p>
+
+            <h2>Questions fréquentes</h2>
+            <div class="faq-item">
+                <h3>Quels mots-clés JSON Schema sont pris en charge ?</h3>
+                <p><code>type</code>, <code>const</code>, <code>enum</code>, <code>required</code>, <code>properties</code>, <code>additionalProperties</code>, <code>minProperties</code>, <code>maxProperties</code>, <code>items</code> (un seul schéma ou un tuple de schémas), <code>minItems</code>, <code>maxItems</code>, <code>uniqueItems</code>, <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, <code>minimum</code>, <code>maximum</code>, <code>exclusiveMinimum</code>, <code>exclusiveMaximum</code>, <code>multipleOf</code>, <code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code> et les <code>$ref</code> locaux.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Qu'est-ce qui n'est délibérément pas pris en charge ?</h3>
+                <p>Les <code>$ref</code> distants (seuls les pointeurs internes au même schéma sont résolus), le <code>format</code> en tant qu'assertion, <code>patternProperties</code>, <code>unevaluatedProperties</code>, <code>if</code>/<code>then</code>/<code>else</code> et <code>dependentSchemas</code>. Un schéma qui les utilise verra quand même ses autres mots-clés vérifiés, mais ceux qui ne sont pas implémentés ne sont pas appliqués : ne lisez donc pas un « valide » ici comme une conformité complète pour un schéma construit sur eux.</p>
+            </div>
+            <div class="faq-item">
+                <h3>La validation est-elle faite sur un serveur ?</h3>
+                <p>Non. Le document et le schéma sont tous deux analysés avec <code>JSON.parse</code> dans votre navigateur et vérifiés en mémoire. Rien n'est envoyé et la page fonctionne sans réseau.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Pourquoi l'erreur de propriété requise est-elle signalée au chemin du parent ?</h3>
+                <p>Parce que c'est là qu'est la contrainte. JSON Schema applique <code>required</code> à l'objet, pas à la propriété manquante ; l'erreur est donc signalée au chemin de l'objet — par exemple <code>$</code> et non <code>$.name</code> — avec le nom de la propriété dans le message.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Comment anyOf et oneOf sont-ils signalés ?</h3>
+                <p>Par une seule erreur sur l'instance qui a échoué, plutôt qu'une par branche. <code>anyOf</code> échoue quand aucune branche ne correspond ; <code>oneOf</code> échoue quand le nombre de branches correspondantes n'est pas exactement un, et le message indique combien ont correspondu. Signaler les erreurs internes de chaque branche noierait la vraie.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Me dit-il si le schéma est faux, ou vérifie-t-il seulement le document ?</h3>
+                <p>Il vérifie le document par rapport au schéma. Si le schéma n'est pas du JSON valide, cela est indiqué séparément. Il ne valide pas le schéma par rapport au métaschéma JSON Schema : un schéma syntaxiquement correct mais logiquement erroné peut simplement ne rien faire correspondre.</p>
+            </div>
+
+            <div class="notice">
+                <p>Besoin de comparer deux documents ? <a href="json-diff.html">Comparer du JSON</a> s'en charge. Une erreur ? <a href="contact.html">Écrivez-nous</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Tous droits réservés.</span>
+            <span>
+                <a href="index.html">Accueil</a> &middot;
+                <a href="/json-validator.html">Validateur</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">Comparer du JSON</a> &middot;
+                <a href="about.html">À propos</a> &middot;
+                <a href="privacy.html">Confidentialité</a> &middot;
+                <a href="terms.html">Conditions</a> &middot;
+                <a href="#" id="cookieSettings">Paramètres des cookies</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/schema.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consentement aux cookies" aria-hidden="true">
+        <p>Nous utilisons des cookies de Google Analytics pour comprendre comment les visiteurs utilisent ce site. Les données sont toujours traitées localement dans votre navigateur. Consultez notre <a href="privacy.html">Politique de confidentialité</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Refuser</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accepter</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Валидатор JSON Schema – проверка JSON по схеме</title>
+    <meta name="description" content="Проверяйте документ JSON по JSON Schema в браузере: каждое невыполненное ограничение выводится с путём. Без загрузки и без учётной записи — проверка идёт на JavaScript." />
+    <link rel="canonical" href="https://json-tool.com/ru/json-schema.html" />
+    <link rel="alternate" hreflang="en" href="https://json-tool.com/json-schema.html" />
+    <link rel="alternate" hreflang="ko" href="https://json-tool.com/ko/json-schema.html" />
+    <link rel="alternate" hreflang="ja" href="https://json-tool.com/ja/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://json-tool.com/zh/json-schema.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://json-tool.com/zh-hant/json-schema.html" />
+    <link rel="alternate" hreflang="ru" href="https://json-tool.com/ru/json-schema.html" />
+    <link rel="alternate" hreflang="es" href="https://json-tool.com/es/json-schema.html" />
+    <link rel="alternate" hreflang="pt" href="https://json-tool.com/pt/json-schema.html" />
+    <link rel="alternate" hreflang="fr" href="https://json-tool.com/fr/json-schema.html" />
+    <link rel="alternate" hreflang="x-default" href="https://json-tool.com/json-schema.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Валидатор JSON Schema – проверка JSON по схеме" />
+    <meta property="og:description" content="Проверяйте документ JSON по JSON Schema в браузере: каждое невыполненное ограничение выводится с путём. Работает локально, без загрузки." />
+    <meta property="og:url" content="https://json-tool.com/ru/json-schema.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Валидатор JSON Schema – проверка JSON по схеме" />
+    <meta name="twitter:description" content="Проверяйте документ JSON по JSON Schema в браузере: каждое невыполненное ограничение выводится с путём. Работает локально, без загрузки." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – форматирование, сжатие и проверка JSON в браузере" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Валидатор JSON Schema",
+            "url": "https://json-tool.com/ru/json-schema.html",
+            "description": "Проверяйте документ JSON по JSON Schema в браузере. Каждое невыполненное ограничение выводится со своим путём. Данные не покидают машину.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Требуется JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "Какие ключевые слова JSON Schema поддерживаются?",
+                "acceptedAnswer": { "@type": "Answer", "text": "type, const, enum, required, properties, additionalProperties, minProperties, maxProperties, items (одна схема или кортеж схем), minItems, maxItems, uniqueItems, minLength, maxLength, pattern, minimum, maximum, exclusiveMinimum, exclusiveMaximum, multipleOf, allOf, anyOf, oneOf, not и локальные ссылки $ref внутрь той же схемы." }
+            }, {
+                "@type": "Question",
+                "name": "Что намеренно не поддерживается?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Удалённые $ref (разрешаются только указатели внутри той же схемы), format как проверка, patternProperties, unevaluatedProperties, if/then/else и dependentSchemas. Схема, использующая их, всё равно проверяет перечисленные выше ключевые слова, но нереализованные не применяются — поэтому не считайте результат «допустимо» полным соответствием для схемы, построенной на них." }
+            }, {
+                "@type": "Question",
+                "name": "Проверка выполняется на сервере?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Нет. И документ, и схема разбираются через JSON.parse в вашем браузере и проверяются в памяти. Ничего не загружается, и страница работает при отключённой сети." }
+            }, {
+                "@type": "Question",
+                "name": "Почему ошибка об отсутствующем обязательном свойстве указывается на родительском пути?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Потому что там находится ограничение. В JSON Schema required применяется к объекту, а не к отсутствующему свойству, поэтому ошибка выводится на пути объекта — например, $, а не $.name, — а имя свойства указано в сообщении." }
+            }, {
+                "@type": "Question",
+                "name": "Как выводятся ошибки anyOf и oneOf?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Одной ошибкой на том экземпляре, который не прошёл, а не по одной на каждую ветвь. anyOf не проходит, когда не совпала ни одна ветвь; oneOf — когда число совпавших ветвей не равно единице, и в сообщении сказано, сколько совпало. Перечисление внутренних ошибок каждой ветви скрыло бы настоящую." }
+            }, {
+                "@type": "Question",
+                "name": "Он сообщает об ошибке в самой схеме или проверяет только документ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Он проверяет документ по схеме. Если сама схема не является допустимым JSON, об этом сообщается отдельно. Схема не проверяется по метасхеме JSON Schema, поэтому синтаксически верная, но логически неверная схема может просто ничему не соответствовать." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+    <link rel="stylesheet" href="/tool-page.css" />
+</head>
+<body data-schema-mode="validate">
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <div class="lang-select" role="navigation" aria-label="Language">
+                    <a href="/json-schema.html" hreflang="en" lang="en">EN</a>
+                    <a href="/ko/json-schema.html" hreflang="ko" lang="ko">한국어</a>
+                    <a href="/ja/json-schema.html" hreflang="ja" lang="ja">日本語</a>
+                    <a href="/zh/json-schema.html" hreflang="zh-Hans" lang="zh-Hans">简体</a>
+                    <a href="/zh-hant/json-schema.html" hreflang="zh-Hant" lang="zh-Hant">繁體</a>
+                    <a href="/ru/json-schema.html" class="active" hreflang="ru" lang="ru">Русский</a>
+                    <a href="/es/json-schema.html" hreflang="es" lang="es">Español</a>
+                    <a href="/pt/json-schema.html" hreflang="pt" lang="pt">Português</a>
+                    <a href="/fr/json-schema.html" hreflang="fr" lang="fr">Français</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Переключить тёмную тему">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Назад к инструменту JSON</a></p>
+            <h1>Валидатор JSON Schema</h1>
+            <p class="updated">Последнее обновление: 2 октября 2026 г.</p>
+
+            <p class="lead">Проверьте документ JSON по JSON Schema и увидьте каждое невыполненное ограничение с его путём. И документ, и схема разбираются и проверяются в браузере.</p>
+
+            <div class="tools-nav">
+                <span>Другие бесплатные инструменты:</span>
+                <a href="index.html">Форматирование JSON</a> &middot;
+                <a href="/json-validator.html">Проверка JSON</a> &middot;
+                <a href="json-diff.html">Сравнение JSON</a> &middot;
+                <a href="json-to-csv.html">JSON в CSV</a> &middot;
+                <a href="csv-to-json.html">CSV в JSON</a> &middot;
+                <a href="/json-minifier.html">Сжатие JSON</a> &middot;
+                <a href="/pretty-print-json.html">Красивый вывод JSON</a> &middot;
+                <a href="/json-syntax.html">Шпаргалка по синтаксису JSON</a> &middot;
+                <a href="/sort-json-keys.html">Сортировка ключей JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Работает в браузере</span>
+                    <span class="badge">Без загрузки</span>
+                    <span class="badge">Ошибки с путями</span>
+                    <span class="badge">Слова из Draft 2020-12</span>
+                </div>
+
+                <label class="field-label" for="instanceInput">Документ JSON <span aria-hidden="true" class="count" id="instanceCount">0 симв.</span></label>
+                <textarea id="instanceInput" class="json-field" spellcheck="false" placeholder='{"name": "Ada", "age": 36}'></textarea>
+
+                <label class="field-label" for="schemaInput" style="margin-top:0.9rem;">JSON Schema <span aria-hidden="true" class="count" id="schemaCount">0 симв.</span></label>
+                <textarea id="schemaInput" class="json-field" spellcheck="false" placeholder='{"type": "object", "required": ["name"], "properties": {"age": {"type": "integer"}}}'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="validateBtn" type="button">Проверить</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Пример</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Очистить</button>
+                    <button class="btn btn-outline btn-sm" id="copyBtn" type="button" disabled>Копировать отчёт</button>
+                    <button class="btn btn-outline btn-sm" id="downloadBtn" type="button" disabled>Скачать отчёт</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+                <div id="issueList"></div>
+            </div>
+
+            <h2>Что проверяется</h2>
+            <p>JSON Schema описывает, какую форму документу разрешено иметь: какие свойства есть, какого они типа, какие диапазоны и шаблоны допустимы. Эта страница проверяет документ по схеме и перечисляет все места, где он не соответствует, каждое с путём, чтобы его было легко найти.</p>
+            <p>Поддерживаются ключевые слова: <code>type</code>, <code>const</code>, <code>enum</code>, <code>required</code>, <code>properties</code>, <code>additionalProperties</code>, <code>minProperties</code>, <code>maxProperties</code>, <code>items</code> (одна схема или кортеж схем), <code>minItems</code>, <code>maxItems</code>, <code>uniqueItems</code>, <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, <code>minimum</code>, <code>maximum</code>, <code>exclusiveMinimum</code>, <code>exclusiveMaximum</code>, <code>multipleOf</code>, <code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code> и локальные указатели <code>$ref</code> внутрь той же схемы.</p>
+
+            <h2>Что намеренно не делается</h2>
+            <ul>
+                <li><strong>Нет удалённых <code>$ref</code>.</strong> Разрешаются только указатели внутри одной схемы (<code>#/$defs/…</code>, <code>#/definitions/…</code>). Загрузка другого файла означала бы сетевой запрос — именно то, чего этот инструмент избегает.</li>
+                <li><strong><code>format</code> не является проверкой.</strong> В новых черновиках <code>format</code> — аннотация, а не ограничение, и здесь он так и трактуется: <code>format</code> со значением <code>email</code> не отклонит некорректный адрес.</li>
+                <li><strong>Часть ключевых слов не реализована</strong>: <code>patternProperties</code>, <code>unevaluatedProperties</code>, <code>if</code>/<code>then</code>/<code>else</code>, <code>dependentSchemas</code>, <code>contains</code>. Схема, использующая их, всё равно проверяет остальные ключевые слова, но нереализованные не применяются — поэтому не считайте результат «допустимо» полным соответствием для схемы, построенной на них.</li>
+                <li><strong>Схема не проверяется по метасхеме.</strong> Синтаксически корректная, но логически неверная схема может просто ничему не соответствовать; эта страница проверяет документ, а не правильность самой схемы.</li>
+            </ul>
+
+            <h2>Как читать ошибки</h2>
+            <p>Каждая ошибка выводится с путём: <code>$</code> — корень документа, точка ведёт к свойству, квадратные скобки индексируют массив. <code>required</code> указывается на объекте, который должен был содержать свойство, — ограничение относится к объекту, а не к отсутствующему свойству, — и имя свойства указано в сообщении. <code>anyOf</code> и <code>oneOf</code> выводятся один раз на том экземпляре, который не прошёл, а не по разу на ветвь: стена ошибок по ветвям скрыла бы настоящую.</p>
+
+            <h2>Частые вопросы</h2>
+            <div class="faq-item">
+                <h3>Какие ключевые слова JSON Schema поддерживаются?</h3>
+                <p><code>type</code>, <code>const</code>, <code>enum</code>, <code>required</code>, <code>properties</code>, <code>additionalProperties</code>, <code>minProperties</code>, <code>maxProperties</code>, <code>items</code> (одна схема или кортеж схем), <code>minItems</code>, <code>maxItems</code>, <code>uniqueItems</code>, <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, <code>minimum</code>, <code>maximum</code>, <code>exclusiveMinimum</code>, <code>exclusiveMaximum</code>, <code>multipleOf</code>, <code>allOf</code>, <code>anyOf</code>, <code>oneOf</code>, <code>not</code> и локальные <code>$ref</code>.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Что намеренно не поддерживается?</h3>
+                <p>Удалённые <code>$ref</code> (разрешаются только указатели внутри той же схемы), <code>format</code> как проверка, <code>patternProperties</code>, <code>unevaluatedProperties</code>, <code>if</code>/<code>then</code>/<code>else</code> и <code>dependentSchemas</code>. Схема, использующая их, всё равно проверяет перечисленные выше ключевые слова, но нереализованные не применяются — поэтому не считайте результат «допустимо» полным соответствием для схемы, построенной на них.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Проверка выполняется на сервере?</h3>
+                <p>Нет. И документ, и схема разбираются через <code>JSON.parse</code> в вашем браузере и проверяются в памяти. Ничего не загружается, и страница работает при отключённой сети.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Почему ошибка об отсутствующем обязательном свойстве указывается на родительском пути?</h3>
+                <p>Потому что там находится ограничение. В JSON Schema <code>required</code> применяется к объекту, а не к отсутствующему свойству, поэтому ошибка выводится на пути объекта — например, <code>$</code>, а не <code>$.name</code>, — а имя свойства указано в сообщении.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Как выводятся ошибки anyOf и oneOf?</h3>
+                <p>Одной ошибкой на том экземпляре, который не прошёл, а не по одной на каждую ветвь. <code>anyOf</code> не проходит, когда не совпала ни одна ветвь; <code>oneOf</code> — когда число совпавших ветвей не равно единице, и в сообщении сказано, сколько совпало. Перечисление внутренних ошибок каждой ветви скрыло бы настоящую.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Он сообщает об ошибке в самой схеме или проверяет только документ?</h3>
+                <p>Он проверяет документ по схеме. Если сама схема не является допустимым JSON, об этом сообщается отдельно. Схема не проверяется по метасхеме JSON Schema, поэтому синтаксически верная, но логически неверная схема может просто ничему не соответствовать.</p>
+            </div>
+
+            <div class="notice">
+                <p>Нужно сравнить два документа? Для этого есть <a href="json-diff.html">Сравнение JSON</a>. Нашли ошибку? <a href="contact.html">Свяжитесь с нами</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. Все права защищены.</span>
+            <span>
+                <a href="index.html">Главная</a> &middot;
+                <a href="/json-validator.html">Проверка</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">Сравнение JSON</a> &middot;
+                <a href="about.html">О проекте</a> &middot;
+                <a href="privacy.html">Конфиденциальность</a> &middot;
+                <a href="terms.html">Условия</a> &middot;
+                <a href="#" id="cookieSettings">Настройки файлов cookie</a> &middot;
+                <a href="contact.html">Контакты</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+    <script src="/schema.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Согласие на использование файлов cookie" aria-hidden="true">
+        <p>Мы используем файлы cookie Google Analytics, чтобы понимать, как посетители пользуются этим сайтом. Данные всегда обрабатываются локально в вашем браузере. См. нашу <a href="privacy.html">Политику конфиденциальности</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Отклонить</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Принять</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>
