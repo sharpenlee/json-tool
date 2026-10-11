@@ -78,6 +78,11 @@
 
             <ul class="post-list">
                 <li>
+                    <h2><a href="/blog/why-llms-return-invalid-json.html">Why LLMs return invalid JSON — a language model has no parser</a></h2>
+                    <p class="post-meta">11 October 2026</p>
+                    <p>A model predicts the next token; it never builds a document, so "JSON mode" constrains sampling rather than guaranteeing your schema. Measured across four parsers, plus the repair layer that has to exist downstream.</p>
+                </li>
+                <li>
                     <h2><a href="/blog/json-number-precision.html">JSON number precision — why 19-digit IDs come back wrong</a></h2>
                     <p class="post-meta">1 October 2026</p>
                     <p>All integers above <code>2**53</code> are silently rounded by the most common parser in the world, and the standard permits it. Measured across JavaScript, Python and Ruby — which disagree — plus the two-year-old round-trip recipe that preserves the digits.</p>

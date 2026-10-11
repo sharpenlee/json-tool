@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Consent mode defaults: everything denied until the banner is answered.
+         This must run before any Google tag, so it is first in <head>. -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            wait_for_update: 500
+        });
+    </script>
+    <link rel="stylesheet" href="/consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Why LLMs Return Invalid JSON — A Model Has No Parser</title>
+    <meta name="description" content="A model predicts tokens, not documents — it has no parser. 'JSON mode' constrains sampling; it does not guarantee your schema. Measured, and the repair layer." />
+    <link rel="canonical" href="https://json-tool.com/blog/why-llms-return-invalid-json.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Why LLMs Return Invalid JSON — A Model Has No Parser" />
+    <meta property="og:description" content="A model predicts the next token; it never builds a document and cannot tell you one is broken. So 'JSON mode' is a constraint on sampling, not a promise about your schema." />
+    <meta property="og:url" content="https://json-tool.com/blog/why-llms-return-invalid-json.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Why LLMs Return Invalid JSON — A Model Has No Parser" />
+    <meta name="twitter:description" content="A model predicts the next token; it never builds a document. 'JSON mode' constrains sampling — it does not guarantee your schema." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "Why LLMs Return Invalid JSON — A Language Model Has No Parser",
+            "description": "A model predicts the next token; it never builds a document and cannot tell you one is broken. 'JSON mode' constrains sampling, so validity has to be constructed downstream. Measured across four parsers, plus the repair layer.",
+            "url": "https://json-tool.com/blog/why-llms-return-invalid-json.html",
+            "mainEntityOfPage": { "@type": "WebPage", "@id": "https://json-tool.com/blog/why-llms-return-invalid-json.html" },
+            "image": "https://json-tool.com/og-image.png",
+            "datePublished": "2026-10-11",
+            "dateModified": "2026-10-11",
+            "inLanguage": "en",
+            "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" },
+            "publisher": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+                "@type": "ListItem",
+                "position": 1,
+                "name": "JSON Tool",
+                "item": "https://json-tool.com/"
+            }, {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "JSON guides",
+                "item": "https://json-tool.com/blog/"
+            }, {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Why LLMs return invalid JSON"
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="/page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="/index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="/index.html">JSON Tool</a><span>/</span><a href="/blog/">JSON guides</a><span>/</span>Why LLMs return invalid JSON
+            </nav>
+            <h1>Why LLMs return invalid JSON — a language model has no parser</h1>
+            <p class="post-meta">Published 11 October 2026</p>
+
+            <p class="lead">Ask a model for JSON and you often get something that is <em>almost</em> JSON: a value wrapped in a markdown fence, a trailing comma, a Python <code>None</code> where <code>null</code> belongs. The reflex is to blame the prompt, or to switch on "JSON mode". Both miss the mechanism. A language model predicts the next token; it never builds a document, and it cannot tell you that a document is broken, because nothing in it represents a document. The useful question is therefore not "how do I make it stop" but "where does the parser go, given there is not one upstream".</p>
+
+            <h2>What comes back</h2>
+
+            <p>The twelve source strings below are the shapes that actually break things — eight of them are repairs that the <code>jsonrepair</code> library documents by name. I ran all twelve through four parsers and recorded accept-or-reject. They were typed as literals rather than captured from a live call: there is no API key on the machine this was written on, so the shapes are the documented ones and what is <em>measured</em> here is how the parsers respond to them.</p>
+
+            <table>
+                <thead>
+                    <tr><th>Source</th><th>Node</th><th>Python</th><th>Ruby</th><th>PHP</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>```json … ```</code> fence</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>trailing comma <code>{"a":1,}</code></td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>single quotes <code>{'a':1}</code></td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>Python literals <code>None / True</code></td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>block comment <code>/* … */</code></td><td>ERR</td><td>ERR</td><td><strong>OK</strong></td><td>ERR</td></tr>
+                    <tr><td>raw newline inside a string</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>truncated <code>{"a":1,"b":[1,2</code></td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td><code>NaN</code></td><td>ERR</td><td><strong>OK</strong></td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td><code>Infinity</code></td><td>ERR</td><td><strong>OK</strong></td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>unquoted key <code>{a:1}</code></td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>trailing prose after the value</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                    <tr><td>UTF-8 BOM before the object</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>
+                </tbody>
+            </table>
+
+            <p>Four parsers, twelve documents, and they agree on almost all of it. Nine of the twelve are rejected by every parser in the table, which is the reassuring part: for a fence, a trailing comma, a stray quote or a truncation, none of the mainstream parsers you are likely to be running will accept the text as JSON. Three rows break the unanimity, in two ways that matter more than they look.</p>
+
+            <h3>Ruby accepts block comments</h3>
+
+            <p>Ruby 2.6.10 — the build measured here, with its bundled <code>json</code> 2.1.0 — parses <code>{"a":1 /* note */}</code> and hands back <code>{"a"=&gt;1}</code>. Every other parser in the table refuses it. So the exact bytes that are a hard 400 from a Node or PHP service are a clean 200 from a Ruby one. This is obscure, and that is the point: a strict parse is not a shared contract between two services in the same pipeline unless they happen to run the same parser.</p>
+
+            <h3>Python accepts NaN and Infinity</h3>
+
+            <p>JSON's number grammar has no <code>NaN</code> and no <code>Infinity</code> — RFC 8259 builds every number from an optional minus, digits, an optional fraction and an optional exponent, and those tokens are not in it. Node, Ruby and PHP reject <code>{"x": NaN}</code>. Python's <code>json.loads</code> returns <code>{'x': nan}</code>. Hand that value straight back to <code>json.dumps</code> and, with the default settings, you get <code>{"x": NaN}</code> — a document that is not valid JSON and that the other three parsers reject on sight; only <code>allow_nan=False</code> turns the silent round trip into an exception. This is the same divergence the companion article on number precision found from the write side; here it arrives from the read side, in data a model just produced.</p>
+
+            <h2>There is no guarantee upstream, by construction</h2>
+
+            <p>The reason models get this wrong is not that they are bad at JSON. It is that the mechanism cannot make the promise. Sampling emits one token at a time from a probability distribution; nothing in the loop represents "the text so far is a complete, well-formed document", so nothing in the loop can refuse to finish it. A constrained decoder does better — it can track whether the text so far is a valid <em>prefix</em> — but a valid prefix is not a valid document, and that gap is the whole story.</p>
+
+            <p>"JSON mode" is the vendor term for pushing that guarantee as far upstream as it will go, and the documentation is unusually direct about what it actually buys you. Microsoft's Azure OpenAI page states that JSON mode <q>guarantees valid JSON output, but it doesn't guarantee the output matches a specific schema</q>. The braces will close; the fields inside them can still be wrong. The same page shows how thin even that guarantee is at the edges — it also requires the word "JSON" to appear somewhere in the messages, and when it does not, the API rejects the request outright:</p>
+
+            <pre><code>Error code: 400 - {'error': {'message': "'messages' must contain the word
+'json' in some form, to use 'response_format' of type 'json_object'."}}</code></pre>
+
+            <p>That error is the honest shape of the whole feature. When the instruction is missing, the documentation warns (quoting OpenAI) that the model can <q>generate an unending stream of whitespace and the request could run continually until it reaches the token limit</q> — a failure that looks, from your side, exactly like a hang.</p>
+
+            <h3>The hole the guarantee does not cover</h3>
+
+            <p>Validity per token is not validity per document, and the place they diverge is truncation. If the reply is longer than <code>max_tokens</code>, the stream simply stops mid-structure and <code>finish_reason</code> comes back as <code>length</code>. Azure's guidance is explicit on both counts: <q>You should check <code>finish_reason</code> for the value <code>length</code> before parsing the response. The model might generate partial JSON</q>, and, in troubleshooting, <q>Don't parse partial JSON.</q></p>
+
+            <p>This is the case the guarantee cannot reach, and the case a repair layer is most likely to paper over. Take the truncated object from the table and let a repair pass close its brackets:</p>
+
+            <pre><code>model (finish_reason: "length")
+    {"a":1,"b":[1,2
+
+after the repair pass closes the brackets
+    {"a":1,"b":[1,2]}</code></pre>
+
+            <p>The result parses cleanly, and it is a lie. Nothing in the text says whether the list was going to end at two items or fifty; the repair chose two. <strong>Repair restores syntax, never data.</strong></p>
+
+            <h2>The repair layer, measured</h2>
+
+            <p>Since the parser upstream does not exist, one has to exist downstream, and in practice it is a repair pass that runs before <code>JSON.parse</code>. I wrote the smallest honest version of that pass and ran it over the same twelve documents. A first stage of plain regex substitutions — strip the fence and the byte-order mark, drop comments and trailing commas, swap the single quotes, map the Python and JavaScript non-values, close unbalanced brackets — recovered nine of the twelve. The three it missed were simply rules that first pass did not contain, and two of them are cases a regex cannot handle safely on its own: a newline must be escaped only when it is <em>inside</em> a string, and trailing prose must be cut only once the value has ended. Adding a boundary-tracking pass, and the key-quoting rule, took it to twelve out of twelve:</p>
+
+            <table>
+                <thead>
+                    <tr><th>Source pattern</th><th>After repair</th><th>What the repair did</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>markdown fence</td><td>parses</td><td>stripped the fence</td></tr>
+                    <tr><td>trailing comma</td><td>parses</td><td>removed it</td></tr>
+                    <tr><td>single quotes</td><td>parses</td><td>rewrote as double quotes</td></tr>
+                    <tr><td><code>None</code> / <code>True</code></td><td>parses</td><td>mapped to <code>null</code> / <code>true</code></td></tr>
+                    <tr><td>block comment</td><td>parses</td><td>removed the comment</td></tr>
+                    <tr><td>raw newline in a string</td><td>parses</td><td>escaped the control character</td></tr>
+                    <tr><td>unquoted key</td><td>parses</td><td>added the quotes</td></tr>
+                    <tr><td>trailing prose</td><td>parses</td><td>discarded everything after the value</td></tr>
+                    <tr><td>UTF-8 BOM</td><td>parses</td><td>stripped the mark</td></tr>
+                    <tr><td><code>NaN</code> / <code>Infinity</code></td><td>parses</td><td>substituted <code>null</code> — a value the model never wrote</td></tr>
+                    <tr><td>truncated</td><td>parses</td><td>closed the brackets — and invented the data above</td></tr>
+                </tbody>
+            </table>
+
+            <p>All twelve parse afterwards. The truncated one parses by being falsified. And some of those rows are decisions rather than restorations: the comment row silently dropped content the model took the trouble to write, and the <code>NaN</code> row is worse — the substituted <code>null</code> is indistinguishable from a real one, so a repair pass can convert "the model produced an undefined number" into "the model said there is nothing here" without leaving a trace.</p>
+
+            <p>None of this is improvisation on my part. The <code>jsonrepair</code> library publishes a list of what it fixes, and eight of the twelve shapes above are on it by name: add missing quotes around keys, add missing escape characters, repair truncated JSON, replace single quotes with double quotes, replace Python constants, strip trailing commas, strip comments and strip fenced code blocks. Three of the shapes it does not cover are the ones that matter most — <code>NaN</code>, <code>Infinity</code> and prose trailing after the value. Those are exactly the cases that survive a repair pass silently: <code>NaN</code> parses in Python and nowhere else, so a pipeline can carry it through the repair stage and lose it at whichever service happens to disagree. That a dedicated repair library and a model's failure modes overlap this heavily is the clearest evidence that the problem is structural rather than incidental.</p>
+
+            <h2>What to do instead</h2>
+
+            <ol>
+                <li><strong>Move the guarantee upstream when you can.</strong> Prefer a schema-constrained mode over asking politely in the prompt: the documented difference is that JSON mode promises syntax while structured outputs constrain the model to a schema. Neither was exercised here (no API key), so treat the exact semantics as documented rather than measured.</li>
+                <li><strong>Treat the reply as untrusted text.</strong> The pipeline is repair → parse → <em>validate against a schema</em>, in that order, and the last step is not optional, because a syntactically perfect document with the wrong fields passes the first two.</li>
+                <li><strong>Check <code>finish_reason</code> before you parse, and never repair a truncated reply into acceptance.</strong> Raise and retry with a larger budget instead. Repair makes a cut-off document look finished; only you can decide that it is not finished.</li>
+                <li><strong>Do not assume "valid JSON" is a shared contract.</strong> Two services in one pipeline can disagree about the same bytes — Ruby takes the block comment, Python takes the <code>NaN</code>, and the third service rejects both. Validate at the boundary rather than trusting that the upstream parser agreed with yours.</li>
+                <li><strong>Look at the output before it reaches code.</strong> A repair layer hides exactly the cases you most need to see.</li>
+            </ol>
+
+            <h2>Check your own payload</h2>
+
+            <p>Paste a model reply into the <a href="/json-validator.html">validator</a> to get the line and column of the first real error rather than a repair that is invisibly wrong, and into the <a href="/">formatter</a> to see the structure once it parses. For output that is valid JSON but the wrong shape, the <a href="/json-schema.html">JSON Schema validator</a> is the missing test: "parses" and "correct" are different questions, and JSON mode only answers the first. The <a href="/json-syntax.html">syntax cheat sheet</a> covers what the grammar actually allows, including why <code>NaN</code> and <code>Infinity</code> are not in it.</p>
+
+            <h2>Provenance</h2>
+
+            <p>The parser table and the repair table were produced by running the documents shown through Node 24.18.0 on V8 15.0.245.15, CPython 3.10.11, Ruby 2.6.10 (bundled <code>json</code> 2.1.0) and PHP 8.3.35 on a 64-bit build. The Node runtime here is the one embedded in an Electron host rather than a stock Node distribution — its V8 build string carries an <code>-electron</code> suffix — and the parser exercised in either case is V8's own <code>JSON.parse</code>. The repair pass was written and executed for this article rather than taken from a library, and the Python <code>NaN</code> round trip was measured with the default <code>json.dumps</code> and again with <code>allow_nan=False</code>. The twelve source strings are the documented failure shapes rather than captures from a live call: there is no API key on the machine this was written on, so nothing here was produced by a model. The claims about JSON mode, structured outputs and <code>finish_reason</code> are quoted from Microsoft's Azure OpenAI documentation, which mirrors OpenAI's, and are labelled documented rather than measured for exactly that reason; the <code>jsonrepair</code> list is quoted from that library's repository README, which enumerates its repairs without naming models as their source.</p>
+
+            <div class="related">
+                <h2>Related</h2>
+                <ul>
+                    <li><a href="/blog/json-number-precision.html">JSON number precision — why 19-digit IDs come back wrong</a> — the same "the parsers disagree" problem, measured from the write side.</li>
+                    <li><a href="/json-schema.html">JSON Schema validator</a> — the check that catches a reply which parses but has the wrong shape.</li>
+                    <li><a href="/blog/">JSON guides</a> — everything published so far.</li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="/index.html">Home</a> &middot;
+                <a href="/blog/">Guides</a> &middot;
+                <a href="/json-validator.html">Validator</a> &middot;
+                <a href="/about.html">About</a> &middot;
+                <a href="/privacy.html">Privacy</a> &middot;
+                <a href="/terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="/contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="/page.js"></script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="/privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="/consent.js"></script>
+</body>
+</html>
