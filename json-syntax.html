@@ -115,6 +115,7 @@
                 <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
                 <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
                 <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="jsonc-to-json.html">JSONC to JSON</a> &middot;
                 <a href="sort-json-keys.html">Sort JSON keys</a> &middot;
                 <a href="json-to-csv.html">JSON to CSV</a> &middot;
                 <a href="csv-to-json.html">CSV to JSON</a>
@@ -175,7 +176,7 @@
             <h2>What JSON does not have</h2>
             <p>Knowing the absences settles most arguments with an editor that seems more permissive than the parser:</p>
             <ul>
-                <li><strong>Comments</strong> — no <code>//</code>, no <code>/* */</code>. Files that need them are JSONC, common in TypeScript configs, and must be stripped before parsing.</li>
+                <li><strong>Comments</strong> — no <code>//</code>, no <code>/* */</code>. Files that need them are JSONC, common in TypeScript configs, and must be stripped before parsing — the <a href="jsonc-to-json.html">JSONC to JSON converter</a> does exactly that and reports what it removed.</li>
                 <li><strong>undefined</strong> — omit the key instead, or use <code>null</code>.</li>
                 <li><strong>Dates, binary, functions, sets, maps</strong> — encode as a string, or a base64 string, and decide the convention with whoever reads it.</li>
                 <li><strong>Single quotes, multiline raw strings, trailing commas</strong> — all invalid, all commonly produced by copy-pasting from JavaScript.</li>

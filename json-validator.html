@@ -115,6 +115,7 @@
                 <a href="json-diff.html">JSON Diff</a> &middot;
                 <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
                 <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="jsonc-to-json.html">JSONC to JSON</a> &middot;
                 <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
                 <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
                 <a href="sort-json-keys.html">Sort JSON keys</a> &middot;
@@ -156,7 +157,7 @@
                 <li><strong>Trailing comma</strong> — <code>{"a": 1, "b": 2,}</code>. JavaScript tolerates it in object literals; JSON does not allow a comma before the closing <code>}</code> or <code>]</code>.</li>
                 <li><strong>Single quotes</strong> — <code>{'name': 'John'}</code>. Strings and property names must use double quotes.</li>
                 <li><strong>Unquoted keys</strong> — <code>{name: "John"}</code>. Every property name has to be a quoted string.</li>
-                <li><strong>Comments</strong> — <code>// …</code> and <code>/* … */</code> are not part of JSON. Files that need them are JSONC, which you must strip before parsing.</li>
+                <li><strong>Comments</strong> — <code>// …</code> and <code>/* … */</code> are not part of JSON. Files that need them are JSONC, which you must strip before parsing — see the <a href="jsonc-to-json.html">JSONC to JSON converter</a>, which does it and lists what it removed.</li>
                 <li><strong>Python-style literals</strong> — <code>True</code>, <code>False</code>, <code>None</code>. The JSON equivalents are <code>true</code>, <code>false</code> and <code>null</code>, all lowercase.</li>
                 <li><strong><code>NaN</code> and <code>Infinity</code></strong> — unrepresentable in JSON; serialise them as <code>null</code> or a string.</li>
                 <li><strong>Smart quotes</strong> — text pasted from a word processor or a slide deck arrives as <code>“name”</code> instead of <code>"name"</code>.</li>

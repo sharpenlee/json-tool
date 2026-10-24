@@ -639,6 +639,10 @@
     <lastmod>2026-10-17</lastmod>
   </url>
   <url>
+    <loc>https://json-tool.com/jsonc-to-json.html</loc>
+    <lastmod>2026-10-24</lastmod>
+  </url>
+  <url>
     <loc>https://json-tool.com/pretty-print-json.html</loc>
     <lastmod>2026-10-17</lastmod>
   </url>
@@ -664,7 +668,7 @@
   </url>
   <url>
     <loc>https://json-tool.com/blog/why-llms-return-invalid-json.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-10-24</lastmod>
   </url>
   <url>
     <loc>https://json-tool.com/json-to-csv.html</loc>

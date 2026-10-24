@@ -49,7 +49,7 @@
             "mainEntityOfPage": { "@type": "WebPage", "@id": "https://json-tool.com/blog/why-llms-return-invalid-json.html" },
             "image": "https://json-tool.com/og-image.png",
             "datePublished": "2026-10-11",
-            "dateModified": "2026-10-11",
+            "dateModified": "2026-10-24",
             "inLanguage": "en",
             "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" },
             "publisher": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
@@ -96,7 +96,7 @@
                 <a href="/index.html">JSON Tool</a><span>/</span><a href="/blog/">JSON guides</a><span>/</span>Why LLMs return invalid JSON
             </nav>
             <h1>Why LLMs return invalid JSON — a language model has no parser</h1>
-            <p class="post-meta">Published 11 October 2026</p>
+            <p class="post-meta">Published 11 October 2026 &middot; updated 24 October 2026</p>
 
             <p class="lead">Ask a model for JSON and you often get something that is <em>almost</em> JSON: a value wrapped in a markdown fence, a trailing comma, a Python <code>None</code> where <code>null</code> belongs. The reflex is to blame the prompt, or to switch on "JSON mode". Both miss the mechanism. A language model predicts the next token; it never builds a document, and it cannot tell you that a document is broken, because nothing in it represents a document. The useful question is therefore not "how do I make it stop" but "where does the parser go, given there is not one upstream".</p>
 
@@ -209,6 +209,7 @@ after the repair pass closes the brackets
                 <ul>
                     <li><a href="/blog/json-number-precision.html">JSON number precision — why 19-digit IDs come back wrong</a> — the same "the parsers disagree" problem, measured from the write side.</li>
                     <li><a href="/json-schema.html">JSON Schema validator</a> — the check that catches a reply which parses but has the wrong shape.</li>
+                    <li><a href="/jsonc-to-json.html">JSONC to JSON</a> — two of those twelve shapes, comments and trailing commas, are the ones a stripper can remove safely; this does exactly that and reports what it removed.</li>
                     <li><a href="/blog/">JSON guides</a> — everything published so far.</li>
                 </ul>
             </div>

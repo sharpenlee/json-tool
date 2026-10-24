@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Consent mode defaults: everything denied until the banner is answered.
+         This must run before any Google tag, so it is first in <head>. -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            wait_for_update: 500
+        });
+    </script>
+    <link rel="stylesheet" href="consent.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSONC to JSON – Strip Comments and Trailing Commas</title>
+    <meta name="description" content="tsconfig.json and settings.json are JSONC, not JSON. See exactly which comments and trailing commas must go, and get the strict equivalent, in your browser." />
+    <link rel="canonical" href="https://json-tool.com/jsonc-to-json.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JSONC to JSON – Strip Comments and Trailing Commas" />
+    <meta property="og:description" content="tsconfig.json and settings.json are JSONC, not JSON. See exactly which comments and trailing commas must go, and get the strict equivalent, in your browser." />
+    <meta property="og:url" content="https://json-tool.com/jsonc-to-json.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="JSON Tool" />
+    <meta property="og:image" content="https://json-tool.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSONC to JSON – Strip Comments and Trailing Commas" />
+    <meta name="twitter:description" content="tsconfig.json and settings.json are JSONC, not JSON. See exactly which comments and trailing commas must go, and get the strict equivalent, in your browser." />
+    <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
+    <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSONC to JSON",
+            "url": "https://json-tool.com/jsonc-to-json.html",
+            "description": "Convert JSONC — JSON with comments and trailing commas — into strict JSON in your browser. Lists every comment and comma that was removed. 100% private, no data upload.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires JavaScript",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [{
+                "@type": "Question",
+                "name": "What is JSONC?",
+                "acceptedAnswer": { "@type": "Answer", "text": "JSONC is JSON with two relaxations: comments and trailing commas. Nothing else changes — strings still need double quotes, keys still need double quotes, and the value types are the same. It is the dialect used by tsconfig.json, .vscode/settings.json, devcontainer.json and other Microsoft-family configuration files." }
+            }, {
+                "@type": "Question",
+                "name": "Why does JSON.parse reject a file that works in my editor?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because the editor is not using JSON.parse. VS Code reads configuration files as JSONC and strips the comments as it loads them, so a trailing comma or a // line is invisible to you. Every strict parser — JSON.parse in the browser, json.loads in Python, json_decode in PHP — stops at the first comment, because the JSON grammar defines no comment token at all." }
+            }, {
+                "@type": "Question",
+                "name": "Is JSONC the same as JSON5?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. JSONC is JSON plus comments and trailing commas, and it is deliberately small. JSON5 is a much larger superset: comments, trailing commas, single-quoted strings, unquoted keys, hexadecimal numbers, leading and trailing decimal points, a leading plus sign, Infinity, NaN, multi-line strings and escaping rules. A JSON5 document often cannot be converted by stripping syntax, because its values are not JSON values." }
+            }, {
+                "@type": "Question",
+                "name": "Does this tool change my data?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. It removes comments and trailing commas, and it reports what it removed. Comments carry no value in JSON, and trailing commas only ever separate values that are already separated, so the parsed result is identical. Whitespace inside a string is data and is never touched — which matters for URLs, where a double slash is part of the address rather than the start of a comment." }
+            }, {
+                "@type": "Question",
+                "name": "Can I stop strict JSON from rejecting comments instead?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Only by changing the reader, and that is usually the wrong direction. A JSONC parser in production means two services reading the same file can disagree about what it says. The durable fix is to convert the file to strict JSON at build time — which is exactly what TypeScript, VS Code and the other tools do with their own configuration files." }
+            }, {
+                "@type": "Question",
+                "name": "What will this tool not convert?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Anything that is not JSON plus comments and trailing commas. Single-quoted strings, unquoted property names, NaN, Infinity, hexadecimal numbers and multi-line strings are all rejected after conversion rather than quietly rewritten, because those changes would alter values rather than syntax. For errors of that kind, use the validator, which names the cause and the line." }
+            }]
+        }
+    </script>
+
+    <link rel="stylesheet" href="page.css" />
+    <link rel="stylesheet" href="tool-page.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a class="logo" href="index.html">JSON<span>Tool</span></a>
+            <div class="header-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <p class="back"><a href="index.html">&larr; Back to the JSON tool</a></p>
+            <h1>JSONC to JSON</h1>
+            <p class="updated">Last updated: 24 October 2026</p>
+
+            <p class="lead">Your file works in the editor and fails in the parser, because it is not JSON — it is JSONC, and JSON has no comment syntax. Paste it here to see exactly which comments and trailing commas have to go, and get the strict equivalent.</p>
+
+            <div class="tools-nav">
+                <span>Other free tools:</span>
+                <a href="jsonpath.html">JSONPath</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">JSON Diff</a> &middot;
+                <a href="index.html">JSON Formatter &amp; Beautifier</a> &middot;
+                <a href="json-validator.html">JSON Validator</a> &middot;
+                <a href="pretty-print-json.html">Pretty-print JSON</a> &middot;
+                <a href="json-syntax.html">JSON syntax cheat sheet</a> &middot;
+                <a href="sort-json-keys.html">Sort JSON keys</a> &middot;
+                <a href="json-minifier.html">JSON Minifier</a> &middot;
+                <a href="json-to-csv.html">JSON to CSV</a> &middot;
+                <a href="csv-to-json.html">CSV to JSON</a>
+            </div>
+
+            <div class="tool-card">
+                <div class="badge-row">
+                    <span class="badge">Local conversion</span>
+                    <span class="badge">No upload</span>
+                    <span class="badge">Comments removed</span>
+                    <span class="badge">Trailing commas removed</span>
+                </div>
+
+                <label class="field-label" for="jsonInput">Input JSONC <span aria-hidden="true" class="count" id="inputCount">0 characters</span></label>
+                <textarea id="jsonInput" class="json-field" spellcheck="false" placeholder='Paste JSONC here, e.g. a tsconfig.json containing // comments and trailing commas'></textarea>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="convertBtn" type="button">Convert to strict JSON</button>
+                    <button class="btn btn-outline btn-sm" id="exampleBtn" type="button">✨ Try an example</button>
+                    <button class="btn btn-outline btn-sm" id="clearBtn" type="button">Clear</button>
+                </div>
+
+                <div class="result" id="result" role="status" aria-live="polite"></div>
+
+                <div id="outputWrap" hidden>
+                    <label class="field-label" for="jsonOutput" style="margin-top:1.1rem;">Strict JSON <span aria-hidden="true" class="count" id="outputCount">0 characters</span></label>
+                    <textarea id="jsonOutput" class="json-field" readonly spellcheck="false"></textarea>
+                    <div class="stats" id="stats"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-outline btn-sm" id="copyBtn" type="button">Copy result</button>
+                        <button class="btn btn-outline btn-sm" id="downloadBtn" type="button">Download converted.json</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Why a file that opens fine refuses to parse</h2>
+            <p>Strict JSON has no comment syntax. The grammar defines strings, numbers, the literals <code>true</code>, <code>false</code> and <code>null</code>, and the six structural characters — and that is the whole list. A <code>//</code> is not in it, so the parser stops there and reports an error, which is why a <code>tsconfig.json</code> that your editor happily displays can fail the moment <code>JSON.parse</code> sees it.</p>
+            <p>Nothing is wrong with the file, and nothing is wrong with the parser. Two different languages are involved: the editor reads <strong>JSONC</strong>, and your code reads <strong>JSON</strong>. VS Code reads <code>tsconfig.json</code>, <code>.vscode/settings.json</code>, <code>devcontainer.json</code> and similar files as JSONC, so it strips the comments as it loads them and never shows you the difference.</p>
+
+            <h2>What JSONC actually allows</h2>
+            <p>Two relaxations and no more:</p>
+            <ul>
+                <li><strong>Comments</strong> — both <code>// line comments</code> and <code>/* block comments */</code>. They are allowed wherever whitespace is allowed, including after the last property, between a key and its colon, and inside a container that has no properties at all.</li>
+                <li><strong>Trailing commas</strong> — a comma after the final element of an object or an array, with any amount of whitespace or a newline before the closing bracket.</li>
+            </ul>
+            <p>Everything else is unchanged from JSON: strings and property names use double quotes, numbers keep the JSON grammar, and there is no <code>undefined</code>, no <code>NaN</code> and no leading plus sign. That is the difference from JSON5, which is a much larger superset and is treated separately below.</p>
+
+            <h2>The trap this tool has to avoid</h2>
+            <p>Stripping comments looks like a one-line regular expression, and that version is unsafe on real payloads. A double slash appears inside perfectly ordinary string values — every <code>https</code> URL has one, and <code>"https://example.com//path"</code> even has two. Run <code>//[^\n]*</code> over it and the rest of the line is deleted, turning a valid document into an unterminated string, or worse, into a shorter one that still parses with a value quietly truncated.</p>
+            <p>So the conversion here walks the text character by character and tracks whether it is inside a string, honouring backslash escapes. A comment marker only counts when it appears outside a string, which is the only place JSONC allows it. Whitespace inside a string is never touched, and if the document already parses as strict JSON the tool says so and changes nothing.</p>
+
+            <h2>JSONC and JSON5 are not the same file</h2>
+            <p>JSON5 is where people usually land after this problem, and it is a much bigger dialect: single-quoted strings, unquoted keys, hexadecimal numbers, <code>+</code> signs, leading and trailing decimal points, <code>Infinity</code>, <code>NaN</code>, multi-line strings and additional escapes. Converting JSON5 by deletion is not safe, because several of those forms carry values that JSON cannot represent at all — <code>NaN</code> has no JSON counterpart, and <code>Infinity</code> needs a decision, not a rewrite.</p>
+            <p>This page therefore refuses them. If the text is not JSON plus comments and trailing commas, the conversion fails and says which category the remaining problem belongs to, instead of inventing a value.</p>
+
+            <h2>Reading it as JSON fails where the comment is</h2>
+            <p>There is nothing subtle about the failure, which is what makes it easy to confirm. Read a commented <code>tsconfig.json</code> with the strict reader and it stops at the first comment:</p>
+            <pre><code>node -e "JSON.parse(require('fs').readFileSync('tsconfig.json','utf8'))"
+
+SyntaxError: Expected property name or '}' in JSON at position 4
+             (line 2 column 3)</code></pre>
+            <p>That position is the comment, not the data. The value on line 3 parses perfectly well; the parser never reaches it. Running the same command against a comment-free file prints the object and exits silently, which is the control that tells the two cases apart.</p>
+            <p>The tools that own these formats already handle it, and that is why the file got written this way in the first place — <code>tsc</code> reads <code>tsconfig.json</code> through its own JSONC parser, and VS Code reads its configuration files the same way, so neither of them ever reports a problem. Only code that later opens the file as <em>data</em> hits the wall.</p>
+            <p>The durable fix is to keep the comment-carrying file as the source of truth for humans and emit a strict copy for machines, rather than teaching a service to read a relaxed dialect. Two systems reading one file with two different parsers is how a trailing comma becomes a production incident.</p>
+
+            <h2>Where this sits next to the other tools</h2>
+            <p>If the file is strictly valid JSON, <a href="json-validator.html">the validator</a> gives you the line and column of any error and names the usual cause. If it is not valid and you want to know why in detail, <a href="json-syntax.html">the syntax cheat sheet</a> lists what the grammar allows. Once it is strict, <a href="index.html">the formatter</a> pretty-prints it and <a href="json-minifier.html">the minifier</a> compresses it for transport.</p>
+
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>What is JSONC?</h3>
+                <p>JSONC is JSON with two relaxations: comments and trailing commas. Nothing else changes — strings still need double quotes, keys still need double quotes, and the value types are the same. It is the dialect used by tsconfig.json, .vscode/settings.json, devcontainer.json and other Microsoft-family configuration files.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Why does JSON.parse reject a file that works in my editor?</h3>
+                <p>Because the editor is not using JSON.parse. VS Code reads configuration files as JSONC and strips the comments as it loads them, so a trailing comma or a // line is invisible to you. Every strict parser — JSON.parse in the browser, json.loads in Python, json_decode in PHP — stops at the first comment, because the JSON grammar defines no comment token at all.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is JSONC the same as JSON5?</h3>
+                <p>No. JSONC is JSON plus comments and trailing commas, and it is deliberately small. JSON5 is a much larger superset: comments, trailing commas, single-quoted strings, unquoted keys, hexadecimal numbers, leading and trailing decimal points, a leading plus sign, Infinity, NaN, multi-line strings and escaping rules. A JSON5 document often cannot be converted by stripping syntax, because its values are not JSON values.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Does this tool change my data?</h3>
+                <p>No. It removes comments and trailing commas, and it reports what it removed. Comments carry no value in JSON, and trailing commas only ever separate values that are already separated, so the parsed result is identical. Whitespace inside a string is data and is never touched — which matters for URLs, where a double slash is part of the address rather than the start of a comment.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I stop strict JSON from rejecting comments instead?</h3>
+                <p>Only by changing the reader, and that is usually the wrong direction. A JSONC parser in production means two services reading the same file can disagree about what it says. The durable fix is to convert the file to strict JSON at build time — which is exactly what TypeScript, VS Code and the other tools do with their own configuration files.</p>
+            </div>
+            <div class="faq-item">
+                <h3>What will this tool not convert?</h3>
+                <p>Anything that is not JSON plus comments and trailing commas. Single-quoted strings, unquoted property names, NaN, Infinity, hexadecimal numbers and multi-line strings are all rejected after conversion rather than quietly rewritten, because those changes would alter values rather than syntax. For errors of that kind, use the validator, which names the cause and the line.</p>
+            </div>
+
+            <div class="notice">
+                <p>This page converts JSONC — it removes comments and trailing commas from a JSON file and nothing else. It is not a validator, and it will not call a comment-carrying document valid: the parser itself still rejects those characters, which is what the <a href="about.html">known limits</a> describe. If you need the error position for a file that is neither, <a href="json-validator.html">the validator</a> reports the line and column. Spotted a bug? <a href="contact.html">Get in touch</a>.</p>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 JSON Tool. All rights reserved.</span>
+            <span>
+                <a href="index.html">Home</a> &middot;
+                <a href="/blog/">Guides</a> &middot;
+                <a href="json-validator.html">Validator</a> &middot;
+                <a href="jsonpath.html">JSONPath</a> &middot;
+                <a href="json-schema.html">JSON Schema</a> &middot;
+                <a href="json-diff.html">JSON Diff</a> &middot;
+                <a href="json-minifier.html">Minifier</a> &middot;
+                <a href="jsonc-to-json.html">JSONC to JSON</a> &middot;
+                <a href="json-to-csv.html">JSON to CSV</a> &middot;
+                <a href="about.html">About</a> &middot;
+                <a href="privacy.html">Privacy</a> &middot;
+                <a href="terms.html">Terms</a> &middot;
+                <a href="#" id="cookieSettings">Cookie Settings</a> &middot;
+                <a href="contact.html">Contact</a>
+            </span>
+        </footer>
+    </div>
+
+    <script src="page.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            var input = document.getElementById('jsonInput');
+            var output = document.getElementById('jsonOutput');
+            var outputWrap = document.getElementById('outputWrap');
+            var inputCount = document.getElementById('inputCount');
+            var outputCount = document.getElementById('outputCount');
+            var stats = document.getElementById('stats');
+            var result = document.getElementById('result');
+            var EXAMPLE = '{\n  // Build output goes here\n  "compilerOptions": {\n    "target": "es2022",\n    "moduleResolution": "bundler", /* keep in sync with Vite */\n    "strict": true,\n  },\n  "include": [\n    "src/**/*.ts",\n  ],\n}';
+
+            function bytes(text) {
+                return new Blob([text]).size;
+            }
+            function fmt(n) {
+                return n.toLocaleString();
+            }
+            function paintCounts() {
+                inputCount.textContent = fmt(input.value.length) + ' character' + (input.value.length === 1 ? '' : 's');
+                outputCount.textContent = fmt(output.value.length) + ' character' + (output.value.length === 1 ? '' : 's');
+            }
+            function clearResult() {
+                result.className = 'result';
+                result.textContent = '';
+            }
+            function showInvalid(text, withValidatorLink) {
+                result.className = 'result show invalid';
+                result.textContent = '';
+                var head = document.createElement('strong');
+                head.textContent = '✕ Still not valid JSON';
+                result.appendChild(head);
+                var body = document.createElement('span');
+                body.textContent = text;
+                result.appendChild(body);
+                if (withValidatorLink) {
+                    var link = document.createElement('a');
+                    link.href = 'json-validator.html';
+                    link.textContent = 'Find the line and cause with the validator →';
+                    link.style.display = 'block';
+                    link.style.marginTop = '0.6rem';
+                    result.appendChild(link);
+                }
+            }
+
+            /* String-aware walk: a comment marker only counts outside a string, and
+               a trailing comma only when only whitespace separates it from the bracket.
+               Returns the stripped text plus a list of what was removed and where. */
+            function stripJsonc(src) {
+                var out = '';
+                var removed = [];
+                var line = 1;
+                var i = 0;
+                var inString = false;
+                while (i < src.length) {
+                    var c = src.charAt(i);
+                    var next = src.charAt(i + 1);
+
+                    if (inString) {
+                        out += c;
+                        if (c === '\\') {
+                            if (i + 1 < src.length) out += src.charAt(i + 1);
+                            i += 2;
+                            continue;
+                        }
+                        if (c === '"') inString = false;
+                        i += 1;
+                        continue;
+                    }
+
+                    if (c === '"') {
+                        inString = true;
+                        out += c;
+                        i += 1;
+                        continue;
+                    }
+
+                    if (c === '\n') {
+                        line += 1;
+                        out += c;
+                        i += 1;
+                        continue;
+                    }
+
+                    if (c === '/' && next === '/') {
+                        removed.push({ kind: 'line', line: line });
+                        while (i < src.length && src.charAt(i) !== '\n') i += 1;
+                        continue;
+                    }
+
+                    if (c === '/' && next === '*') {
+                        removed.push({ kind: 'block', line: line });
+                        i += 2;
+                        while (i < src.length && !(src.charAt(i) === '*' && src.charAt(i + 1) === '/')) {
+                            if (src.charAt(i) === '\n') line += 1;
+                            i += 1;
+                        }
+                        i += 2;
+                        continue;
+                    }
+
+                    if (c === ',') {
+                        var j = i + 1;
+                        while (j < src.length && /\s/.test(src.charAt(j))) j += 1;
+                        if (src.charAt(j) === '}' || src.charAt(j) === ']') {
+                            removed.push({ kind: 'comma', line: line });
+                            i += 1;
+                            continue;
+                        }
+                    }
+
+                    out += c;
+                    i += 1;
+                }
+                return { text: out, removed: removed };
+            }
+
+            function describe(removed) {
+                var line = 0, block = 0, comma = 0;
+                removed.forEach(function (item) {
+                    if (item.kind === 'line') line += 1;
+                    else if (item.kind === 'block') block += 1;
+                    else comma += 1;
+                });
+                return { line: line, block: block, comma: comma, total: removed.length };
+            }
+
+            function convert() {
+                paintCounts();
+                var text = input.value;
+                if (!text.trim()) {
+                    clearResult();
+                    outputWrap.hidden = true;
+                    output.value = '';
+                    stats.innerHTML = '';
+                    return;
+                }
+
+                var walked = stripJsonc(text);
+                var counts = describe(walked.removed);
+
+                if (counts.total === 0) {
+                    try {
+                        var already = JSON.parse(text);
+                        output.value = JSON.stringify(already, null, 2);
+                        outputWrap.hidden = false;
+                        result.className = 'result show valid';
+                        result.textContent = '';
+                        var okHead = document.createElement('strong');
+                        okHead.textContent = '✓ Already strict JSON';
+                        result.appendChild(okHead);
+                        var okBody = document.createElement('span');
+                        okBody.textContent = 'No comments and no trailing commas were found, so there was nothing to remove. The output below is the same document re-indented.';
+                        result.appendChild(okBody);
+                        stats.innerHTML = '';
+                        appendStats([
+                            ['Comments removed', '0'],
+                            ['Trailing commas removed', '0'],
+                            ['Output', fmt(bytes(output.value)) + ' B']
+                        ]);
+                        paintCounts();
+                        return;
+                    } catch (err) {
+                        outputWrap.hidden = true;
+                        output.value = '';
+                        stats.innerHTML = '';
+                        showInvalid(describeFailure(text) + '. Nothing was changed.', true);
+                        paintCounts();
+                        return;
+                    }
+                }
+
+                try {
+                    var parsed = JSON.parse(walked.text);
+                } catch (err) {
+                    outputWrap.hidden = true;
+                    output.value = '';
+                    stats.innerHTML = '';
+                    showInvalid(describeFailure(walked.text), true);
+                    paintCounts();
+                    return;
+                }
+
+                output.value = JSON.stringify(parsed, null, 2);
+                outputWrap.hidden = false;
+                result.className = 'result show valid';
+                result.textContent = '';
+                var head = document.createElement('strong');
+                head.textContent = '✓ Converted — ' + counts.total + (counts.total === 1 ? ' change' : ' changes') + ' made';
+                result.appendChild(head);
+                var body = document.createElement('span');
+                body.textContent = 'This file was JSONC, not JSON. Comments and trailing commas are the only things removed, so the value below is identical to what your editor was reading.';
+                result.appendChild(body);
+                appendStats([
+                    ['Line comments', fmt(counts.line)],
+                    ['Block comments', fmt(counts.block)],
+                    ['Trailing commas', fmt(counts.comma)],
+                    ['Output', fmt(bytes(output.value)) + ' B']
+                ]);
+                paintCounts();
+            }
+
+            /* Names the category of what is still wrong, without guessing a value. */
+            function describeFailure(text) {
+                if (/\/\/|\/\*/.test(text)) {
+                    return 'A comment marker is still present after conversion, which usually means it appears inside a string that is never closed';
+                }
+                if (/'/.test(text)) {
+                    return 'A single-quoted string is present. JSONC keeps JSON string quoting, so this is JSON5 or a JavaScript literal rather than JSONC';
+                }
+                if (/\b(NaN|Infinity|-Infinity)\b/.test(text)) {
+                    return 'NaN or Infinity is present. JSON has no number that can represent those values, so this is JSON5 and cannot be converted by removing syntax';
+                }
+                if (/[{,]\s*[A-Za-z_$][\w$]*\s*:/.test(text)) {
+                    return 'An unquoted property name is present. JSONC requires double-quoted keys, so this is JSON5';
+                }
+                if (/\b(True|False|None)\b/.test(text)) {
+                    return 'A Python literal is present. JSON uses lowercase true, false and null';
+                }
+                if (/[\u2018\u2019\u201c\u201d]/.test(text)) {
+                    return 'A curly quote is present, which is normally pasted from a document rather than typed';
+                }
+                return 'The document is not JSON plus comments and trailing commas';
+            }
+
+            function appendStats(rows) {
+                stats.innerHTML = '';
+                rows.forEach(function (row, idx) {
+                    if (idx) stats.appendChild(document.createTextNode(' · '));
+                    var span = document.createElement('span');
+                    span.appendChild(document.createTextNode(row[0] + ' '));
+                    var b = document.createElement('b');
+                    b.textContent = row[1];
+                    span.appendChild(b);
+                    stats.appendChild(span);
+                });
+            }
+
+            document.getElementById('convertBtn').addEventListener('click', convert);
+            document.getElementById('exampleBtn').addEventListener('click', function () {
+                input.value = EXAMPLE;
+                convert();
+                input.focus();
+            });
+            document.getElementById('clearBtn').addEventListener('click', function () {
+                input.value = '';
+                output.value = '';
+                outputWrap.hidden = true;
+                stats.innerHTML = '';
+                clearResult();
+                paintCounts();
+                input.focus();
+            });
+            document.getElementById('copyBtn').addEventListener('click', function () {
+                if (!output.value) return;
+                var btn = this;
+                navigator.clipboard.writeText(output.value).then(function () {
+                    btn.textContent = 'Copied ✓';
+                    setTimeout(function () { btn.textContent = 'Copy result'; }, 1400);
+                });
+            });
+            document.getElementById('downloadBtn').addEventListener('click', function () {
+                if (!output.value) return;
+                var url = URL.createObjectURL(new Blob([output.value], { type: 'application/json' }));
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'converted.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+            input.addEventListener('input', paintCounts);
+            input.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    convert();
+                }
+            });
+            paintCounts();
+        })();
+    </script>
+
+    <!-- ===== COOKIE CONSENT ===== -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+        <p>We use Google Analytics cookies to understand how visitors use this site. Your JSON is always processed locally in your browser. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="cookie-actions">
+            <button id="cookieReject" class="cb-btn cb-reject" type="button">Reject</button>
+            <button id="cookieAccept" class="cb-btn cb-accept" type="button">Accept</button>
+        </div>
+    </div>
+    <script src="consent.js"></script>
+</body>
+</html>
