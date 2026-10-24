@@ -195,6 +195,14 @@ li {
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+/* In-text links must be distinguishable by more than colour alone (WCAG 1.4.1;
+   this is what Lighthouse's link-in-text-block audit fails on). Scoped to prose,
+   the notice block and the related list so nav, header and footer links keep the
+   treatment they already had. */
+main p a,
+.notice a,
+.related a { text-decoration: underline; text-underline-offset: 2px; }
+
 code {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 0.88em;

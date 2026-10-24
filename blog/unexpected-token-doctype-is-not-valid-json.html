@@ -18,14 +18,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Why "Unexpected token '&lt;'" Means Your API Returned HTML</title>
-    <meta name="description" content="The response was HTML — an error page, a login redirect or a proxy block page — not JSON. How to confirm it in one request and fix the real cause." />
+    <meta name="description" content="Your API returned an HTML page, not JSON. Confirm it in one request, read any engine's message, and see why n8n's 'change Response Format to Text' hides it." />
     <link rel="canonical" href="https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="Why &quot;Unexpected token '&lt;'&quot; Means Your API Returned HTML" />
-    <meta property="og:description" content="The response was HTML — an error page, a login redirect or a proxy block page — not JSON. How to confirm it in one request and fix the real cause." />
+    <meta property="og:description" content="Your API returned an HTML page, not JSON. Confirm it in one request, read any engine's message, and see why n8n's 'change Response Format to Text' hides it." />
     <meta property="og:url" content="https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html" />
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="JSON Tool" />
@@ -35,7 +35,7 @@
     <meta property="og:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Why &quot;Unexpected token '&lt;'&quot; Means Your API Returned HTML" />
-    <meta name="twitter:description" content="The response was HTML, not JSON. How to confirm it in one request and fix the real cause." />
+    <meta name="twitter:description" content="Your API returned an HTML page, not JSON. Confirm it in one request, and see why n8n's 'change Response Format to Text' hides the failure." />
     <meta name="twitter:image" content="https://json-tool.com/og-image.png" />
     <meta name="twitter:image:alt" content="JSON Tool – format, minify and validate JSON in your browser" />
 
@@ -44,12 +44,12 @@
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             "headline": "Why \"Unexpected token '<'\" Means Your API Returned HTML",
-            "description": "The response was HTML, not JSON. How to confirm it in one request and fix the real cause.",
+            "description": "Your API returned an HTML page, not JSON. Confirm it in one request, read any engine's message, and see why n8n's 'change Response Format to Text' hides it.",
             "url": "https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html",
             "mainEntityOfPage": { "@type": "WebPage", "@id": "https://json-tool.com/blog/unexpected-token-doctype-is-not-valid-json.html" },
             "image": "https://json-tool.com/og-image.png",
             "datePublished": "2026-09-27",
-            "dateModified": "2026-10-01",
+            "dateModified": "2026-10-24",
             "inLanguage": "en",
             "author": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" },
             "publisher": { "@type": "Organization", "name": "JSON Tool", "url": "https://json-tool.com/" }
@@ -96,7 +96,7 @@
                 <a href="/index.html">JSON Tool</a><span>/</span><a href="/blog/">JSON guides</a><span>/</span>Why APIs return HTML
             </nav>
             <h1>Why "Unexpected token '&lt;'" means your API returned HTML</h1>
-            <p class="post-meta">Published 27 September 2026</p>
+            <p class="post-meta">Published 27 September 2026 &middot; updated 24 October 2026</p>
 
             <p class="lead">You called an endpoint, expected data, and the parser stopped on the very first character. The message is not about your payload — it is about the shape of the response, and the response was a web page.</p>
 
@@ -156,6 +156,28 @@ const data = JSON.parse(body);</code></pre>
 
             <h2>Do not fix this by stripping the HTML</h2>
             <p>It is tempting to add a repair step that slices everything before the first <code>{</code> and parses the remainder. That converts a loud failure into a quiet one. The request is still wrong, and once the error page changes shape you will be debugging a half-parsed object instead of a 404. Fix the path, the authentication or the routing, and keep the guard from the snippet above so the next occurrence fails where you can see it.</p>
+
+            <h2>When n8n reports it</h2>
+
+            <p>n8n wraps the same failure in a message of its own, and <em>which</em> message you get is the useful part. Its HTTP Request node has a <strong>Response Format</strong> option with four values — <code>Autodetect</code> (the default), <code>File</code>, <code>JSON</code> and <code>Text</code> — and the two ways to fail on an HTML body are two different branches of code.</p>
+
+            <p>Under <code>Autodetect</code> the node looks at the response's <code>content-type</code> and parses as JSON only if that header contains <code>application/json</code>. When the parse then fails it reports:</p>
+
+            <pre><code>Invalid JSON in response body</code></pre>
+
+            <p>That one is diagnostic, and it tells you something the browser message does not: the server <em>declared</em> JSON and the bytes disagreed with it. The message proves the header, not the cause. How the pair gets there is a second question — a reverse proxy that emits its own HTML error page while letting the origin's content type stand, or a framework that sets the type from the route rather than from the body, both land here. Note the corollary, which is the more useful half: an HTML body served honestly as <code>text/html</code> under <code>Autodetect</code> never reaches a parser at all — the node takes its text branch and nothing raises an error, whatever the next node then makes of the payload.</p>
+
+            <p>If you set <code>JSON</code> explicitly, the node calls <code>JSON.parse</code> inside a <code>try/catch</code> and rethrows:</p>
+
+            <pre><code>Response body is not valid JSON. Change "Response Format" to "Text"</code></pre>
+
+            <p>This string is not a diagnosis. It is the catch block, and it carries no information about why the parse failed. The advice embedded in it is the repair this page argues against in the section above: switching the format to <code>Text</code> does not fix the response, it stops n8n from checking it. The HTML then flows on as an ordinary string, and the same defect surfaces one node later with nothing left pointing at the cause — a downstream expression that gets a document where it wanted an object, or a stored field containing <code>&lt;!DOCTYPE html&gt;</code>.</p>
+
+            <p>The third variant is the one to watch, because it never fails. In the autodetect branch the parse is handed n8n's <strong>Never Error</strong> option, whose documentation only talks about status codes — "return success regardless of the code returned". The same flag is what decides what happens to a bad body: in the source, setting it makes the parse fall back to an empty object. A <code>{}</code> is indistinguishable from an endpoint that genuinely returned nothing, which is how a broken auth header survives into production. One step away from that is the node's continue-on-error setting, where the source catches the throw one level up and pushes <code>{ error: error.message }</code> as the item's data — so the workflow keeps running, and the complaint travels downstream looking like a response.</p>
+
+            <p>What works in n8n is the same guard as anywhere else, in a different syntax: set the format to <code>Text</code>, turn on <strong>Include Response Headers and Status</strong>, and read the body's first bytes and the returned <code>content-type</code> before you let anything parse it. Find out what arrived, then choose the format.</p>
+
+            <p>Both messages above are quoted from n8n's source rather than from a forum: <code>HttpRequestV3.node.ts</code> in n8n 2.44.6, read on 24 October 2026. The autodetect branch keys on <code>content-type</code>, throws <code>Invalid JSON in response body</code>, and passes <code>fallbackValue: {}</code> when never-error is set; the explicit-<code>JSON</code> branch throws the "Change Response Format to Text" string from two sites, one for the full response and one for the bare body. The option names and the four format values come from n8n's own HTTP Request node documentation, fetched the same day. The node was not executed here — no n8n instance was involved — so the wording and the control flow are read from code, not run.</p>
 
             <h2>Wording across engines</h2>
             <p>The same defect is reported differently depending on what parsed it. If your message is not the one at the top of this page, it is probably in this table:</p>
